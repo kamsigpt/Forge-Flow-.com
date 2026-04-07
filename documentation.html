@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — ForgeFlow</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <style>
+    body { background: #FAFAFA; }
+    
+    .page-hero {
+      position: relative;
+      padding: 180px 60px 100px;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(180deg, #FFF7ED 0%, #FAFAFA 100%);
+    }
+    
+    .page-hero-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 100%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 140, 66, 0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .page-hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: #111111;
+      margin-bottom: 24px;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .page-hero p {
+      font-size: 20px;
+      color: #6B7280;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .search-box {
+      max-width: 560px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 18px 24px;
+      padding-left: 56px;
+      border: 2px solid rgba(0,0,0,0.08);
+      border-radius: 16px;
+      font-size: 16px;
+      background: white;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: #FF6A00;
+      box-shadow: 0 8px 32px rgba(255, 106, 0, 0.15);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      opacity: 0.4;
+    }
+    
+    .docs-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 40px 80px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+    
+    .doc-card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      border: 2px solid transparent;
+    }
+    
+    .doc-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .doc-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(255, 106, 0, 0.15);
+      border-color: rgba(255, 106, 0, 0.2);
+    }
+    
+    .doc-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 24px;
+    }
+    
+    .doc-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 12px;
+    }
+    
+    .doc-card p {
+      font-size: 15px;
+      color: #9CA3AF;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+    
+    .guides-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+    
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 32px;
+    }
+    
+    .guide-list {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    
+    .guide-item {
+      padding: 24px 32px;
+      border-bottom: 1px solid #F3F4F6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .guide-item:last-child {
+      border-bottom: none;
+    }
+    
+    .guide-item:hover {
+      background: #FFF7ED;
+      padding-left: 40px;
+    }
+    
+    .guide-item h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #111111;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .guide-item span {
+      color: #9CA3AF;
+      font-size: 14px;
+    }
+    
+    .guide-arrow {
+      color: #FF6A00;
+      font-size: 18px;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.2s ease;
+    }
+    
+    .guide-item:hover .guide-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 140px 24px 60px; }
+      .page-hero h1 { font-size: 42px; }
+      .docs-grid { grid-template-columns: 1fr; padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="nav-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--nav"></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#workflow">How it Works</a></li>
+      <li><a href="index.html#compare">vs Other Systems</a></li>
+      <li><a href="pricing-select.html">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-nav-ghost" onclick="location.href='login.html'">Log in</button>
+      <button class="btn-nav-primary" onclick="location.href='signup.html'">Sign up</button>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="page-hero-glow"></div>
+    <h1 class="animate-on-scroll">Documentation</h1>
+    <p class="animate-on-scroll">Everything you need to get started with ForgeFlow. From quick setup guides to detailed API references.</p>
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+  </div>
+
+  <div class="docs-grid">
+    <a href="#getting-started" class="doc-card">
+      <div class="doc-icon">🚀</div>
+      <h3>Getting Started</h3>
+      <p>Set up your account and connect your first production line in under 10 minutes.</p>
+    </a>
+    
+    <a href="#inventory" class="doc-card">
+      <div class="doc-icon">📦</div>
+      <h3>Inventory Management</h3>
+      <p>Track raw materials, work-in-progress, and finished goods in real-time.</p>
+    </a>
+    
+    <a href="#production" class="doc-card">
+      <div class="doc-icon">⚙️</div>
+      <h3>Production Scheduling</h3>
+      <p>Optimize production runs with intelligent scheduling and resource allocation.</p>
+    </a>
+    
+    <a href="#quality" class="doc-card">
+      <div class="doc-icon">✓</div>
+      <h3>Quality Control</h3>
+      <p>Implement inspection workflows and track defect rates across production.</p>
+    </a>
+    
+    <a href="api-reference.html" class="doc-card">
+      <div class="doc-icon">🔌</div>
+      <h3>API Reference</h3>
+      <p>Build custom integrations with our comprehensive REST API documentation.</p>
+    </a>
+    
+    <a href="status.html" class="doc-card">
+      <div class="doc-icon">📊</div>
+      <h3>System Status</h3>
+      <p>Check real-time system status and incident history for ForgeFlow services.</p>
+    </a>
+  </div>
+
+  <div class="guides-section">
+    <h2 class="section-title">Popular Guides</h2>
+    <div class="guide-list">
+      <div class="guide-item">
+        <h4>🔗 Connecting Shopify to ForgeFlow <span>3 min</span></h4>
+        <span class="guide-arrow">→</span>
+      </div>
+      <div class="guide-item">
+        <h4>📱 Setting up mobile scanning <span>5 min</span></h4>
+        <span class="guide-arrow">→</span>
+      </div>
+      <div class="guide-item">
+        <h4>📊 Creating your first report <span>4 min</span></h4>
+        <span class="guide-arrow">→</span>
+      </div>
+      <div class="guide-item">
+        <h4>👥 Inviting team members <span>2 min</span></h4>
+        <span class="guide-arrow">→</span>
+      </div>
+      <div class="guide-item">
+        <h4>🔄 Importing existing inventory <span>6 min</span></h4>
+        <span class="guide-arrow">→</span>
+      </div>
+      <div class="guide-item">
+        <h4>⚙️ Configuring automatic reorder points <span>5 min</span></h4>
+        <span class="guide-arrow">→</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--footer"></div>
+        <p>Modern manufacturing operations platform for the digital age.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+<li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="api-reference.html">API Reference</a></li>
+          <li><a href="help.html">Help Center</a></li>
+          <li><a href="status.html">Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ForgeFlow. All rights reserved.</span>
+      <span>
+        <a href="privacy.html" style="color:inherit;margin-left:20px">Privacy</a>
+        <a href="terms.html" style="color:inherit;margin-left:20px">Terms</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.doc-card, .animate-on-scroll').forEach(el => {
+      el.classList.add('animate-on-scroll');
+      observer.observe(el);
+    });
+
+    window.addEventListener('scroll', () => {
+      document.querySelector('.nav').classList.toggle('scrolled', window.scrollY > 30);
+    });
+  </script>
+</body>
+</html>

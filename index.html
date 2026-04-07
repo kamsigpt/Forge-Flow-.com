@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeFlow — Manufacturing Operations Platform</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="js/landing.js"></script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="nav-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--nav"></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#workflow">How it Works</a></li>
+      <li><a href="#compare">vs Other Systems</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-nav-ghost" onclick="openAuthModal('login')">Log in</button>
+      <button class="btn-nav-primary" onclick="location.href='signup.html'">Sign up</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-shapes">
+      <div class="hero-shape shape-1"></div>
+      <div class="hero-shape shape-2"></div>
+      <div class="hero-shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+      <h1 class="hero-title">The Modern Manufacturing<br><span class="highlight">Operations Platform</span></h1>
+      <p class="hero-desc">End-to-end production management, real-time inventory tracking, and intelligent MRP scheduling. All in one powerful system built for modern manufacturers.</p>
+      <div class="hero-ctas">
+        <button class="btn-hero-primary" onclick="location.href='signup.html'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Sign up
+        </button>
+        <button class="btn-hero-ghost" onclick="scrollToSection('showcase')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Watch Demo
+        </button>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-item">
+          <span class="check">✓</span>
+          <span>No credit card required</span>
+        </div>
+        <div class="hero-trust-item">
+          <span class="check">✓</span>
+          <span>Full platform access</span>
+        </div>
+        <div class="hero-trust-item">
+          <span class="check">✓</span>
+          <span>Cancel anytime</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-float-card card-1">
+        <div class="float-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="float-card-label">Production Output</div>
+        <div class="float-card-val">94%</div>
+        <div class="float-card-badge">↑ 12% vs last month</div>
+      </div>
+      <div class="hero-float-card card-2">
+        <div class="float-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="float-card-label">Revenue (MTD)</div>
+        <div class="float-card-val">$420K</div>
+        <div class="float-card-badge" style="color:#FF6A00">↑ 8% vs target</div>
+      </div>
+      <div class="hero-mockup">
+        <div class="mockup-topbar">
+          <span class="mock-dot r"></span>
+          <span class="mock-dot y"></span>
+          <span class="mock-dot g"></span>
+          <span class="mock-addr">app.forgeflow.io/dashboard</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mock-sidebar">
+            <div class="mock-sidebar-logo">
+              <span class="mock-sidebar-logo-text"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--mock"></span>
+            </div>
+            <div class="mock-nav-item active">
+              <span class="mock-nav-icon"></span>Dashboard
+            </div>
+            <div class="mock-nav-item">
+              <span class="mock-nav-icon"></span>Manufacturing
+            </div>
+            <div class="mock-nav-item">
+              <span class="mock-nav-icon"></span>Inventory
+            </div>
+            <div class="mock-nav-item">
+              <span class="mock-nav-icon"></span>Sales Orders
+            </div>
+            <div class="mock-nav-item">
+              <span class="mock-nav-icon"></span>Purchasing
+            </div>
+          </div>
+          <div class="mock-main">
+            <div class="mock-page-title">Dashboard Overview</div>
+            <div class="mock-kpis">
+              <div class="mock-kpi">
+                <div class="mock-kpi-label">Sales Revenue</div>
+                <div class="mock-kpi-val">$42K</div>
+                <div class="mock-kpi-sub">↑ 12%</div>
+              </div>
+              <div class="mock-kpi">
+                <div class="mock-kpi-label">Active Orders</div>
+                <div class="mock-kpi-val">12</div>
+                <div class="mock-kpi-sub">↑ 4 new</div>
+              </div>
+              <div class="mock-kpi">
+                <div class="mock-kpi-label">Inventory Value</div>
+                <div class="mock-kpi-val">$10.5K</div>
+                <div class="mock-kpi-sub" style="color:var(--danger)">3 low stock</div>
+              </div>
+            </div>
+            <div class="mock-chart-box">
+              <div class="mock-chart-title">Sales & Production (Last 12 Months)</div>
+              <div class="mock-bars">
+                <div class="mock-bar" style="height:40%"></div>
+                <div class="mock-bar alt" style="height:55%"></div>
+                <div class="mock-bar" style="height:45%"></div>
+                <div class="mock-bar alt" style="height:70%"></div>
+                <div class="mock-bar" style="height:60%"></div>
+                <div class="mock-bar alt" style="height:85%"></div>
+                <div class="mock-bar" style="height:75%"></div>
+                <div class="mock-bar alt" style="height:90%"></div>
+                <div class="mock-bar" style="height:80%"></div>
+                <div class="mock-bar alt" style="height:95%"></div>
+                <div class="mock-bar" style="height:88%"></div>
+                <div class="mock-bar alt" style="height:100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section" id="features">
+    <div class="features-header">
+      <div class="section-eyebrow">Platform Capabilities</div>
+      <h2 class="section-title">Everything you need to run<br>your manufacturing operations</h2>
+      <p class="section-desc">From raw material procurement to finished goods delivery — track every detail with precision and confidence.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>
+        </div>
+        <h3 class="feature-title">Production Management</h3>
+        <p class="feature-desc">Create, track, and manage manufacturing orders from start to finish. Real-time status updates and automated workflows keep your production moving.</p>
+        <span class="feature-tag">MRP Integration</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3 class="feature-title">Inventory Control</h3>
+        <p class="feature-desc">Multi-warehouse tracking with bin locations, lot/serial numbers, and automated reorder points. Never run out of critical materials again.</p>
+        <span class="feature-tag">Real-time Stock</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <h3 class="feature-title">Workfloor Operations</h3>
+        <p class="feature-desc">Digital work orders with time tracking, machine assignments, and quality checkpoints. Empower your operators with mobile-friendly interfaces.</p>
+        <span class="feature-tag">Shop Floor</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="feature-title">Sales & Purchase</h3>
+        <p class="feature-desc">Complete quote-to-cash workflow. Manage customer orders, generate purchase requests, and keep procurement aligned with production needs.</p>
+        <span class="feature-tag">End-to-End</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3 class="feature-title">Bill of Materials</h3>
+        <p class="feature-desc">Multi-level BOMs with version control, routings, and cost rollups. Ensure every product is built with the right parts, every time.</p>
+        <span class="feature-tag">BOM Management</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="feature-title">Staff & Resource</h3>
+        <p class="feature-desc">Track workforce availability, assign tasks, and manage capacities. Integrate with maintenance schedules for equipment uptime.</p>
+        <span class="feature-tag">Capacity Planning</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="workflow-section" id="workflow">
+    <div class="workflow-inner">
+      <div class="features-header">
+        <div class="section-eyebrow">How It Works</div>
+        <h2 class="section-title">From quote to delivery<br>in one seamless flow</h2>
+        <p class="section-desc">ForgeFlow connects every step of your manufacturing process, eliminating data silos and reducing manual work.</p>
+      </div>
+      <div class="workflow-steps">
+        <div class="workflow-line"></div>
+        <div class="workflow-step">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="step-label">Receive Order</div>
+          <div class="step-desc">Sales orders flow in from customers or manual entry</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="step-label">Plan Production</div>
+          <div class="step-desc">Auto-generate MFG orders with material requirements</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="step-label">Execute</div>
+          <div class="step-desc">Track work operations on the shop floor in real-time</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="step-label">Deliver</div>
+          <div class="step-desc">Ship to customers and update inventory automatically</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE 1 -->
+  <section class="showcase-section">
+    <div class="showcase-content">
+      <div class="section-eyebrow">Production Dashboard</div>
+      <h2 class="section-title">Real-time visibility into<br>your entire operation</h2>
+      <p class="section-desc">See exactly what's happening across all your workcenters. KPI dashboards surface the metrics that matter most to your business.</p>
+      <div class="showcase-points">
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Production Analytics</h4>
+            <p>Track output, efficiency, and yields across all work orders</p>
+          </div>
+        </div>
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Smart Alerts</h4>
+            <p>Automated notifications for low stock, delays, and exceptions</p>
+          </div>
+        </div>
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Financial Integration</h4>
+            <p>Track labor, material, and overhead costs in real-time</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="showcase-visual">
+      <div class="showcase-float-card float-card-left">
+        <div class="float-card-icon" style="background:rgba(16,185,129,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="float-card-label" style="font-size:9px">On-Time Delivery</div>
+        <div class="float-card-val" style="font-size:18px">98%</div>
+      </div>
+      <div class="showcase-float-card float-card-right">
+        <div class="float-card-icon" style="background:rgba(249,115,22,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="float-card-label" style="font-size:9px">Cost Savings</div>
+        <div class="float-card-val" style="font-size:18px">$24K</div>
+      </div>
+      <div class="showcase-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--gray-700)">Operations Overview</span>
+          <span style="font-size:10px;color:var(--gray-400)">Mar 2026</span>
+        </div>
+        <div class="mini-kpis">
+          <div class="mini-kpi">
+            <div class="mini-kpi-label">Active Orders</div>
+            <div class="mini-kpi-val">12</div>
+          </div>
+          <div class="mini-kpi">
+            <div class="mini-kpi-label">In Progress</div>
+            <div class="mini-kpi-val">8</div>
+          </div>
+          <div class="mini-kpi">
+            <div class="mini-kpi-label">Completed</div>
+            <div class="mini-kpi-val">23</div>
+          </div>
+        </div>
+        <table class="mini-table">
+          <thead>
+            <tr><th>Order</th><th>Product</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>MFG-0031</strong></td><td>Aluminium Frame</td><td><span style="background:#FFF7ED;color:#FF6A00;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600">In Progress</span></td></tr>
+            <tr><td><strong>MFG-0030</strong></td><td>Steel Bracket</td><td><span style="background:var(--gray-50);color:var(--gray-400);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600">Pending</span></td></tr>
+            <tr><td><strong>MFG-0029</strong></td><td>Conveyor Unit</td><td><span style="background:var(--success-bg);color:var(--success);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600">Complete</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE 2 -->
+  <section class="showcase-section reverse">
+    <div class="showcase-content">
+      <div class="section-eyebrow">Inventory Management</div>
+      <h2 class="section-title">Never lose track of<br>your materials again</h2>
+      <p class="section-desc">Multi-warehouse support, bin locations, lot tracking, and automated reorder points. Complete visibility from raw materials to finished goods.</p>
+      <div class="showcase-points">
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Multi-Warehouse</h4>
+            <p>Manage stock across multiple locations with ease</p>
+          </div>
+        </div>
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Automatic Reordering</h4>
+            <p>Set min/max levels and generate POs automatically</p>
+          </div>
+        </div>
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Full Traceability</h4>
+            <p>Track lots and serials from receipt to delivery</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="showcase-visual">
+      <div class="showcase-float-card float-card-left">
+        <div class="float-card-icon" style="background:rgba(239,68,68,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="float-card-label" style="font-size:9px">Low Stock</div>
+        <div class="float-card-val" style="font-size:18px;color:var(--danger)">3 Items</div>
+      </div>
+      <div class="showcase-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--gray-700)">Inventory Overview</span>
+          <span style="font-size:10px;color:var(--gray-400)">WH-A + WH-B</span>
+        </div>
+        <div class="mini-bom">
+          <div class="mini-bom-header">Material Shortages</div>
+          <div class="mini-bom-row"><div class="mini-bom-dot"></div>Aluminium Sheet 2mm — <span style="color:var(--danger)">-38 SHT</span></div>
+          <div class="mini-bom-row"><div class="mini-bom-dot"></div>Solvent Chemical A — <span style="color:var(--danger)">-8 L</span></div>
+          <div class="mini-bom-row"><div class="mini-bom-dot"></div>Packaging Box — <span style="color:var(--warn)">-76 PCS</span></div>
+        </div>
+        <table class="mini-table">
+          <thead>
+            <tr><th>SKU</th><th>Description</th><th>Qty</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>RM-1001</strong></td><td>Aluminium Sheet 2mm</td><td style="color:var(--danger)">12</td></tr>
+            <tr><td><strong>RM-1002</strong></td><td>Steel Rod 10mm</td><td style="color:var(--success)">340</td></tr>
+            <tr><td><strong>FG-2001</strong></td><td>Aluminium Frame Kit</td><td style="color:var(--success)">85</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section class="compare-section" id="compare">
+    <div class="compare-inner">
+      <div class="compare-header">
+        <div class="section-eyebrow">Why ForgeFlow?</div>
+        <h2 class="section-title">Built for modern manufacturers</h2>
+        <p class="section-desc">See how we compare to spreadsheets and legacy systems</p>
+      </div>
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th class="forgeflow-col">ForgeFlow</th>
+              <th>Legacy ERP</th>
+              <th>Spreadsheets</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Real-time inventory tracking</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>Automated MRP scheduling</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="prt">Partial</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>Shop floor mobile interface</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>Multi-warehouse support</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="chk">✓</span></td>
+              <td><span class="prt">Manual</span></td>
+            </tr>
+            <tr>
+              <td>Cloud-based & accessible</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="prt">Add-on</span></td>
+              <td><span class="chk">✓</span></td>
+            </tr>
+            <tr>
+              <td>No implementation fees</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
+              <td><span class="chk">✓</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing-section" id="pricing">
+    <div class="pricing-header">
+      <div class="section-eyebrow">Pricing</div>
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-desc">No hidden fees. No implementation costs. Start free, scale as you grow.</p>
+      <div class="pricing-toggle">
+        <span class="toggle-label">Monthly</span>
+        <div class="toggle-switch" id="pricingToggle" onclick="togglePricing()"></div>
+        <span class="toggle-label">Annual</span>
+        <span class="toggle-save">Save 20%</span>
+      </div>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-plan">Starter</div>
+        <div class="pricing-price" id="price-starter">$150<sup>/mo</sup></div>
+        <div class="pricing-tagline">Everything you need to move from spreadsheets to a real system</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Up to 15 users</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Basic inventory tracking</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Sales orders management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Purchase requests</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>BOM management</li>
+          <li class="faded"><span class="pricing-cross">✗</span>Workfloor operations</li>
+          <li class="faded"><span class="pricing-cross">✗</span>Advanced reporting</li>
+          <li class="faded"><span class="pricing-cross">✗</span>API access</li>
+        </ul>
+        <button class="btn-pricing btn-pricing-outline" onclick="location.href='signup.html'">Sign up</button>
+      </div>
+      <div class="pricing-card popular">
+        <div class="popular-badge">Most Popular</div>
+        <div class="pricing-plan">Professional</div>
+        <div class="pricing-price" id="price-pro">$250<sup>/mo</sup></div>
+        <div class="pricing-tagline">Scale your operations with advanced tools and reporting</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Up to 30 users</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Full inventory management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Sales orders management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Purchase requests</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>BOM management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Workfloor operations</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced reporting</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>API access</li>
+        </ul>
+        <button class="btn-pricing btn-pricing-fill" onclick="location.href='signup.html'">Sign up</button>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-plan">Enterprise</div>
+        <div class="pricing-price" id="price-enterprise">Contact Us</div>
+        <div class="pricing-tagline">Custom solutions for complex multi-warehouse operations</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited users</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Full inventory management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Sales orders management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Purchase requests</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>BOM management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Workfloor operations</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced reporting</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>API access</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Multi-warehouse</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced automation</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Custom integrations</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Dedicated support</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>SLA guarantee</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>On-premise option</li>
+        </ul>
+        <button class="btn-pricing btn-pricing-outline" onclick="openContactSalesModal()">Contact Sales</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div>
+      <h2 class="cta-title">Ready to transform your operations?</h2>
+      <p class="cta-desc">Join thousands of manufacturers who've upgraded from spreadsheets. Sign up today — no credit card required.</p>
+    </div>
+    <div class="cta-actions">
+      <button class="btn-cta-white" onclick="location.href='signup.html'">Sign up</button>
+      <button class="btn-cta-ghost" onclick="scrollToSection('features')">Learn More</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--footer"></div>
+        <p>Modern manufacturing operations platform for the digital age. Built for teams who want to move fast.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="api-reference.html">API Reference</a></li>
+          <li><a href="help.html">Help Center</a></li>
+          <li><a href="status.html">Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ForgeFlow. All rights reserved.</span>
+      <span>
+        <a href="privacy.html" style="color:inherit;margin-left:20px">Privacy</a>
+        <a href="terms.html" style="color:inherit;margin-left:20px">Terms</a>
+        <a href="#" style="color:inherit;margin-left:20px">Cookies</a>
+      </span>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="auth-modal">
+      <button class="modal-close" onclick="closeAuthModal()">×</button>
+      <div class="auth-modal-brand">
+        <span class="auth-modal-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--auth-modal"></span>
+      </div>
+      <h2 class="auth-modal-title" id="authModalTitle">Welcome back</h2>
+      <p class="auth-modal-subtitle" id="authModalSubtitle">Sign in to continue to your dashboard</p>
+
+      <!-- Social Login Buttons -->
+      <button class="btn-social google" onclick="handleSocialLogin('google')">
+        <svg viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continue with Google
+      </button>
+      <button class="btn-social facebook" onclick="handleSocialLogin('facebook')">
+        <svg viewBox="0 0 24 24" fill="white">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+        Continue with Facebook
+      </button>
+
+      <div class="auth-social-divider">
+        <span>or continue with email</span>
+      </div>
+
+      <form class="auth-form" id="authForm" onsubmit="handleAuth(event)">
+        <div class="form-group" id="nameGroup" style="display:none">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" id="authName" placeholder="John Smith">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Work Email</label>
+          <input type="email" class="form-input" id="authEmail" placeholder="you@company.com" required>
+        </div>
+        <div class="form-group" id="passwordGroup">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="authPassword" placeholder="••••••••" required>
+        </div>
+        <div class="form-group" id="confirmPasswordGroup" style="display:none">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" class="form-input" id="authConfirmPassword" placeholder="••••••••">
+        </div>
+        <div class="form-group" id="companyGroup" style="display:none">
+          <label class="form-label">Company Name</label>
+          <input type="text" class="form-input" id="authCompany" placeholder="Acme Manufacturing">
+        </div>
+        <div class="form-group" id="planGroup" style="display:none">
+          <label class="form-label">Select Plan</label>
+          <div class="plan-select-grid">
+            <div class="plan-opt selected" onclick="selectPlan(this, 'starter')">
+              <div class="plan-opt-name">Starter</div>
+              <div class="plan-opt-price">$150/mo</div>
+            </div>
+            <div class="plan-opt" onclick="selectPlan(this, 'professional')">
+              <div class="plan-opt-name">Professional</div>
+              <div class="plan-opt-price">$250/mo</div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn-auth-submit" id="authSubmitBtn">Sign in</button>
+      </form>
+
+      <div class="auth-footer" id="authFooter">
+        <span id="authFooterText">Don't have an account? <a href="signup.html" style="color: var(--accent-color); font-weight: 700; text-decoration: none; padding: 4px 12px; border-radius: 6px; transition: all 0.2s;">Sign up free</a></span>
+      </div>
+
+      <p class="auth-terms" id="authTerms">
+        By continuing, you agree to ForgeFlow's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+
+  <div id="contactSalesModal" class="modal-overlay">
+    <div class="modal-container">
+      <button class="modal-close" onclick="closeContactSalesModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <h2 class="modal-title">Contact Sales</h2>
+        <p class="modal-subtitle">Talk to our enterprise team about your manufacturing needs</p>
+      </div>
+      
+      <form id="contactSalesForm" onsubmit="submitContactSalesForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="csFirstName">First Name *</label>
+            <input type="text" id="csFirstName" name="firstName" required placeholder="John">
+          </div>
+          <div class="form-group">
+            <label for="csLastName">Last Name *</label>
+            <input type="text" id="csLastName" name="lastName" required placeholder="Smith">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="csEmail">Work Email *</label>
+          <input type="email" id="csEmail" name="email" required placeholder="john@company.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="csPhone">Phone Number *</label>
+          <input type="tel" id="csPhone" name="phone" required placeholder="+1 (555) 123-4567">
+        </div>
+        
+        <div class="form-group">
+          <label for="csCompanyName">Company Name *</label>
+          <input type="text" id="csCompanyName" name="companyName" required placeholder="Acme Manufacturing Inc.">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="csCompanySize">Company Size *</label>
+            <select id="csCompanySize" name="companySize" required>
+              <option value="">Select size...</option>
+              <option value="1-50">1-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+              <option value="201-500">201-500 employees</option>
+              <option value="501-1000">501-1,000 employees</option>
+              <option value="1001-5000">1,001-5,000 employees</option>
+              <option value="5000+">5,000+ employees</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="csIndustry">Industry</label>
+            <select id="csIndustry" name="industry">
+              <option value="">Select industry...</option>
+              <option value="automotive">Automotive</option>
+              <option value="aerospace">Aerospace & Defense</option>
+              <option value="electronics">Electronics</option>
+              <option value="food">Food & Beverage</option>
+              <option value="pharmaceuticals">Pharmaceuticals</option>
+              <option value="chemicals">Chemicals</option>
+              <option value="machinery">Industrial Machinery</option>
+              <option value="textiles">Textiles & Apparel</option>
+              <option value="plastics">Plastics & Rubber</option>
+              <option value="metal">Metal Fabrication</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="csCurrentSystem">Current ERP / Manufacturing System</label>
+          <select id="csCurrentSystem" name="currentSystem">
+            <option value="">Select system...</option>
+            <option value="none">No current system</option>
+            <option value="sap">SAP</option>
+            <option value="oracle">Oracle</option>
+            <option value="microsoft">Microsoft Dynamics</option>
+            <option value="infor">Infor</option>
+            <option value="sage">Sage</option>
+            <option value="quickbooks">QuickBooks</option>
+            <option value="excel">Spreadsheets / Excel</option>
+            <option value="custom">Custom / Legacy System</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="csMessage">Additional Requirements</label>
+          <textarea id="csMessage" name="message" rows="4" placeholder="Tell us about your specific requirements, integration needs, or questions..."></textarea>
+        </div>
+        
+        <button type="submit" id="contactSalesSubmit" class="modal-submit-btn">
+          Send Request
+        </button>
+        
+        <p class="modal-disclaimer">By submitting this form, you agree to be contacted by our sales team. We respect your privacy and will never share your information.</p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openContactSalesModal() {
+      document.getElementById('contactSalesModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeContactSalesModal() {
+      document.getElementById('contactSalesModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function submitContactSalesForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('contactSalesForm');
+      const submitBtn = document.getElementById('contactSalesSubmit');
+      
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+      
+      const formData = {
+        firstName: document.getElementById('csFirstName').value,
+        lastName: document.getElementById('csLastName').value,
+        email: document.getElementById('csEmail').value,
+        phone: document.getElementById('csPhone').value,
+        companyName: document.getElementById('csCompanyName').value,
+        companySize: document.getElementById('csCompanySize').value,
+        industry: document.getElementById('csIndustry').value,
+        currentSystem: document.getElementById('csCurrentSystem').value,
+        message: document.getElementById('csMessage').value,
+        timestamp: new Date().toISOString(),
+        source: 'landing_page'
+      };
+      
+      console.log('Contact Sales Form Submitted:', formData);
+      sessionStorage.setItem('forgeflow_lead', JSON.stringify(formData));
+      
+      setTimeout(() => {
+        closeContactSalesModal();
+        alert('Thank you for your interest in ForgeFlow Enterprise! Our sales team will contact you within 24 hours.');
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send Request';
+      }, 1500);
+    }
+
+    window.openContactSalesModal = openContactSalesModal;
+    window.closeContactSalesModal = closeContactSalesModal;
+    window.submitContactSalesForm = submitContactSalesForm;
+
+    document.getElementById('contactSalesModal').addEventListener('click', function(e) {
+      if (e.target === this) closeContactSalesModal();
+    });
+  </script>
+
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-overlay.open .modal-container {
+      transform: scale(1) translateY(0);
+    }
+    
+    .modal-container {
+      background: white;
+      border-radius: 24px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 48px;
+      position: relative;
+      transform: scale(0.95) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #f3f4f6;
+      color: #6b7280;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    
+    .modal-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #FF6A00 0%, #E55D00 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: white;
+    }
+    
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    
+    .modal-subtitle {
+      font-size: 15px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: var(--font-body);
+      color: #111;
+      background: #fafafa;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #FF6A00;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.1);
+    }
+    
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #9ca3af;
+    }
+    
+    .form-group select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 44px;
+    }
+    
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .modal-submit-btn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #FF6A00 0%, #E55D00 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .modal-submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 106, 0, 0.4);
+    }
+    .modal-submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .modal-disclaimer {
+      font-size: 12px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    
+    @media (max-width: 640px) {
+      .modal-container {
+        padding: 32px 24px;
+        max-height: 95vh;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .modal-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+
+</body>
+</html>

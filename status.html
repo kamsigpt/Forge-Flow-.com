@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Status — ForgeFlow</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <style>
+    body { background: #FAFAFA; }
+    
+    .page-hero {
+      position: relative;
+      padding: 180px 60px 100px;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(180deg, #FFF7ED 0%, #FAFAFA 100%);
+    }
+    
+    .page-hero-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 100%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 140, 66, 0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .status-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .status-banner span {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #22c55e;
+    }
+    
+    .page-hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: #111111;
+      margin-bottom: 16px;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .page-hero p {
+      font-size: 16px;
+      color: #9CA3AF;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .status-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+    
+    .services-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .services-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .service-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #F3F4F6;
+      transition: all 0.2s ease;
+    }
+    
+    .service-row:last-child {
+      border-bottom: none;
+    }
+    
+    .service-row:hover {
+      background: #FFF7ED;
+      margin: 0 -20px;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    
+    .service-info h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #111111;
+      margin-bottom: 4px;
+    }
+    
+    .service-info span {
+      font-size: 13px;
+      color: #9CA3AF;
+    }
+    
+    .status-badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    .status-badge.operational {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+    
+    .status-badge.degraded {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+    
+    .status-badge.outage {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    
+    .incidents-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .incidents-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .incidents-card h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 28px;
+    }
+    
+    .incident-item {
+      padding-left: 20px;
+      border-left: 3px solid #E5E7EB;
+      margin-bottom: 28px;
+    }
+    
+    .incident-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .incident-date {
+      font-size: 13px;
+      color: #9CA3AF;
+      margin-bottom: 4px;
+    }
+    
+    .incident-item h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #111111;
+      margin-bottom: 8px;
+    }
+    
+    .incident-item p {
+      font-size: 14px;
+      color: #6B7280;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+    
+    .subscribe-card {
+      background: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+      border-radius: 24px;
+      padding: 40px;
+      margin-top: 32px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .subscribe-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .subscribe-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 12px;
+    }
+    
+    .subscribe-card p {
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 24px;
+    }
+    
+    .subscribe-form {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .subscribe-form input {
+      flex: 1;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+    
+    .subscribe-form input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+    
+    .subscribe-form button {
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .subscribe-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 106, 0, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 140px 24px 60px; }
+      .page-hero h1 { font-size: 42px; }
+      .status-container { padding: 0 24px 60px; }
+      .subscribe-form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="nav-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--nav"></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#workflow">How it Works</a></li>
+      <li><a href="index.html#compare">vs Other Systems</a></li>
+      <li><a href="pricing-select.html">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-nav-ghost" onclick="location.href='login.html'">Log in</button>
+      <button class="btn-nav-primary" onclick="location.href='signup.html'">Sign up</button>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="page-hero-glow"></div>
+    <div class="status-banner animate-on-scroll">
+      <div class="status-dot"></div>
+      <span>All Systems Operational</span>
+    </div>
+    <h1 class="animate-on-scroll">System Status</h1>
+    <p class="animate-on-scroll">Last updated: March 19, 2026 at 10:45 AM UTC</p>
+  </div>
+
+  <div class="status-container">
+    <div class="services-card">
+      <div class="service-row">
+        <div class="service-info">
+          <h4>API</h4>
+          <span>REST API and Webhooks</span>
+        </div>
+        <span class="status-badge operational">Operational</span>
+      </div>
+      
+      <div class="service-row">
+        <div class="service-info">
+          <h4>Dashboard</h4>
+          <span>Web Application</span>
+        </div>
+        <span class="status-badge operational">Operational</span>
+      </div>
+      
+      <div class="service-row">
+        <div class="service-info">
+          <h4>Authentication</h4>
+          <span>Login and User Management</span>
+        </div>
+        <span class="status-badge operational">Operational</span>
+      </div>
+      
+      <div class="service-row">
+        <div class="service-info">
+          <h4>Integrations</h4>
+          <span>Shopify, QuickBooks, Google Sheets</span>
+        </div>
+        <span class="status-badge operational">Operational</span>
+      </div>
+      
+      <div class="service-row">
+        <div class="service-info">
+          <h4>Data Sync</h4>
+          <span>Real-time Data Processing</span>
+        </div>
+        <span class="status-badge operational">Operational</span>
+      </div>
+      
+      <div class="service-row">
+        <div class="service-info">
+          <h4>File Storage</h4>
+          <span>Document and Image Upload</span>
+        </div>
+        <span class="status-badge operational">Operational</span>
+      </div>
+    </div>
+
+    <div class="incidents-card">
+      <h2>Incident History</h2>
+      
+      <div class="incident-item">
+        <p class="incident-date">March 5, 2026 — Resolved in 23 minutes</p>
+        <h4>Brief API Latency Spike</h4>
+        <p>We experienced elevated response times for approximately 23 minutes due to a database query optimization issue. No data was affected.</p>
+      </div>
+      
+      <div class="incident-item">
+        <p class="incident-date">February 18, 2026 — Resolved in 12 minutes</p>
+        <h4>Authentication Service Interruption</h4>
+        <p>Users may have experienced difficulty logging in for approximately 12 minutes due to a configuration issue during routine maintenance.</p>
+      </div>
+    </div>
+
+    <div class="subscribe-card">
+      <h3>Subscribe to Updates</h3>
+      <p>Get notified about incidents and maintenance windows.</p>
+      <form class="subscribe-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent = 'Subscribed!';">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--footer"></div>
+        <p>Modern manufacturing operations platform for the digital age.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+<li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="api-reference.html">API Reference</a></li>
+          <li><a href="help.html">Help Center</a></li>
+          <li><a href="status.html">Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ForgeFlow. All rights reserved.</span>
+      <span>
+        <a href="privacy.html" style="color:inherit;margin-left:20px">Privacy</a>
+        <a href="terms.html" style="color:inherit;margin-left:20px">Terms</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.services-card, .incidents-card, .subscribe-card, .animate-on-scroll').forEach(el => {
+      el.classList.add('animate-on-scroll');
+      observer.observe(el);
+    });
+
+    window.addEventListener('scroll', () => {
+      document.querySelector('.nav').classList.toggle('scrolled', window.scrollY > 30);
+    });
+  </script>
+</body>
+</html>

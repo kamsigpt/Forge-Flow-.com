@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About ForgeFlow — Manufacturing Operations Platform</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <style>
+    body { background: #FAFAFA; }
+    
+    .page-hero {
+      position: relative;
+      padding: 180px 60px 100px;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(180deg, #FFF7ED 0%, #FAFAFA 100%);
+    }
+    
+    .page-hero-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 100%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 140, 66, 0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .page-hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: #111111;
+      margin-bottom: 24px;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .page-hero h1 .highlight {
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .page-hero p {
+      font-size: 20px;
+      color: #6B7280;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .content-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+    
+    .problem-solution {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+    
+    .problem-card, .solution-card {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .problem-card.visible, .solution-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .problem-card {
+      border-left: 4px solid #ef4444;
+    }
+    
+    .solution-card {
+      border-left: 4px solid #22c55e;
+    }
+    
+    .card-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 24px;
+    }
+    
+    .problem-card .card-icon {
+      background: rgba(239, 68, 68, 0.1);
+    }
+    
+    .solution-card .card-icon {
+      background: rgba(34, 197, 94, 0.1);
+    }
+    
+    .problem-card h3, .solution-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    
+    .problem-card h3 { color: #ef4444; }
+    .solution-card h3 { color: #22c55e; }
+    
+    .problem-card ul, .solution-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .problem-card li, .solution-card li {
+      font-size: 16px;
+      color: #6B7280;
+      line-height: 1.6;
+      padding: 12px 0;
+      border-bottom: 1px solid #F3F4F6;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .problem-card li:last-child, .solution-card li:last-child {
+      border-bottom: none;
+    }
+    
+    .problem-card li::before {
+      content: '✗';
+      color: #ef4444;
+      font-weight: bold;
+    }
+    
+    .solution-card li::before {
+      content: '✓';
+      color: #22c55e;
+      font-weight: bold;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 60px;
+    }
+    
+    .feature-item {
+      background: white;
+      border-radius: 20px;
+      padding: 36px 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      text-align: center;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .feature-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .feature-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(255, 106, 0, 0.15);
+    }
+    
+    .feature-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 24px;
+    }
+    
+    .feature-item h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 12px;
+    }
+    
+    .feature-item p {
+      font-size: 14px;
+      color: #9CA3AF;
+      line-height: 1.6;
+    }
+    
+    .stats-section {
+      background: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+      border-radius: 24px;
+      padding: 60px;
+      margin-bottom: 60px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .stats-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      text-align: center;
+    }
+    
+    .stat-item h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: #FF6A00;
+      margin-bottom: 8px;
+    }
+    
+    .stat-item p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .how-it-works {
+      background: white;
+      border-radius: 24px;
+      padding: 60px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      margin-bottom: 60px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .how-it-works.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .how-it-works h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: #111111;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    
+    .step-item {
+      text-align: center;
+      position: relative;
+    }
+    
+    .step-num {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin: 0 auto 20px;
+    }
+    
+    .step-item h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #111111;
+      margin-bottom: 8px;
+    }
+    
+    .step-item p {
+      font-size: 14px;
+      color: #9CA3AF;
+      line-height: 1.5;
+    }
+    
+    .industries-section {
+      background: white;
+      border-radius: 24px;
+      padding: 60px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      margin-bottom: 60px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .industries-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .industries-section h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: #111111;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    
+    .industries-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    
+    .industry-item {
+      background: #FAFAFA;
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    
+    .industry-item:hover {
+      background: #FFF7ED;
+      transform: translateY(-4px);
+    }
+    
+    .industry-item h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #111111;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .industry-item p {
+      font-size: 14px;
+      color: #9CA3AF;
+      line-height: 1.5;
+    }
+    
+    .cta-box {
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      border-radius: 24px;
+      padding: 60px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .cta-box.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .cta-box h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 16px;
+    }
+    
+    .cta-box p {
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 32px;
+      font-size: 18px;
+    }
+    
+    .cta-box .btn {
+      display: inline-block;
+      padding: 16px 40px;
+      background: white;
+      color: #FF6A00;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    
+    .cta-box .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 1024px) {
+      .features-grid, .industries-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    @media (max-width: 768px) {
+      .page-hero { padding: 140px 24px 60px; }
+      .page-hero h1 { font-size: 42px; }
+      .content-section { padding: 40px 24px; }
+      .problem-solution { grid-template-columns: 1fr; }
+      .features-grid, .industries-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="nav-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--nav"></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#workflow">How it Works</a></li>
+      <li><a href="index.html#compare">vs Other Systems</a></li>
+      <li><a href="pricing-select.html">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-nav-ghost" onclick="location.href='login.html'">Log in</button>
+      <button class="btn-nav-primary" onclick="location.href='signup.html'">Sign up</button>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="page-hero-glow"></div>
+    <h1 class="animate-on-scroll">Meet <span class="highlight">ForgeFlow</span></h1>
+    <p class="animate-on-scroll">The all-in-one manufacturing operations platform that connects your production floor to your business strategy. Built for modern manufacturers who refuse to settle for outdated software.</p>
+  </div>
+
+  <div class="content-section">
+    <div class="problem-solution">
+      <div class="problem-card">
+        <div class="card-icon">😰</div>
+        <h3>The Problem</h3>
+        <ul>
+          <li>Disconnected systems that don't talk to each other</li>
+          <li>Spreadsheets that are out of date the moment you save them</li>
+          <li>No real-time visibility into production status</li>
+          <li>Inventory shortages causing costly production delays</li>
+          <li>Quality issues discovered too late, after products ship</li>
+          <li>Hours wasted reconciling data between multiple tools</li>
+          <li>Expensive enterprise software that requires consultants to configure</li>
+          <li>No mobility — you're chained to your desk to run production</li>
+        </ul>
+      </div>
+      
+      <div class="solution-card">
+        <div class="card-icon">🚀</div>
+        <h3>The ForgeFlow Solution</h3>
+        <ul>
+          <li>Single source of truth for all your operations data</li>
+          <li>Real-time inventory tracking that updates automatically</li>
+          <li>Live production dashboards visible from anywhere</li>
+          <li>Smart reorder alerts before you run out of materials</li>
+          <li>Built-in quality control checkpoints at every stage</li>
+          <li>One-click reporting and analytics</li>
+          <li>Setup in hours, not months — no consultants needed</li>
+          <li>Full mobile support for floor workers and managers</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">📦</div>
+        <h4>Inventory Management</h4>
+        <p>Track raw materials, WIP, and finished goods in real-time. Barcode scanning, batch tracking, and automatic reorder points.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⚙️</div>
+        <h4>Production Scheduling</h4>
+        <p>Intelligent scheduling that considers materials, machines, and labor. Optimize production runs with drag-and-drop planning.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">✅</div>
+        <h4>Quality Control</h4>
+        <p>Configurable inspection checklists, pass/fail criteria, and real-time defect tracking. Catch issues before they become problems.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <h4>Advanced Reporting</h4>
+        <p>OEE, yield rates, cycle times, and custom KPIs. Beautiful dashboards that update in real-time.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔗</div>
+        <h4>Integrations</h4>
+        <p>Connect Shopify, QuickBooks, Google Sheets, and 50+ other tools. Two-way sync keeps everything in sync.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">👥</div>
+        <h4>Team Management</h4>
+        <p>Role-based access, shift scheduling, and performance tracking. Empower your team with the right information.</p>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <h3>40%</h3>
+          <p>Reduction in inventory carrying costs</p>
+        </div>
+        <div class="stat-item">
+          <h3>60%</h3>
+          <p>Faster production planning</p>
+        </div>
+        <div class="stat-item">
+          <h3>95%</h3>
+          <p>On-time delivery rate</p>
+        </div>
+        <div class="stat-item">
+          <h3>3x</h3>
+          <p>Faster issue resolution</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="how-it-works">
+      <h2>How ForgeFlow Works</h2>
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <h4>Connect</h4>
+          <p>Import your existing data or start fresh. Our onboarding wizard guides you through setup.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <h4>Configure</h4>
+          <p>Set up your products, BOMs, machines, and workflows. No coding required.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <h4>Run</h4>
+          <p>Start production orders, track work in real-time, and manage quality checkpoints.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <h4>Optimize</h4>
+          <p>Use insights from dashboards to continuously improve efficiency and reduce waste.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="industries-section">
+      <h2>Built for Modern Manufacturers</h2>
+      <div class="industries-grid">
+        <div class="industry-item">
+          <h4>🏭 Discrete Manufacturing</h4>
+          <p>Electronics, machinery, consumer goods — anything you build from components.</p>
+        </div>
+        <div class="industry-item">
+          <h4>🔄 Process Manufacturing</h4>
+          <p>Food & beverage, chemicals, pharmaceuticals — batch-based production.</p>
+        </div>
+        <div class="industry-item">
+          <h4>🪵 Wood & Fabrication</h4>
+          <p>Custom cabinets, furniture, metal fabrication — job shops and custom manufacturers.</p>
+        </div>
+        <div class="industry-item">
+          <h4>📱 Electronics Assembly</h4>
+          <p>PCB assembly, box build, testing, and fulfillment operations.</p>
+        </div>
+        <div class="industry-item">
+          <h4>🧵 Textiles & Apparel</h4>
+          <p>Cut-and-sew, screen printing, embroidery — fashion and textile production.</p>
+        </div>
+        <div class="industry-item">
+          <h4>🏗️ Contract Manufacturing</h4>
+          <p>CMs serving multiple customers with complex scheduling needs.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <h3>Ready to transform your operations?</h3>
+      <p>Join thousands of manufacturers who've modernized with ForgeFlow.</p>
+      <a href="signup.html" class="btn">Start Free Trial</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--footer"></div>
+        <p>Modern manufacturing operations platform for the digital age.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+<li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="api-reference.html">API Reference</a></li>
+          <li><a href="help.html">Help Center</a></li>
+          <li><a href="status.html">Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ForgeFlow. All rights reserved.</span>
+      <span>
+        <a href="privacy.html" style="color:inherit;margin-left:20px">Privacy</a>
+        <a href="terms.html" style="color:inherit;margin-left:20px">Terms</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.problem-card, .solution-card, .feature-item, .stats-section, .how-it-works, .industries-section, .cta-box, .animate-on-scroll').forEach(el => {
+      el.classList.add('animate-on-scroll');
+      observer.observe(el);
+    });
+
+    window.addEventListener('scroll', () => {
+      document.querySelector('.nav').classList.toggle('scrolled', window.scrollY > 30);
+    });
+  </script>
+</body>
+</html>

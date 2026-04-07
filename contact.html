@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — ForgeFlow</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <style>
+    body { background: #FAFAFA; }
+    
+    .page-hero {
+      position: relative;
+      padding: 180px 60px 100px;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(180deg, #FFF7ED 0%, #FAFAFA 100%);
+    }
+    
+    .page-hero-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 100%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 140, 66, 0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .page-hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: #111111;
+      margin-bottom: 24px;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .page-hero p {
+      font-size: 20px;
+      color: #6B7280;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .contact-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 60px;
+    }
+    
+    .contact-info {
+      padding-top: 20px;
+    }
+    
+    .info-card {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .info-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .info-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(255, 106, 0, 0.12);
+    }
+    
+    .info-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    
+    .info-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 8px;
+    }
+    
+    .info-card p {
+      font-size: 15px;
+      color: #6B7280;
+      margin-bottom: 0;
+    }
+    
+    .info-card a {
+      color: #FF6A00;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .info-card a:hover {
+      text-decoration: underline;
+    }
+    
+    .contact-form-wrapper {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .contact-form-wrapper.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .contact-form-wrapper h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 8px;
+    }
+    
+    .contact-form-wrapper > p {
+      color: #9CA3AF;
+      margin-bottom: 32px;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 24px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #E5E7EB;
+      border-radius: 12px;
+      font-family: 'Figtree', sans-serif;
+      font-size: 16px;
+      color: #111111;
+      transition: all 0.2s ease;
+      background: white;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #FF6A00;
+      box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.1);
+    }
+    
+    .form-group textarea {
+      resize: vertical;
+      min-height: 140px;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(255, 106, 0, 0.35);
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255, 106, 0, 0.45);
+    }
+    
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .page-hero { padding: 140px 24px 60px; }
+      .page-hero h1 { font-size: 42px; }
+      .contact-container { grid-template-columns: 1fr; padding: 0 24px 60px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="nav-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--nav"></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#workflow">How it Works</a></li>
+      <li><a href="index.html#compare">vs Other Systems</a></li>
+      <li><a href="pricing-select.html">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-nav-ghost" onclick="location.href='login.html'">Log in</button>
+      <button class="btn-nav-primary" onclick="location.href='signup.html'">Sign up</button>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="page-hero-glow"></div>
+    <h1 class="animate-on-scroll">Get in Touch</h1>
+    <p class="animate-on-scroll">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+  </div>
+
+  <div class="contact-container">
+    <div class="contact-info">
+      <div class="info-card">
+        <div class="info-icon">📧</div>
+        <h3>Email Us</h3>
+        <p>For general inquiries:<br><a href="mailto:hello@forgeflow.io">hello@forgeflow.io</a></p>
+      </div>
+      
+      <div class="info-card">
+        <div class="info-icon">💬</div>
+        <h3>Live Chat</h3>
+        <p>Available Mon-Fri<br>9am - 6pm EST</p>
+      </div>
+      
+      <div class="info-card">
+        <div class="info-icon">🌍</div>
+        <h3>Location</h3>
+        <p>Remote-first company<br>Team members worldwide</p>
+      </div>
+      
+      <div class="info-card">
+        <div class="info-icon">🏢</div>
+        <h3>Headquarters</h3>
+        <p>123 Manufacturing Way<br>San Francisco, CA 94105</p>
+      </div>
+    </div>
+
+    <div class="contact-form-wrapper">
+      <h2>Send us a message</h2>
+      <p>Fill out the form below and we'll get back to you shortly.</p>
+      
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="John" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Work Email</label>
+          <input type="email" placeholder="john@acme.com" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Company</label>
+          <input type="text" placeholder="Acme Manufacturing">
+        </div>
+        
+        <div class="form-group">
+          <label>Subject</label>
+          <select required>
+            <option value="">Select a topic...</option>
+            <option>General Inquiry</option>
+            <option>Sales Question</option>
+            <option>Technical Support</option>
+            <option>Partnership Opportunity</option>
+            <option>Press & Media</option>
+            <option>Job Application</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="How can we help you?" required></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--footer"></div>
+        <p>Modern manufacturing operations platform for the digital age.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+<li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="documentation.html">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="api-reference.html">API Reference</a></li>
+          <li><a href="help.html">Help Center</a></li>
+          <li><a href="status.html">Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ForgeFlow. All rights reserved.</span>
+      <span>
+        <a href="privacy.html" style="color:inherit;margin-left:20px">Privacy</a>
+        <a href="terms.html" style="color:inherit;margin-left:20px">Terms</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.info-card, .contact-form-wrapper, .animate-on-scroll').forEach(el => {
+      el.classList.add('animate-on-scroll');
+      observer.observe(el);
+    });
+
+    window.addEventListener('scroll', () => {
+      document.querySelector('.nav').classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('.submit-btn');
+      btn.textContent = 'Message Sent!';
+      btn.style.background = '#10B981';
+      setTimeout(() => {
+        btn.textContent = 'Send Message';
+        btn.style.background = '';
+        this.reset();
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
