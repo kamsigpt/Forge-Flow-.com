@@ -1,45 +1,83 @@
-# ForgeFlow - Manufacturing Operations Platform
+# ForgeFlow
+
+ForgeFlow is a manufacturing operations platform with a public website, authentication screens, pricing flow, documentation pages, and a full application workspace for production, inventory, purchasing, sales, maintenance, integrations, staff, teams, and roles.
+
+## Live Site
+
+The project is prepared for GitHub Pages at:
+
+```text
+https://kamsigpt.github.io/Forge-Flow-.com/
+```
+
+GitHub Pages is deployed from the Vite production build in `dist` through the workflow at `.github/workflows/deploy.yml`.
+
+## Local Development
+
+Install dependencies once:
+
+```bash
+npm install
+```
+
+Start the entire project locally:
+
+```bash
+npm run dev
+```
+
+Vite serves the site at:
+
+```text
+http://localhost:3000/
+```
+
+## Production Build
+
+Create the GitHub Pages build:
+
+```bash
+npm run build
+```
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
 
 ## Project Structure
 
 ```text
-forgeflow-project/
+.
 |-- index.html
 |-- app.html
+|-- about.html
+|-- api-reference.html
+|-- contact.html
+|-- documentation.html
+|-- help.html
+|-- login.html
+|-- payment.html
+|-- pricing-select.html
+|-- privacy.html
+|-- signup.html
+|-- status.html
+|-- terms.html
+|-- assets/
 |-- css/
-|   |-- shared.css
-|   |-- landing.css
-|   `-- app.css
 |-- js/
-|   |-- landing.js
-|   `-- app.js
-`-- assets/
-    `-- logo.svg
+|-- supabase/
+|-- vite.config.js
+`-- package.json
 ```
 
-## How to run
+## Pages Included In The Build
 
-1. Open `index.html` directly in a modern browser, or
-2. Run a local server:
-
-```bash
-python -m http.server 8080
-```
-
-Then visit `http://localhost:8080`.
-
-## Main modules
-
-- Dashboard
-- Manufacturing
-- Work Operations
-- Inventory
-- Sales Orders
-- Purchase Requests
-- BOM
-- Unit of Measure
-- Suppliers
-- Staff
-- Maintenance
-- Integrations
-- Teams and Roles
+- Landing page
+- Application workspace
+- Sign up and login
+- Pricing and payment
+- About and contact
+- Help, documentation, and API reference
+- Status, privacy, and terms
