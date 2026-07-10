@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up — ForgeFlow</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="assets/forge_flow_icon-removebg-preview.png">
     <link rel="stylesheet" href="css/shared.css">
     <link rel="stylesheet" href="css/landing.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -20,7 +20,7 @@
             </a>
 
             <div class="auth-brand">
-                <span class="auth-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--auth"></span>
+                <span class="auth-brand-name"><img src="assets/forge_flow_logo-removebg-preview.png" alt="Forge Flow" class="ff-logo ff-logo--auth"></span>
             </div>
 
             <h1 class="auth-title">Create your account</h1>
@@ -36,11 +36,14 @@
         Continue with Google
       </button>
 
-            <button class="btn-social facebook" onclick="handleFacebookLogin()">
+            <button class="btn-social microsoft" onclick="handleMicrosoftLogin()">
         <svg viewBox="0 0 24 24" fill="white">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          <path d="M1 1h10v10H1z" fill="#F25022"/>
+          <path d="M13 1h10v10H13z" fill="#7FBA00"/>
+          <path d="M1 13h10v10H1z" fill="#00A4EF"/>
+          <path d="M13 13h10v10H13z" fill="#FFB900"/>
         </svg>
-        Continue with Facebook
+        Continue with Microsoft
       </button>
 
             <div class="auth-social-divider">
@@ -108,7 +111,7 @@
                         <div class="mockup-window-body">
                             <div class="mockup-sidebar">
                                 <div class="mockup-logo">
-                                    <span><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--mock"></span>
+                                    <span><img src="assets/forge_flow_logo-removebg-preview.png" alt="Forge Flow" class="ff-logo ff-logo--mock"></span>
                                 </div>
                                 <div class="mockup-nav-item active">
                                     <div class="mockup-nav-icon"></div>Dashboard
@@ -238,18 +241,103 @@
             }
         });
 
-        // Initialize Supabase (Vite replaces %VITE_*% at build time)
-        const supabaseUrl = '%VITE_SUPABASE_URL%';
-        const supabaseKey = '%VITE_SUPABASE_ANON_KEY%';
+        function isUnresolvedEnvValue(value) {
+            if (!value) return true;
+            const trimmed = String(value).trim();
+            return !trimmed || trimmed.includes('%VITE_') || trimmed === 'undefined' || trimmed === 'null';
+        }
+
+        function normalizeSupabaseUrl(value) {
+            return String(value || '').trim().replace(/\/+$/, '');
+        }
+
+        function getSupabaseRuntimeConfig() {
+            const viteUrl = '%VITE_SUPABASE_URL%';
+            const viteKey = '%VITE_SUPABASE_ANON_KEY%';
+            const fallbackUrl = window.__FORGEFLOW_SUPABASE_URL || localStorage.getItem('forgeflow_supabase_url') || 'https://secaghvmfkujeciiapav.supabase.co';
+            const fallbackKey = window.__FORGEFLOW_SUPABASE_ANON_KEY || localStorage.getItem('forgeflow_supabase_anon_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlY2FnaHZtZmt1amVjaWlhcGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NDA1OTYsImV4cCI6MjA4OTMxNjU5Nn0.sXDDLStGTQ4txc_YcN7MIE1JC96R94ILafoID-_2Nzs';
+
+            const url = isUnresolvedEnvValue(viteUrl) ? fallbackUrl : viteUrl;
+            const key = isUnresolvedEnvValue(viteKey) ? fallbackKey : viteKey;
+
+            return {
+                url: normalizeSupabaseUrl(url),
+                key: String(key || '').trim()
+            };
+        }
+
+        function getAuthUnavailableMessage() {
+            if (window.location.protocol === 'file:') {
+                return 'Auth is unavailable from file://. Start with `npm run dev` or deploy the built dist folder.';
+            }
+            if (typeof supabase === 'undefined') {
+                return 'Auth library failed to load. Check internet/ad blocker access to cdn.jsdelivr.net.';
+            }
+            return 'Authentication service is not configured for this deployment.';
+        }
+
+        function isUnsupportedProtocol() {
+            return window.location.protocol === 'file:';
+        }
+
+        function toFriendlyAuthError(err, fallbackMessage) {
+            const raw = String(err?.message || fallbackMessage || 'Authentication failed');
+            const lower = raw.toLowerCase();
+            if (lower.includes('failed to fetch') || lower.includes('networkerror') || lower.includes('network request failed')) {
+                return 'Unable to reach authentication server. Check internet and Supabase URL configuration.';
+            }
+            return raw;
+        }
+
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('signupError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Initialize Supabase client with build-time env or runtime fallback.
+        const supabaseConfig = getSupabaseRuntimeConfig();
+        const hasValidSupabaseConfig = /^https?:\/\//i.test(supabaseConfig.url) && supabaseConfig.key.length > 20;
 
         // Use existing supabase global or create client
         var supabaseClient = null;
-        if (typeof supabase !== 'undefined' && supabase) {
+        if (typeof supabase !== 'undefined' && supabase && hasValidSupabaseConfig) {
             try {
-                supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+                supabaseClient = supabase.createClient(supabaseConfig.url, supabaseConfig.key);
             } catch (e) {
-                console.log('Supabase not configured');
+                console.log('Supabase initialization failed');
             }
+        } else if (!hasValidSupabaseConfig) {
+            console.warn('Supabase config missing/invalid for signup page');
+        }
+
+        async function isAuthServerReachable() {
+            const endpoint = `${supabaseConfig.url}/auth/v1/settings`;
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 8000);
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: { apikey: supabaseConfig.key },
+                    cache: 'no-store',
+                    signal: controller.signal
+                });
+                return response.ok;
+            } catch (e) {
+                return false;
+            } finally {
+                clearTimeout(timeout);
+            }
+        }
+
+        async function ensureAuthServerReachable() {
+            if (!supabaseClient) return false;
+            const reachable = await isAuthServerReachable();
+            if (!reachable) {
+                showAuthError(`Unable to reach authentication server at ${supabaseConfig.url}. Check DNS/firewall and Supabase project status.`);
+                return false;
+            }
+            return true;
         }
 
         function showLoading(btn, text) {
@@ -291,11 +379,15 @@
         }
 
         async function handleGoogleLogin() {
-            if (!supabaseClient) {
-                document.getElementById('signupError').textContent = 'Social login requires Supabase configuration. Please use email signup.';
-                document.getElementById('signupError').style.display = 'block';
+            if (isUnsupportedProtocol()) {
+                showAuthError(getAuthUnavailableMessage());
                 return;
             }
+            if (!supabaseClient) {
+                showAuthError(getAuthUnavailableMessage());
+                return;
+            }
+            if (!(await ensureAuthServerReachable())) return;
 
             const {
                 error
@@ -307,30 +399,32 @@
             });
 
             if (error) {
-                document.getElementById('signupError').textContent = error.message;
-                document.getElementById('signupError').style.display = 'block';
+                showAuthError(toFriendlyAuthError(error, 'Google login failed'));
             }
         }
 
-        async function handleFacebookLogin() {
-            if (!supabaseClient) {
-                document.getElementById('signupError').textContent = 'Social login requires Supabase configuration. Please use email signup.';
-                document.getElementById('signupError').style.display = 'block';
+        async function handleMicrosoftLogin() {
+            if (isUnsupportedProtocol()) {
+                showAuthError(getAuthUnavailableMessage());
                 return;
             }
+            if (!supabaseClient) {
+                showAuthError(getAuthUnavailableMessage());
+                return;
+            }
+            if (!(await ensureAuthServerReachable())) return;
 
             const {
                 error
             } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'facebook',
+                provider: 'azure',
                 options: {
                     redirectTo: window.location.origin + '/app.html'
                 }
             });
 
             if (error) {
-                document.getElementById('signupError').textContent = error.message;
-                document.getElementById('signupError').style.display = 'block';
+                showAuthError(toFriendlyAuthError(error, 'Microsoft login failed'));
             }
         }
 
@@ -435,9 +529,18 @@
                 email: email
             };
 
+            if (isUnsupportedProtocol()) {
+                showAuthError(getAuthUnavailableMessage());
+                resetButton(submitBtn);
+                return;
+            }
+
             if (!supabaseClient) {
-                errorDiv.textContent = 'Authentication service is unavailable. Please contact support.';
-                errorDiv.style.display = 'block';
+                showAuthError(getAuthUnavailableMessage());
+                resetButton(submitBtn);
+                return;
+            }
+            if (!(await ensureAuthServerReachable())) {
                 resetButton(submitBtn);
                 return;
             }
@@ -479,8 +582,7 @@
 
             } catch (err) {
                 console.error('Signup error:', err);
-                errorDiv.textContent = err.message || 'Failed to create account';
-                errorDiv.style.display = 'block';
+                showAuthError(toFriendlyAuthError(err, 'Failed to create account'));
                 resetButton(submitBtn);
             }
         }

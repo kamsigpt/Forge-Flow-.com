@@ -16,8 +16,7 @@ function setForgeflowUser(user) {
 }
 
 function redirectToLogin() {
-  const target = encodeURIComponent(window.location.pathname + window.location.search);
-  window.location.href = `login.html?next=${target}`;
+  window.location.href = 'index.html';
 }
 
 async function fetchUserProfile(authUserId) {
@@ -40,8 +39,13 @@ async function checkAppAuth() {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) return null;
 
-    const profile = await fetchUserProfile(user.id);
-    if (!profile?.company_id) return null;
+    let profile = null;
+    try {
+      profile = await fetchUserProfile(user.id);
+    } catch (profileError) {
+      // Keep users in-app when auth is valid but profile/bootstrap queries fail temporarily.
+      console.warn('Profile fetch failed, continuing with auth session:', profileError);
+    }
 
     currentAuthUser = user;
     currentAuthProfile = profile;
@@ -1901,7 +1905,7 @@ async function doLogout() {
   localStorage.removeItem('forgeflow_user');
   localStorage.removeItem('forgeflow_trial_start');
   sessionStorage.removeItem('forgeflow_trial_start');
-  window.location.href = 'login.html';
+  window.location.href = 'index.html';
 }
 
 // ============ INTEGRATION FUNCTIONS ============

@@ -4,25 +4,129 @@ window.addEventListener('scroll', () => {
   if (nav) nav.classList.toggle('scrolled', window.scrollY > 30);
 });
 
-// ============ SCROLL ANIMATIONS ============
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
+// ============ PARTICLES ============
+function createParticles(containerId, count) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    particle.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${Math.random() * 15 + 10}s;
+      animation-delay: ${Math.random() * 10}s;
+      opacity: ${Math.random() * 0.4 + 0.1};
+    `;
+    container.appendChild(particle);
+  }
+}
+createParticles('particles', 30);
+createParticles('ctaParticles', 20);
 
-const observer = new IntersectionObserver((entries) => {
+// ============ PARALLAX ============
+const heroVisual = document.getElementById('heroVisual');
+if (heroVisual) {
+  heroVisual.addEventListener('mousemove', (e) => {
+    const rect = heroVisual.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    const cards = heroVisual.querySelectorAll('[data-depth]');
+    cards.forEach(card => {
+      const depth = parseFloat(card.getAttribute('data-depth'));
+      card.style.transform = `translate(${x * depth * 15}px, ${y * depth * 15}px)`;
+    });
+  });
+
+  heroVisual.addEventListener('mouseleave', () => {
+    const cards = heroVisual.querySelectorAll('[data-depth]');
+    cards.forEach(card => {
+      card.style.transform = '';
+    });
+    const dashboard = document.getElementById('heroDashboard');
+    if (dashboard) {
+      dashboard.style.transform = '';
+      dashboard.style.removeProperty('--glow-x');
+      dashboard.style.removeProperty('--glow-y');
+    }
+  });
+
+  const dashboard = document.getElementById('heroDashboard');
+  if (dashboard) {
+    dashboard.addEventListener('mousemove', (e) => {
+      const rect = dashboard.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      dashboard.style.setProperty('--glow-x', x + '%');
+      dashboard.style.setProperty('--glow-y', y + '%');
+    });
+    dashboard.addEventListener('mouseleave', () => {
+      dashboard.style.removeProperty('--glow-x');
+      dashboard.style.removeProperty('--glow-y');
+    });
+  }
+}
+
+// ============ COUNT-UP ANIMATION ============
+function animateCountUp() {
+  document.querySelectorAll('.count-up, .analytics-number').forEach(el => {
+    const target = parseFloat(el.getAttribute('data-target'));
+    if (!target || el.classList.contains('counted')) return;
+    el.classList.add('counted');
+
+    const duration = 2000;
+    const start = performance.now();
+    const isDecimal = target % 1 !== 0;
+
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = eased * target;
+      el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current).toLocaleString();
+      if (progress < 1) requestAnimationFrame(update);
+      else el.textContent = isDecimal ? target.toFixed(1) : target.toLocaleString();
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+// ============ SCROLL ANIMATIONS ============
+const scrollObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
+      if (entry.target.classList.contains('analytics-number') || entry.target.querySelector('.count-up')) {
+        animateCountUp();
+      }
+      scrollObserver.unobserve(entry.target);
     }
   });
-}, observerOptions);
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
-function initAnimations() {
-  document.querySelectorAll('.feature-card, .pricing-card, .workflow-step, .showcase-section').forEach(el => {
-    el.classList.add('animate-on-scroll');
-    observer.observe(el);
+function initScrollAnimations() {
+  document.querySelectorAll('.scroll-fade, .feature-card, .pricing-card, .workflow-step, .showcase-section, .analytics-item').forEach(el => {
+    if (!el.classList.contains('scroll-fade')) el.classList.add('scroll-fade');
+    scrollObserver.observe(el);
+  });
+
+  document.querySelectorAll('.analytics-number').forEach(el => {
+    scrollObserver.observe(el);
+  });
+
+  document.querySelectorAll('.count-up').forEach(el => {
+    scrollObserver.observe(el);
+  });
+}
+
+// ============ DASHBOARD BAR ANIMATION ============
+function animateDashboardBars() {
+  const bars = document.querySelectorAll('.dash-bar');
+  bars.forEach((bar, i) => {
+    bar.style.setProperty('--i', i);
   });
 }
 
@@ -253,7 +357,6 @@ async function doLogin() {
 
     if (error) throw error;
 
-    // Login successful - store user info and redirect to app
     if (data.user) {
       const firstName = data.user.user_metadata?.first_name || ''
       const lastName = data.user.user_metadata?.last_name || ''
@@ -324,26 +427,27 @@ window.addEventListener('load', () => {
       labels: ['Oct','Nov','Dec','Jan','Feb','Mar'],
       datasets: [{
         data: [58, 72, 78, 75, 82, 84],
-        backgroundColor: 'rgba(255, 106, 0, 0.15)',
+        backgroundColor: 'rgba(255, 106, 0, 0.12)',
         borderColor: '#FF6A00',
         borderWidth: 1.5,
-        borderRadius: 4,
+        borderRadius: 6,
       }]
     },
     options: {
       responsive: true,
       plugins: { legend: { display: false } },
       scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#94A3B8' } },
-        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 9 }, color: '#94A3B8' } }
+        x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#9CA3AF' } },
+        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 9 }, color: '#9CA3AF' } }
       }
     }
   });
 });
 
-// ============ SMOOTH SCROLL & MODAL ============
+// ============ SMOOTH SCROLL & INIT ============
 document.addEventListener('DOMContentLoaded', function() {
-  initAnimations();
+  initScrollAnimations();
+  animateDashboardBars();
   
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
@@ -386,5 +490,4 @@ async function checkAuthStatus() {
   }
 }
 
-// Run on page load
 checkAuthStatus();

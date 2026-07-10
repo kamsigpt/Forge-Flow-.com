@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ForgeFlow — Manufacturing Operations Platform</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" href="assets/forge_flow_icon-removebg-preview.png">
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/landing.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
@@ -14,250 +14,274 @@
 <body>
 
   <!-- NAV -->
-  <nav class="nav">
-    <div class="nav-brand">
-      <span class="nav-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--nav"></span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#workflow">How it Works</a></li>
-      <li><a href="#compare">vs Other Systems</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="btn-nav-ghost" onclick="openAuthModal('login')">Log in</button>
-      <button class="btn-nav-primary" onclick="location.href='signup.html'">Sign up</button>
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="assets/forge_flow_logo-removebg-preview.png" alt="ForgeFlow" class="ff-logo ff-logo--nav">
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Solutions</a></li>
+        <li><a href="#workflow">How It Works</a></li>
+        <li><a href="#compare">Why ForgeFlow</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-nav-ghost" onclick="openAuthModal('login')">Sign In</button>
+        <button class="btn-nav-primary" onclick="location.href='signup.html'">Get Free Trial</button>
+      </div>
     </div>
   </nav>
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="hero-glow"></div>
-    <div class="hero-shapes">
-      <div class="hero-shape shape-1"></div>
-      <div class="hero-shape shape-2"></div>
-      <div class="hero-shape shape-3"></div>
-    </div>
-    <div class="hero-content">
-      <h1 class="hero-title">The Modern Manufacturing<br><span class="highlight">Operations Platform</span></h1>
-      <p class="hero-desc">End-to-end production management, real-time inventory tracking, and intelligent MRP scheduling. All in one powerful system built for modern manufacturers.</p>
-      <div class="hero-ctas">
-        <button class="btn-hero-primary" onclick="location.href='signup.html'">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          Sign up
-        </button>
-        <button class="btn-hero-ghost" onclick="scrollToSection('showcase')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Watch Demo
-        </button>
-      </div>
-      <div class="hero-trust">
-        <div class="hero-trust-item">
-          <span class="check">✓</span>
-          <span>No credit card required</span>
+  <section class="hero" id="hero">
+    <div class="hero-mesh"></div>
+    <div class="hero-wave"></div>
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          The Future of<br>
+          <span class="highlight">Manufacturing Operations</span>
+        </h1>
+        <p class="hero-desc">End-to-end production management, real-time inventory tracking, intelligent MRP scheduling, and data-driven analytics — all in one powerful platform.</p>
+        <div class="hero-ctas">
+          <button class="btn-primary btn-lg" onclick="location.href='signup.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Get Free Trial
+          </button>
+          <button class="btn-ghost btn-lg" onclick="scrollToSection('showcase')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Watch Overview
+          </button>
         </div>
-        <div class="hero-trust-item">
-          <span class="check">✓</span>
-          <span>Full platform access</span>
-        </div>
-        <div class="hero-trust-item">
-          <span class="check">✓</span>
-          <span>Cancel anytime</span>
-        </div>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="hero-float-card card-1">
-        <div class="float-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
-        <div class="float-card-label">Production Output</div>
-        <div class="float-card-val">94%</div>
-        <div class="float-card-badge">↑ 12% vs last month</div>
-      </div>
-      <div class="hero-float-card card-2">
-        <div class="float-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-        <div class="float-card-label">Revenue (MTD)</div>
-        <div class="float-card-val">$420K</div>
-        <div class="float-card-badge" style="color:#FF6A00">↑ 8% vs target</div>
-      </div>
-      <div class="hero-mockup">
-        <div class="mockup-topbar">
-          <span class="mock-dot r"></span>
-          <span class="mock-dot y"></span>
-          <span class="mock-dot g"></span>
-          <span class="mock-addr">app.forgeflow.io/dashboard</span>
-        </div>
-        <div class="mockup-body">
-          <div class="mock-sidebar">
-            <div class="mock-sidebar-logo">
-              <span class="mock-sidebar-logo-text"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--mock"></span>
-            </div>
-            <div class="mock-nav-item active">
-              <span class="mock-nav-icon"></span>Dashboard
-            </div>
-            <div class="mock-nav-item">
-              <span class="mock-nav-icon"></span>Manufacturing
-            </div>
-            <div class="mock-nav-item">
-              <span class="mock-nav-icon"></span>Inventory
-            </div>
-            <div class="mock-nav-item">
-              <span class="mock-nav-icon"></span>Sales Orders
-            </div>
-            <div class="mock-nav-item">
-              <span class="mock-nav-icon"></span>Purchasing
-            </div>
+        <div class="hero-trust">
+          <div class="hero-trust-item">
+            <span class="check">✓</span>
+            <span>No credit card required</span>
           </div>
-          <div class="mock-main">
-            <div class="mock-page-title">Dashboard Overview</div>
-            <div class="mock-kpis">
-              <div class="mock-kpi">
-                <div class="mock-kpi-label">Sales Revenue</div>
-                <div class="mock-kpi-val">$42K</div>
-                <div class="mock-kpi-sub">↑ 12%</div>
-              </div>
-              <div class="mock-kpi">
-                <div class="mock-kpi-label">Active Orders</div>
-                <div class="mock-kpi-val">12</div>
-                <div class="mock-kpi-sub">↑ 4 new</div>
-              </div>
-              <div class="mock-kpi">
-                <div class="mock-kpi-label">Inventory Value</div>
-                <div class="mock-kpi-val">$10.5K</div>
-                <div class="mock-kpi-sub" style="color:var(--danger)">3 low stock</div>
-              </div>
-            </div>
-            <div class="mock-chart-box">
-              <div class="mock-chart-title">Sales & Production (Last 12 Months)</div>
-              <div class="mock-bars">
-                <div class="mock-bar" style="height:40%"></div>
-                <div class="mock-bar alt" style="height:55%"></div>
-                <div class="mock-bar" style="height:45%"></div>
-                <div class="mock-bar alt" style="height:70%"></div>
-                <div class="mock-bar" style="height:60%"></div>
-                <div class="mock-bar alt" style="height:85%"></div>
-                <div class="mock-bar" style="height:75%"></div>
-                <div class="mock-bar alt" style="height:90%"></div>
-                <div class="mock-bar" style="height:80%"></div>
-                <div class="mock-bar alt" style="height:95%"></div>
-                <div class="mock-bar" style="height:88%"></div>
-                <div class="mock-bar alt" style="height:100%"></div>
-              </div>
-            </div>
+          <div class="hero-trust-item">
+            <span class="check">✓</span>
+            <span>Full platform access</span>
+          </div>
+          <div class="hero-trust-item">
+            <span class="check">✓</span>
+            <span>Cancel anytime</span>
           </div>
         </div>
+      </div>
+      <div class="hero-visual" id="heroVisual">
+        <div class="hero-float-card card-1" data-depth="0.3">
+          <div class="float-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="float-card-label">Production Output</div>
+          <div class="float-card-val" id="productionOutput">94%</div>
+          <div class="float-card-badge">↑ 12% vs last month</div>
+        </div>
+        <div class="hero-float-card card-2" data-depth="-0.2">
+          <div class="float-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="float-card-label">Cost Savings</div>
+          <div class="float-card-val" id="costSavings">$1.2M</div>
+          <div class="float-card-badge" style="color:#FF6A00">YTD savings</div>
+        </div>
+        <div class="hero-float-card card-3" data-depth="0.1">
+          <div class="float-card-icon" style="background:rgba(16,185,129,0.1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="float-card-label">On-Time Delivery</div>
+          <div class="float-card-val" style="color:#10B981">98.7%</div>
+          <div class="float-card-badge" style="color:#10B981">↑ 3.2% improvement</div>
+        </div>
+        <div class="hero-dashboard" id="heroDashboard">
+          <div class="dash-topbar">
+            <span class="dash-dot r"></span>
+            <span class="dash-dot y"></span>
+            <span class="dash-dot g"></span>
+            <span class="dash-addr">forgeflow.io/dashboard</span>
+          </div>
+          <div class="dash-body">
+            <div class="dash-header">
+              <div class="dash-title">Production Overview</div>
+              <div class="dash-status">
+                <span class="status-dot"></span>
+                All systems operational
+              </div>
+            </div>
+            <div class="dash-kpis">
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">Active Orders</div>
+                <div class="dash-kpi-val count-up" data-target="147">0</div>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">Machines Online</div>
+                <div class="dash-kpi-val count-up" data-target="64">0</div>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">OEE Score</div>
+                <div class="dash-kpi-val count-up" data-target="92">0</div>
+                <span style="font-size:10px;color:#10B981;font-weight:600">↑ 4.2%</span>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">Quality Yield</div>
+                <div class="dash-kpi-val count-up" data-target="99.2">0</div>
+                <span style="font-size:10px;color:#10B981;font-weight:600">99.2%</span>
+              </div>
+            </div>
+            <div class="dash-chart">
+              <div class="dash-chart-header">
+                <span>Production Output (Last 12 Months)</span>
+                <span class="dash-chart-legend">
+                  <span class="legend-dot" style="background:#FF6A00"></span>Current
+                  <span class="legend-dot" style="background:#E5E7EB"></span>Target
+                </span>
+              </div>
+              <div class="dash-bars">
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:50%"></div>
+                  <div class="dash-bar" style="height:40%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:60%"></div>
+                  <div class="dash-bar" style="height:55%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:55%"></div>
+                  <div class="dash-bar" style="height:50%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:75%"></div>
+                  <div class="dash-bar" style="height:70%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:65%"></div>
+                  <div class="dash-bar" style="height:62%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:85%"></div>
+                  <div class="dash-bar" style="height:78%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:80%"></div>
+                  <div class="dash-bar" style="height:76%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:92%"></div>
+                  <div class="dash-bar" style="height:88%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:85%"></div>
+                  <div class="dash-bar" style="height:82%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:95%"></div>
+                  <div class="dash-bar" style="height:90%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:90%"></div>
+                  <div class="dash-bar" style="height:88%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:100%"></div>
+                  <div class="dash-bar" style="height:96%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="dash-footer">
+              <div class="dash-footer-item">
+                <span class="dash-footer-dot" style="background:#10B981"></span>
+                Machine Health: <strong>92%</strong>
+              </div>
+              <div class="dash-footer-item">
+                <span class="dash-footer-dot" style="background:#FF6A00"></span>
+                Inventory: <strong>2,847 units</strong>
+              </div>
+              <div class="dash-footer-item">
+                <span class="dash-footer-dot" style="background:#3B82F6"></span>
+                Insights: <strong>Active</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-glow"></div>
       </div>
     </div>
   </section>
 
   <!-- FEATURES -->
   <section class="features-section" id="features">
-    <div class="features-header">
-      <div class="section-eyebrow">Platform Capabilities</div>
+    <div class="features-header scroll-fade">
       <h2 class="section-title">Everything you need to run<br>your manufacturing operations</h2>
       <p class="section-desc">From raw material procurement to finished goods delivery — track every detail with precision and confidence.</p>
     </div>
     <div class="features-grid">
-      <div class="feature-card">
+      <div class="feature-card scroll-fade">
         <div class="feature-icon-wrap">
-          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </div>
-        <h3 class="feature-title">Production Management</h3>
-        <p class="feature-desc">Create, track, and manage manufacturing orders from start to finish. Real-time status updates and automated workflows keep your production moving.</p>
-        <span class="feature-tag">MRP Integration</span>
+        <h3 class="feature-title">Predictive Maintenance</h3>
+        <p class="feature-desc">Proactive maintenance scheduling identifies equipment wear patterns and alerts you before failures happen, reducing downtime by up to 40%.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
       </div>
-      <div class="feature-card">
+      <div class="feature-card scroll-fade">
         <div class="feature-icon-wrap">
           <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         </div>
-        <h3 class="feature-title">Inventory Control</h3>
-        <p class="feature-desc">Multi-warehouse tracking with bin locations, lot/serial numbers, and automated reorder points. Never run out of critical materials again.</p>
-        <span class="feature-tag">Real-time Stock</span>
+        <h3 class="feature-title">Production Optimization</h3>
+        <p class="feature-desc">Real-time production scheduling optimizes machine utilization, labor allocation, and material flow across all workcenters.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
       </div>
-      <div class="feature-card">
+      <div class="feature-card scroll-fade">
         <div class="feature-icon-wrap">
           <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
         </div>
-        <h3 class="feature-title">Workfloor Operations</h3>
-        <p class="feature-desc">Digital work orders with time tracking, machine assignments, and quality checkpoints. Empower your operators with mobile-friendly interfaces.</p>
-        <span class="feature-tag">Shop Floor</span>
+        <h3 class="feature-title">Inventory Intelligence</h3>
+        <p class="feature-desc">Multi-warehouse tracking with demand forecasting, automated reorder points, and smart inventory optimization.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon-wrap">
-          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        </div>
-        <h3 class="feature-title">Sales & Purchase</h3>
-        <p class="feature-desc">Complete quote-to-cash workflow. Manage customer orders, generate purchase requests, and keep procurement aligned with production needs.</p>
-        <span class="feature-tag">End-to-End</span>
-      </div>
-      <div class="feature-card">
+      <div class="feature-card scroll-fade">
         <div class="feature-icon-wrap">
           <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         </div>
-        <h3 class="feature-title">Bill of Materials</h3>
-        <p class="feature-desc">Multi-level BOMs with version control, routings, and cost rollups. Ensure every product is built with the right parts, every time.</p>
-        <span class="feature-tag">BOM Management</span>
+        <h3 class="feature-title">Quality Control</h3>
+        <p class="feature-desc">Advanced defect detection with real-time quality monitoring, statistical process control, and automated inspection workflows.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
       </div>
-      <div class="feature-card">
+      <div class="feature-card scroll-fade">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3 class="feature-title">Machine Monitoring</h3>
+        <p class="feature-desc">Real-time equipment monitoring with IoT integration, vibration analysis, and automated alerts for abnormal operating conditions.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+      <div class="feature-card scroll-fade">
         <div class="feature-icon-wrap">
           <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
-        <h3 class="feature-title">Staff & Resource</h3>
-        <p class="feature-desc">Track workforce availability, assign tasks, and manage capacities. Integrate with maintenance schedules for equipment uptime.</p>
-        <span class="feature-tag">Capacity Planning</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- WORKFLOW -->
-  <section class="workflow-section" id="workflow">
-    <div class="workflow-inner">
-      <div class="features-header">
-        <div class="section-eyebrow">How It Works</div>
-        <h2 class="section-title">From quote to delivery<br>in one seamless flow</h2>
-        <p class="section-desc">ForgeFlow connects every step of your manufacturing process, eliminating data silos and reducing manual work.</p>
-      </div>
-      <div class="workflow-steps">
-        <div class="workflow-line"></div>
-        <div class="workflow-step">
-          <div class="step-bubble">
-            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          </div>
-          <div class="step-label">Receive Order</div>
-          <div class="step-desc">Sales orders flow in from customers or manual entry</div>
-        </div>
-        <div class="workflow-step">
-          <div class="step-bubble">
-            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          </div>
-          <div class="step-label">Plan Production</div>
-          <div class="step-desc">Auto-generate MFG orders with material requirements</div>
-        </div>
-        <div class="workflow-step">
-          <div class="step-bubble">
-            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="step-label">Execute</div>
-          <div class="step-desc">Track work operations on the shop floor in real-time</div>
-        </div>
-        <div class="workflow-step">
-          <div class="step-bubble">
-            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-          </div>
-          <div class="step-label">Deliver</div>
-          <div class="step-desc">Ship to customers and update inventory automatically</div>
-        </div>
+        <h3 class="feature-title">Smart Scheduling</h3>
+        <p class="feature-desc">Intelligent production scheduling that considers machine capacity, material availability, and delivery deadlines simultaneously.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
       </div>
     </div>
   </section>
 
   <!-- SHOWCASE 1 -->
-  <section class="showcase-section">
-    <div class="showcase-content">
-      <div class="section-eyebrow">Production Dashboard</div>
+  <section class="showcase-section" id="showcase">
+    <div class="showcase-content scroll-fade">
       <h2 class="section-title">Real-time visibility into<br>your entire operation</h2>
       <p class="section-desc">See exactly what's happening across all your workcenters. KPI dashboards surface the metrics that matter most to your business.</p>
       <div class="showcase-points">
@@ -267,7 +291,7 @@
           </div>
           <div class="showcase-point-text">
             <h4>Production Analytics</h4>
-            <p>Track output, efficiency, and yields across all work orders</p>
+            <p>Track output, efficiency, and yields across all work orders in real time</p>
           </div>
         </div>
         <div class="showcase-point">
@@ -276,7 +300,7 @@
           </div>
           <div class="showcase-point-text">
             <h4>Smart Alerts</h4>
-            <p>Automated notifications for low stock, delays, and exceptions</p>
+            <p>Automated notifications for low stock, machine issues, and production delays</p>
           </div>
         </div>
         <div class="showcase-point">
@@ -285,53 +309,40 @@
           </div>
           <div class="showcase-point-text">
             <h4>Financial Integration</h4>
-            <p>Track labor, material, and overhead costs in real-time</p>
+            <p>Track labor, material, and overhead costs with variance analysis</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="showcase-visual">
+    <div class="showcase-visual scroll-fade">
       <div class="showcase-float-card float-card-left">
         <div class="float-card-icon" style="background:rgba(16,185,129,0.1)">
           <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
-        <div class="float-card-label" style="font-size:9px">On-Time Delivery</div>
-        <div class="float-card-val" style="font-size:18px">98%</div>
+        <div class="float-card-label">On-Time Delivery</div>
+        <div class="float-card-val" style="font-size:22px;color:#10B981">98%</div>
       </div>
       <div class="showcase-float-card float-card-right">
         <div class="float-card-icon" style="background:rgba(249,115,22,0.1)">
           <svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
         <div class="float-card-label" style="font-size:9px">Cost Savings</div>
-        <div class="float-card-val" style="font-size:18px">$24K</div>
+        <div class="float-card-val" style="font-size:22px">$24K</div>
       </div>
       <div class="showcase-screen">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--gray-700)">Operations Overview</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--gray-700)">Operations Overview</span>
           <span style="font-size:10px;color:var(--gray-400)">Mar 2026</span>
         </div>
-        <div class="mini-kpis">
-          <div class="mini-kpi">
-            <div class="mini-kpi-label">Active Orders</div>
-            <div class="mini-kpi-val">12</div>
-          </div>
-          <div class="mini-kpi">
-            <div class="mini-kpi-label">In Progress</div>
-            <div class="mini-kpi-val">8</div>
-          </div>
-          <div class="mini-kpi">
-            <div class="mini-kpi-label">Completed</div>
-            <div class="mini-kpi-val">23</div>
-          </div>
-        </div>
+        <canvas id="previewChart" height="140"></canvas>
         <table class="mini-table">
           <thead>
             <tr><th>Order</th><th>Product</th><th>Status</th></tr>
           </thead>
           <tbody>
-            <tr><td><strong>MFG-0031</strong></td><td>Aluminium Frame</td><td><span style="background:#FFF7ED;color:#FF6A00;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600">In Progress</span></td></tr>
-            <tr><td><strong>MFG-0030</strong></td><td>Steel Bracket</td><td><span style="background:var(--gray-50);color:var(--gray-400);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600">Pending</span></td></tr>
-            <tr><td><strong>MFG-0029</strong></td><td>Conveyor Unit</td><td><span style="background:var(--success-bg);color:var(--success);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600">Complete</span></td></tr>
+            <tr><td><strong>MFG-0031</strong></td><td>Aluminium Frame</td><td><span class="badge badge-production">In Progress</span></td></tr>
+            <tr><td><strong>MFG-0030</strong></td><td>Steel Bracket</td><td><span class="badge badge-draft">Pending</span></td></tr>
+            <tr><td><strong>MFG-0029</strong></td><td>Conveyor Unit</td><td><span class="badge badge-complete">Complete</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -340,18 +351,17 @@
 
   <!-- SHOWCASE 2 -->
   <section class="showcase-section reverse">
-    <div class="showcase-content">
-      <div class="section-eyebrow">Inventory Management</div>
-      <h2 class="section-title">Never lose track of<br>your materials again</h2>
-      <p class="section-desc">Multi-warehouse support, bin locations, lot tracking, and automated reorder points. Complete visibility from raw materials to finished goods.</p>
+    <div class="showcase-content scroll-fade">
+      <h2 class="section-title">Complete factory<br>digital twin visualization</h2>
+      <p class="section-desc">Monitor your entire factory floor in real-time with 3D digital twin technology. See machine status, material flow, and production bottlenecks instantly.</p>
       <div class="showcase-points">
         <div class="showcase-point">
           <div class="showcase-point-icon">
             <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
           </div>
           <div class="showcase-point-text">
-            <h4>Multi-Warehouse</h4>
-            <p>Manage stock across multiple locations with ease</p>
+            <h4>IoT Connectivity</h4>
+            <p>Connect any machine or sensor with industrial IoT protocols</p>
           </div>
         </div>
         <div class="showcase-point">
@@ -359,8 +369,8 @@
             <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           </div>
           <div class="showcase-point-text">
-            <h4>Automatic Reordering</h4>
-            <p>Set min/max levels and generate POs automatically</p>
+            <h4>Real-Time Analytics</h4>
+            <p>Live production data with sub-second latency updates</p>
           </div>
         </div>
         <div class="showcase-point">
@@ -368,41 +378,121 @@
             <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           </div>
           <div class="showcase-point-text">
-            <h4>Full Traceability</h4>
-            <p>Track lots and serials from receipt to delivery</p>
+            <h4>Predictive Insights</h4>
+            <p>System analyzes usage patterns and predicts maintenance needs</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="showcase-visual">
+    <div class="showcase-visual scroll-fade">
       <div class="showcase-float-card float-card-left">
-        <div class="float-card-icon" style="background:rgba(239,68,68,0.1)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div class="float-card-icon" style="background:rgba(16,185,129,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
-        <div class="float-card-label" style="font-size:9px">Low Stock</div>
-        <div class="float-card-val" style="font-size:18px;color:var(--danger)">3 Items</div>
+        <div class="float-card-label">Machine Uptime</div>
+        <div class="float-card-val" style="font-size:22px;color:#10B981">99.2%</div>
       </div>
       <div class="showcase-screen">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <span style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--gray-700)">Inventory Overview</span>
-          <span style="font-size:10px;color:var(--gray-400)">WH-A + WH-B</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--gray-700)">Factory Floor Live</span>
+          <span style="font-size:10px;color:var(--gray-400)">Updated: Live</span>
         </div>
-        <div class="mini-bom">
-          <div class="mini-bom-header">Material Shortages</div>
-          <div class="mini-bom-row"><div class="mini-bom-dot"></div>Aluminium Sheet 2mm — <span style="color:var(--danger)">-38 SHT</span></div>
-          <div class="mini-bom-row"><div class="mini-bom-dot"></div>Solvent Chemical A — <span style="color:var(--danger)">-8 L</span></div>
-          <div class="mini-bom-row"><div class="mini-bom-dot"></div>Packaging Box — <span style="color:var(--warn)">-76 PCS</span></div>
+        <div class="factory-grid">
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">CNC-001</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">CNC-002</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator idle"></div>
+            <div class="machine-name">CNC-003</div>
+            <div class="machine-status">Idle</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">LTH-001</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator maintenance"></div>
+            <div class="machine-name">LTH-002</div>
+            <div class="machine-status">Maint.</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">ASM-001</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">ASM-002</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator idle"></div>
+            <div class="machine-name">PAK-001</div>
+            <div class="machine-status">Idle</div>
+          </div>
         </div>
-        <table class="mini-table">
-          <thead>
-            <tr><th>SKU</th><th>Description</th><th>Qty</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>RM-1001</strong></td><td>Aluminium Sheet 2mm</td><td style="color:var(--danger)">12</td></tr>
-            <tr><td><strong>RM-1002</strong></td><td>Steel Rod 10mm</td><td style="color:var(--success)">340</td></tr>
-            <tr><td><strong>FG-2001</strong></td><td>Aluminium Frame Kit</td><td style="color:var(--success)">85</td></tr>
-          </tbody>
-        </table>
+        <div class="factory-stats">
+          <div class="factory-stat">
+            <span class="factory-stat-val">64</span>
+            <span class="factory-stat-label">Machines Online</span>
+          </div>
+          <div class="factory-stat">
+            <span class="factory-stat-val">8</span>
+            <span class="factory-stat-label">Workcenters</span>
+          </div>
+          <div class="factory-stat">
+            <span class="factory-stat-val">92%</span>
+            <span class="factory-stat-label">Utilization</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="workflow-section" id="workflow">
+    <div class="workflow-inner">
+      <div class="features-header scroll-fade">
+        <h2 class="section-title">From raw material to delivery<br>in one seamless flow</h2>
+        <p class="section-desc">ForgeFlow connects every step of your manufacturing process, eliminating data silos and reducing manual work.</p>
+      </div>
+      <div class="workflow-steps">
+        <div class="workflow-step scroll-fade">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="step-label">Capture Demand</div>
+          <div class="step-desc">Sales orders, forecasts, and custom requests captured automatically from any channel</div>
+        </div>
+        <div class="workflow-step scroll-fade">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="step-label">Intelligent Planning</div>
+          <div class="step-desc">System generates production schedules, material requirements, and resource allocation in seconds</div>
+        </div>
+        <div class="workflow-step scroll-fade">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="step-label">Execute & Track</div>
+          <div class="step-desc">Monitor every work operation live on the shop floor with real-time IoT data</div>
+        </div>
+        <div class="workflow-step scroll-fade">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="step-label">Deliver & Optimize</div>
+          <div class="step-desc">Fulfill orders on time and feed performance data back into planning for continuous improvement</div>
+        </div>
       </div>
     </div>
   </section>
@@ -410,12 +500,11 @@
   <!-- COMPARISON -->
   <section class="compare-section" id="compare">
     <div class="compare-inner">
-      <div class="compare-header">
-        <div class="section-eyebrow">Why ForgeFlow?</div>
-        <h2 class="section-title">Built for modern manufacturers</h2>
-        <p class="section-desc">See how we compare to spreadsheets and legacy systems</p>
+      <div class="compare-header scroll-fade">
+        <h2 class="section-title">Built for Smart Manufacturers</h2>
+        <p class="section-desc">See how we compare to traditional systems and spreadsheets</p>
       </div>
-      <div class="compare-table-wrap">
+      <div class="compare-table-wrap scroll-fade">
         <table class="compare-table">
           <thead>
             <tr>
@@ -427,7 +516,13 @@
           </thead>
           <tbody>
             <tr>
-              <td>Real-time inventory tracking</td>
+              <td>Predictive maintenance scheduling</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>Real-time production monitoring</td>
               <td class="forgeflow-col"><span class="chk">✓</span></td>
               <td><span class="chk">✓</span></td>
               <td><span class="crs">✗</span></td>
@@ -439,28 +534,22 @@
               <td><span class="crs">✗</span></td>
             </tr>
             <tr>
-              <td>Shop floor mobile interface</td>
+              <td>Digital twin visualization</td>
               <td class="forgeflow-col"><span class="chk">✓</span></td>
               <td><span class="crs">✗</span></td>
               <td><span class="crs">✗</span></td>
             </tr>
             <tr>
-              <td>Multi-warehouse support</td>
-              <td class="forgeflow-col"><span class="chk">✓</span></td>
-              <td><span class="chk">✓</span></td>
-              <td><span class="prt">Manual</span></td>
-            </tr>
-            <tr>
-              <td>Cloud-based & accessible</td>
+              <td>IoT machine connectivity</td>
               <td class="forgeflow-col"><span class="chk">✓</span></td>
               <td><span class="prt">Add-on</span></td>
-              <td><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
             </tr>
             <tr>
-              <td>No implementation fees</td>
+              <td>Advanced quality defect detection</td>
               <td class="forgeflow-col"><span class="chk">✓</span></td>
               <td><span class="crs">✗</span></td>
-              <td><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
             </tr>
           </tbody>
         </table>
@@ -470,8 +559,7 @@
 
   <!-- PRICING -->
   <section class="pricing-section" id="pricing">
-    <div class="pricing-header">
-      <div class="section-eyebrow">Pricing</div>
+    <div class="pricing-header scroll-fade">
       <h2 class="section-title">Simple, transparent pricing</h2>
       <p class="section-desc">No hidden fees. No implementation costs. Start free, scale as you grow.</p>
       <div class="pricing-toggle">
@@ -482,7 +570,7 @@
       </div>
     </div>
     <div class="pricing-grid">
-      <div class="pricing-card">
+      <div class="pricing-card scroll-fade">
         <div class="pricing-plan">Starter</div>
         <div class="pricing-price" id="price-starter">$150<sup>/mo</sup></div>
         <div class="pricing-tagline">Everything you need to move from spreadsheets to a real system</div>
@@ -492,44 +580,37 @@
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Sales orders management</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Purchase requests</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>BOM management</li>
-          <li class="faded"><span class="pricing-cross">✗</span>Workfloor operations</li>
           <li class="faded"><span class="pricing-cross">✗</span>Advanced reporting</li>
-          <li class="faded"><span class="pricing-cross">✗</span>API access</li>
+          <li class="faded"><span class="pricing-cross">✗</span>Advanced analytics</li>
         </ul>
-        <button class="btn-pricing btn-pricing-outline" onclick="location.href='signup.html'">Sign up</button>
+        <button class="btn-pricing btn-pricing-outline" onclick="location.href='signup.html'">Start Free Trial</button>
       </div>
-      <div class="pricing-card popular">
+      <div class="pricing-card popular scroll-fade">
         <div class="popular-badge">Most Popular</div>
         <div class="pricing-plan">Professional</div>
         <div class="pricing-price" id="price-pro">$250<sup>/mo</sup></div>
-        <div class="pricing-tagline">Scale your operations with advanced tools and reporting</div>
+        <div class="pricing-tagline">Scale your operations with advanced tools and data-driven insights</div>
         <ul class="pricing-features">
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Up to 30 users</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Full inventory management</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Sales orders management</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Purchase requests</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Production scheduling</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>BOM management</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Workfloor operations</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced reporting</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Predictive analytics</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>API access</li>
         </ul>
-        <button class="btn-pricing btn-pricing-fill" onclick="location.href='signup.html'">Sign up</button>
+        <button class="btn-pricing btn-pricing-fill" onclick="location.href='signup.html'">Start Free Trial</button>
       </div>
-      <div class="pricing-card">
+      <div class="pricing-card scroll-fade">
         <div class="pricing-plan">Enterprise</div>
         <div class="pricing-price" id="price-enterprise">Contact Us</div>
         <div class="pricing-tagline">Custom solutions for complex multi-warehouse operations</div>
         <ul class="pricing-features">
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited users</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Full inventory management</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Sales orders management</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Purchase requests</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>BOM management</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Workfloor operations</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced reporting</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>API access</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Full platform access</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Multi-warehouse</li>
-          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced automation</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Workflow automation</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Digital twin access</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Custom integrations</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Dedicated support</li>
           <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>SLA guarantee</li>
@@ -542,13 +623,18 @@
 
   <!-- CTA -->
   <section class="cta-section">
-    <div>
-      <h2 class="cta-title">Ready to transform your operations?</h2>
-      <p class="cta-desc">Join thousands of manufacturers who've upgraded from spreadsheets. Sign up today — no credit card required.</p>
-    </div>
-    <div class="cta-actions">
-      <button class="btn-cta-white" onclick="location.href='signup.html'">Sign up</button>
-      <button class="btn-cta-ghost" onclick="scrollToSection('features')">Learn More</button>
+    <div class="cta-glow"></div>
+    <div class="cta-particles" id="ctaParticles"></div>
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to transform your manufacturing operations?</h2>
+      <p class="cta-desc">Join thousands of manufacturers who've upgraded to modern operations. Book a demo today — no credit card required.</p>
+      <div class="cta-actions">
+        <button class="btn-cta-primary" onclick="location.href='signup.html'">
+          Get Free Trial
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-cta-secondary" onclick="scrollToSection('features')">Learn More</button>
+      </div>
     </div>
   </section>
 
@@ -556,23 +642,27 @@
   <footer class="footer">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="footer-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--footer"></div>
-        <p>Modern manufacturing operations platform for the digital age. Built for teams who want to move fast.</p>
+        <img src="assets/forge_flow_logo-removebg-preview.png" alt="ForgeFlow" class="ff-logo ff-logo--footer">
+        <p>Modern manufacturing operations platform built for industry leaders. Built for teams who want to move fast and eliminate downtime.</p>
       </div>
       <div class="footer-col">
-        <h4>Product</h4>
+        <h4>Solutions</h4>
         <ul>
-          <li><a href="index.html#features">Features</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="#">Production Mgmt</a></li>
+          <li><a href="#">Inventory Control</a></li>
+          <li><a href="#">Quality Assurance</a></li>
+          <li><a href="#">Predictive Maintenance</a></li>
+          <li><a href="#">Digital Twin</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Company</h4>
+        <h4>Industries</h4>
         <ul>
-          <li><a href="about.html">About</a></li>
-
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">Automotive</a></li>
+          <li><a href="#">Aerospace</a></li>
+          <li><a href="#">Electronics</a></li>
+          <li><a href="#">Pharma</a></li>
+          <li><a href="#">Food & Beverage</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -580,7 +670,18 @@
         <ul>
           <li><a href="documentation.html">Documentation</a></li>
           <li><a href="api-reference.html">API Reference</a></li>
+          <li><a href="#">White Papers</a></li>
+          <li><a href="#">Case Studies</a></li>
           <li><a href="help.html">Help Center</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="contact.html">Contact</a></li>
           <li><a href="status.html">Status</a></li>
         </ul>
       </div>
@@ -588,9 +689,9 @@
     <div class="footer-bottom">
       <span>© 2026 ForgeFlow. All rights reserved.</span>
       <span>
-        <a href="privacy.html" style="color:inherit;margin-left:20px">Privacy</a>
-        <a href="terms.html" style="color:inherit;margin-left:20px">Terms</a>
-        <a href="#" style="color:inherit;margin-left:20px">Cookies</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="#">Cookies</a>
       </span>
     </div>
   </footer>
@@ -600,12 +701,11 @@
     <div class="auth-modal">
       <button class="modal-close" onclick="closeAuthModal()">×</button>
       <div class="auth-modal-brand">
-        <span class="auth-modal-brand-name"><img src="assets/logo.svg" alt="Forge Flow" class="ff-logo ff-logo--auth-modal"></span>
+        <img src="assets/forge_flow_logo-removebg-preview.png" alt="ForgeFlow" class="ff-logo ff-logo--auth-modal">
       </div>
       <h2 class="auth-modal-title" id="authModalTitle">Welcome back</h2>
       <p class="auth-modal-subtitle" id="authModalSubtitle">Sign in to continue to your dashboard</p>
 
-      <!-- Social Login Buttons -->
       <button class="btn-social google" onclick="handleSocialLogin('google')">
         <svg viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -615,11 +715,14 @@
         </svg>
         Continue with Google
       </button>
-      <button class="btn-social facebook" onclick="handleSocialLogin('facebook')">
+      <button class="btn-social microsoft" onclick="handleSocialLogin('microsoft')">
         <svg viewBox="0 0 24 24" fill="white">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          <path d="M1 1h10v10H1z" fill="#F25022"/>
+          <path d="M13 1h10v10H13z" fill="#7FBA00"/>
+          <path d="M1 13h10v10H1z" fill="#00A4EF"/>
+          <path d="M13 13h10v10H13z" fill="#FFB900"/>
         </svg>
-        Continue with Facebook
+        Continue with Microsoft
       </button>
 
       <div class="auth-social-divider">
@@ -673,6 +776,7 @@
     </div>
   </div>
 
+  <!-- CONTACT SALES MODAL -->
   <div id="contactSalesModal" class="modal-overlay">
     <div class="modal-container">
       <button class="modal-close" onclick="closeContactSalesModal()">
@@ -744,8 +848,6 @@
               <option value="pharmaceuticals">Pharmaceuticals</option>
               <option value="chemicals">Chemicals</option>
               <option value="machinery">Industrial Machinery</option>
-              <option value="textiles">Textiles & Apparel</option>
-              <option value="plastics">Plastics & Rubber</option>
               <option value="metal">Metal Fabrication</option>
               <option value="other">Other</option>
             </select>
@@ -762,7 +864,6 @@
             <option value="microsoft">Microsoft Dynamics</option>
             <option value="infor">Infor</option>
             <option value="sage">Sage</option>
-            <option value="quickbooks">QuickBooks</option>
             <option value="excel">Spreadsheets / Excel</option>
             <option value="custom">Custom / Legacy System</option>
             <option value="other">Other</option>
@@ -788,20 +889,16 @@
       document.getElementById('contactSalesModal').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-
     function closeContactSalesModal() {
       document.getElementById('contactSalesModal').classList.remove('open');
       document.body.style.overflow = '';
     }
-
     function submitContactSalesForm(e) {
       e.preventDefault();
       const form = document.getElementById('contactSalesForm');
       const submitBtn = document.getElementById('contactSalesSubmit');
-      
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
-      
       const formData = {
         firstName: document.getElementById('csFirstName').value,
         lastName: document.getElementById('csLastName').value,
@@ -815,10 +912,8 @@
         timestamp: new Date().toISOString(),
         source: 'landing_page'
       };
-      
       console.log('Contact Sales Form Submitted:', formData);
       sessionStorage.setItem('forgeflow_lead', JSON.stringify(formData));
-      
       setTimeout(() => {
         closeContactSalesModal();
         alert('Thank you for your interest in ForgeFlow Enterprise! Our sales team will contact you within 24 hours.');
@@ -827,11 +922,9 @@
         submitBtn.innerHTML = 'Send Request';
       }, 1500);
     }
-
     window.openContactSalesModal = openContactSalesModal;
     window.closeContactSalesModal = closeContactSalesModal;
     window.submitContactSalesForm = submitContactSalesForm;
-
     document.getElementById('contactSalesModal').addEventListener('click', function(e) {
       if (e.target === this) closeContactSalesModal();
     });
@@ -862,7 +955,6 @@
     .modal-overlay.open .modal-container {
       transform: scale(1) translateY(0);
     }
-    
     .modal-container {
       background: white;
       border-radius: 24px;
@@ -876,7 +968,6 @@
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
     }
-    
     .modal-close {
       position: absolute;
       top: 20px;
@@ -897,12 +988,10 @@
       background: #e5e7eb;
       color: #374151;
     }
-    
     .modal-header {
       text-align: center;
       margin-bottom: 32px;
     }
-    
     .modal-icon {
       width: 64px;
       height: 64px;
@@ -914,7 +1003,6 @@
       margin: 0 auto 20px;
       color: white;
     }
-    
     .modal-title {
       font-family: var(--font-display);
       font-size: 28px;
@@ -922,23 +1010,19 @@
       color: #111;
       margin-bottom: 8px;
     }
-    
     .modal-subtitle {
       font-size: 15px;
       color: #6b7280;
       line-height: 1.5;
     }
-    
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
-    
     .form-group {
       margin-bottom: 20px;
     }
-    
     .form-group label {
       display: block;
       font-size: 13px;
@@ -946,7 +1030,6 @@
       color: #374151;
       margin-bottom: 8px;
     }
-    
     .form-group input,
     .form-group select,
     .form-group textarea {
@@ -961,7 +1044,6 @@
       transition: all 0.2s;
       box-sizing: border-box;
     }
-    
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
@@ -970,12 +1052,10 @@
       background: white;
       box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.1);
     }
-    
     .form-group input::placeholder,
     .form-group textarea::placeholder {
       color: #9ca3af;
     }
-    
     .form-group select {
       cursor: pointer;
       appearance: none;
@@ -984,12 +1064,10 @@
       background-position: right 12px center;
       padding-right: 44px;
     }
-    
     .form-group textarea {
       resize: vertical;
       min-height: 100px;
     }
-    
     .modal-submit-btn {
       width: 100%;
       padding: 16px 32px;
@@ -1015,7 +1093,6 @@
       opacity: 0.7;
       cursor: not-allowed;
     }
-    
     .spinner {
       width: 18px;
       height: 18px;
@@ -1027,7 +1104,6 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    
     .modal-disclaimer {
       font-size: 12px;
       color: #9ca3af;
@@ -1035,7 +1111,6 @@
       margin-top: 16px;
       line-height: 1.5;
     }
-    
     @media (max-width: 640px) {
       .modal-container {
         padding: 32px 24px;
