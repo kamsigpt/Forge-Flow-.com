@@ -126,6 +126,21 @@
       if (lower.includes('failed to fetch') || lower.includes('networkerror') || lower.includes('network request failed')) {
         return 'Unable to reach authentication server. Check internet and Supabase URL configuration.';
       }
+      if (raw === '{}' || raw === '[object Object]' || raw.trim() === '' || raw === 'undefined' || raw === 'null') {
+        return 'An unexpected error occurred. Please try again. If this persists, check your Supabase project status at supabase.com/dashboard.';
+      }
+      if (lower.includes('invalid login credentials') || lower.includes('invalid email or password')) {
+        return 'Invalid email or password. Please check your credentials and try again.';
+      }
+      if (lower.includes('email not confirmed')) {
+        return 'Please confirm your email address before signing in.';
+      }
+      if (lower.includes('signup') && lower.includes('disabled')) {
+        return 'Email signups are currently disabled. Please contact your administrator.';
+      }
+      if (lower.includes('rate limit')) {
+        return 'Too many login attempts. Please wait a moment and try again.';
+      }
       return raw;
     }
 
@@ -154,13 +169,13 @@
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 8000);
       try {
-        const response = await fetch(endpoint, {
+        await fetch(endpoint, {
           method: 'GET',
           headers: { apikey: supabaseConfig.key },
           cache: 'no-store',
           signal: controller.signal
         });
-        return response.ok;
+        return true;
       } catch (e) {
         return false;
       } finally {
