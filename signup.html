@@ -232,12 +232,7 @@
     </div>
 
     <script type="module">
-        let createClient;
-        try {
-            ({ createClient } = await import('https://esm.sh/@supabase/supabase-js@2'));
-        } catch (e) {
-            console.error('Supabase library failed to load:', e);
-        }
+        import { createClient } from './js/supabase-auth.js';
 
         // Add click handler for signup button
         document.addEventListener('DOMContentLoaded', function() {
@@ -276,10 +271,7 @@
             if (window.location.protocol === 'file:') {
                 return 'Auth is unavailable from file://. Start with `npm run dev` or deploy the built dist folder.';
             }
-            if (!createClient) {
-                return 'Auth library failed to load. Check your internet connection.';
-            }
-            return 'Authentication service is not configured for this deployment.';
+            return 'Authentication service is not configured. Please check your Supabase project at supabase.com/dashboard.';
         }
 
         function isUnsupportedProtocol() {

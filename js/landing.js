@@ -1,3 +1,5 @@
+import { createClient } from './supabase-auth.js';
+
 // ============ NAV SCROLL ============
 window.addEventListener('scroll', () => {
   const nav = document.querySelector('.nav');
@@ -136,15 +138,17 @@ let authMode = 'login';
 let supabase = null;
 
 function initSupabase() {
-  if (window.supabase) {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    if (supabaseUrl && supabaseKey) {
-      supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  try {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || localStorage.getItem('forgeflow_supabase_url') || 'https://secaghvmfkujeciiapav.supabase.co';
+    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || localStorage.getItem('forgeflow_supabase_anon_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlY2FnaHZtZmt1amVjaWlhcGF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NDA1OTYsImV4cCI6MjA4OTMxNjU5Nn0.sXDDLStGTQ4txc_YcN7MIE1JC96R94ILafoID-_2Nzs';
+    if (supabaseUrl && supabaseKey && createClient) {
+      supabase = createClient(supabaseUrl, supabaseKey);
       supabase.auth.getSession().then(({ data, error }) => {
         console.log('Supabase connection:', error ? 'error' : 'OK');
       });
     }
+  } catch (e) {
+    console.warn('Supabase init failed:', e);
   }
 }
 if (document.readyState === 'loading') {
