@@ -7,7 +7,6 @@
   <link rel="icon" type="image/png" href="assets/forge_flow_icon-removebg-preview.png">
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/landing.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="auth-page">
 
@@ -80,7 +79,14 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    let createClient;
+    try {
+      ({ createClient } = await import('https://esm.sh/@supabase/supabase-js@2'));
+    } catch (e) {
+      console.error('Supabase library failed to load:', e);
+    }
+
     function isUnresolvedEnvValue(value) {
       if (!value) return true;
       const trimmed = String(value).trim();
@@ -110,8 +116,8 @@
       if (window.location.protocol === 'file:') {
         return 'Auth is unavailable from file://. Start with `npm run dev` or deploy the built dist folder.';
       }
-      if (typeof supabase === 'undefined') {
-        return 'Auth library failed to load. Check internet/ad blocker access to cdn.jsdelivr.net.';
+      if (!createClient) {
+        return 'Auth library failed to load. Check your internet connection.';
       }
       return 'Authentication service is not configured for this deployment.';
     }
@@ -154,9 +160,9 @@
     const supabaseConfig = getSupabaseRuntimeConfig();
     const hasValidSupabaseConfig = /^https?:\/\//i.test(supabaseConfig.url) && supabaseConfig.key.length > 20;
     var supabaseClient = null;
-    if (typeof supabase !== 'undefined' && supabase && hasValidSupabaseConfig) {
+    if (createClient && hasValidSupabaseConfig) {
       try {
-        supabaseClient = supabase.createClient(supabaseConfig.url, supabaseConfig.key);
+        supabaseClient = createClient(supabaseConfig.url, supabaseConfig.key);
       } catch (e) {
         console.log('Supabase initialization failed');
       }
@@ -441,6 +447,9 @@
         resetButton(submitBtn);
       }
     }
+    window.handleLogin = handleLogin;
+    window.handleGoogleLogin = handleGoogleLogin;
+    window.handleMicrosoftLogin = handleMicrosoftLogin;
   </script>
   
   <style>
