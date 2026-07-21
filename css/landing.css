@@ -898,7 +898,7 @@ body {
   width: 56px;
   height: 56px;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255, 106, 0, 0.1) 0%, rgba(255, 176, 102, 0.15) 100%);
+  background: var(--ff-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -915,12 +915,8 @@ body {
 .feature-icon-wrap .feature-icon {
   width: 26px;
   height: 26px;
-  color: var(--ff-primary);
-  transition: color 0.3s;
-}
-
-.feature-card:hover .feature-icon {
   color: white;
+  transition: color 0.3s;
 }
 
 .feature-title {
