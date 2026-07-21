@@ -294,12 +294,13 @@
             }
             if (!(await ensureAuthServerReachable())) return;
 
+            const redirectBase = window.location.href.replace(/[^/]*$/, '');
             const {
                 error
             } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.origin + '/app.html'
+                    redirectTo: redirectBase + 'app.html'
                 }
             });
 
@@ -319,12 +320,13 @@
             }
             if (!(await ensureAuthServerReachable())) return;
 
+            const redirectBase = window.location.href.replace(/[^/]*$/, '');
             const {
                 error
             } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'azure',
                 options: {
-                    redirectTo: window.location.origin + '/app.html'
+                    redirectTo: redirectBase + 'app.html'
                 }
             });
 
