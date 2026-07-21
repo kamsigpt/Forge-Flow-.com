@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up — ForgeFlow</title>
     <link rel="icon" type="image/png" href="assets/forge_flow_icon-removebg-preview.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="css/shared.css">
-    <link rel="stylesheet" href="css/landing.css">
 </head>
 
 <body class="auth-page">
@@ -15,35 +16,36 @@
     <div class="auth-container">
         <div class="auth-card">
             <a href="index.html" class="auth-back">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to home
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to home
             </a>
 
             <div class="auth-brand">
-                <span class="auth-brand-name"><img src="assets/forge_flow_logo-removebg-preview.png" alt="Forge Flow" class="ff-logo ff-logo--auth"></span>
+                <a href="index.html" class="auth-brand-name"><img src="assets/forge_flow_logo-removebg-preview.png" alt="Forge Flow" class="ff-logo ff-logo--auth"></a>
             </div>
 
             <h1 class="auth-title">Create your account</h1>
-            <p class="auth-subtitle">Create your account and get started today</p>
+            <p class="auth-subtitle">Get started with ForgeFlow today</p>
 
-            <button class="btn-social google" onclick="handleGoogleLogin()">
-        <svg viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
-        Continue with Google
-      </button>
-
-            <button class="btn-social microsoft" onclick="handleMicrosoftLogin()">
-        <svg viewBox="0 0 24 24" fill="white">
-          <path d="M1 1h10v10H1z" fill="#F25022"/>
-          <path d="M13 1h10v10H13z" fill="#7FBA00"/>
-          <path d="M1 13h10v10H1z" fill="#00A4EF"/>
-          <path d="M13 13h10v10H13z" fill="#FFB900"/>
-        </svg>
-        Continue with Microsoft
-      </button>
+            <div class="auth-social-row">
+                <button class="btn-social google" onclick="handleGoogleLogin()">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google
+                </button>
+                <button class="btn-social microsoft" onclick="handleMicrosoftLogin()">
+                    <svg viewBox="0 0 24 24" fill="white">
+                        <path d="M1 1h10v10H1z" fill="#F25022"/>
+                        <path d="M13 1h10v10H13z" fill="#7FBA00"/>
+                        <path d="M1 13h10v10H1z" fill="#00A4EF"/>
+                        <path d="M13 13h10v10H13z" fill="#FFB900"/>
+                    </svg>
+                    Microsoft
+                </button>
+            </div>
 
             <div class="auth-social-divider">
                 <span>or continue with email</span>
@@ -71,22 +73,23 @@
                     <input type="email" class="form-input" id="email" placeholder="john@acme.com" required>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="password" placeholder="Create a strong password" required minlength="6">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Confirm Password</label>
-                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm your password" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="password" placeholder="Min. 6 characters" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm password" required>
+                    </div>
                 </div>
             </form>
 
             <div id="signupError" class="auth-error" style="display:none"></div>
 
-            <button type="button" class="btn-auth-primary" id="signupBtn" onclick="handleSignup()">
-        Create Account
-      </button>
+            <button type="button" class="btn-auth-primary" id="signupBtn">
+                Create Account
+            </button>
 
             <p class="auth-terms">
                 By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
@@ -99,131 +102,23 @@
 
         <div class="auth-visual">
             <div class="auth-visual-content">
-                <div class="signup-dashboard-mockup">
-                    <div class="mockup-window">
-                        <div class="mockup-window-header">
-                            <div class="mockup-dots">
-                                <span></span><span></span><span></span>
-                            </div>
-                            <span class="mockup-url">app.forgeflow.io/dashboard</span>
-                        </div>
-                        <div class="mockup-window-body">
-                            <div class="mockup-sidebar">
-                                <div class="mockup-logo">
-                                    <span><img src="assets/forge_flow_logo-removebg-preview.png" alt="Forge Flow" class="ff-logo ff-logo--mock"></span>
-                                </div>
-                                <div class="mockup-nav-item active">
-                                    <div class="mockup-nav-icon"></div>Dashboard
-                                </div>
-                                <div class="mockup-nav-item">
-                                    <div class="mockup-nav-icon"></div>Manufacturing
-                                </div>
-                                <div class="mockup-nav-item">
-                                    <div class="mockup-nav-icon"></div>Inventory
-                                </div>
-                                <div class="mockup-nav-item">
-                                    <div class="mockup-nav-icon"></div>Reports
-                                </div>
-                            </div>
-                            <div class="mockup-main-area">
-                                <div class="mockup-header-bar">
-                                    <span>Dashboard</span>
-                                    <div class="mockup-user-avatar">JS</div>
-                                </div>
-                                <div class="mockup-kpi-row">
-                                    <div class="mockup-kpi-card">
-                                        <div class="mockup-kpi-label">Production</div>
-                                        <div class="mockup-kpi-value">94%</div>
-                                        <div class="mockup-kpi-trend up">+12%</div>
-                                    </div>
-                                    <div class="mockup-kpi-card">
-                                        <div class="mockup-kpi-label">Orders</div>
-                                        <div class="mockup-kpi-value">23</div>
-                                        <div class="mockup-kpi-trend up">+4</div>
-                                    </div>
-                                    <div class="mockup-kpi-card">
-                                        <div class="mockup-kpi-label">Revenue</div>
-                                        <div class="mockup-kpi-value">$42K</div>
-                                        <div class="mockup-kpi-trend up">+8%</div>
-                                    </div>
-                                </div>
-                                <div class="mockup-chart-area">
-                                    <div class="mockup-chart-bars">
-                                        <div class="mockup-bar" style="height:40%"></div>
-                                        <div class="mockup-bar" style="height:55%"></div>
-                                        <div class="mockup-bar" style="height:45%"></div>
-                                        <div class="mockup-bar" style="height:70%"></div>
-                                        <div class="mockup-bar" style="height:60%"></div>
-                                        <div class="mockup-bar" style="height:85%"></div>
-                                        <div class="mockup-bar" style="height:75%"></div>
-                                        <div class="mockup-bar" style="height:90%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="floating-card float-card-1">
-                        <div class="float-card-icon green">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                        </div>
-                        <div class="float-card-content">
-                            <div class="float-card-label">Order Complete</div>
-                            <div class="float-card-value">MFG-0028</div>
-                        </div>
-                    </div>
-
-                    <div class="floating-card float-card-2">
-                        <div class="float-card-icon orange">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                        </div>
-                        <div class="float-card-content">
-                            <div class="float-card-label">Low Stock Alert</div>
-                            <div class="float-card-value">3 Items</div>
-                            <div class="float-card-trend">↑ Action needed</div>
-                        </div>
-                    </div>
-
-                    <div class="floating-card float-card-3">
-                        <div class="float-card-icon blue">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                        </div>
-                        <div class="float-card-content">
-                            <div class="float-card-label">Efficiency</div>
-                            <div class="float-card-value">98.5%</div>
-                        </div>
-                    </div>
-                </div>
-
                 <h2>Join thousands of manufacturers</h2>
                 <p>Streamline your operations, reduce costs, and scale your business with ForgeFlow.</p>
                 <div class="auth-benefits">
                     <div class="auth-benefit">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M8 12l2.5 2.5L16 9"/>
-            </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
                         <span>Full platform access</span>
                     </div>
                     <div class="auth-benefit">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M8 12l2.5 2.5L16 9"/>
-            </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
                         <span>No credit card required</span>
                     </div>
                     <div class="auth-benefit">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M8 12l2.5 2.5L16 9"/>
-            </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
                         <span>Cancel anytime</span>
                     </div>
                     <div class="auth-benefit">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M8 12l2.5 2.5L16 9"/>
-            </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
                         <span>Setup in minutes</span>
                     </div>
                 </div>
@@ -603,164 +498,138 @@
 
     <style>
         @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
-        }
-        
-        .redirect-content {
-            text-align: center;
-        }
-        
-        .redirect-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid #f0f0f0;
-            border-top-color: #FF6A00;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        .redirect-content p {
-            font-family: var(--font-display);
-            font-size: 18px;
-            font-weight: 600;
-            color: #111;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        
+
         .auth-page {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            height: 100vh;
+            overflow: hidden;
+            background: #0f172a;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px 20px;
+            align-items: stretch;
+            padding: 0;
         }
-        
+
         .auth-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            max-width: 1100px;
+            gap: 0;
             width: 100%;
-            align-items: flex-start;
-            padding-top: 40px;
+            max-width: none;
+            min-height: 100vh;
+            padding-top: 0;
+            align-items: stretch;
         }
-        
+
         .auth-card {
             background: white;
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            border-radius: 0;
+            padding: 28px 48px;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            min-height: 100vh;
+            overflow-y: auto;
         }
-        
+
         .auth-back {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             color: var(--gray-500);
             text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            margin-top: 8px;
             transition: color 0.2s;
+            flex-shrink: 0;
         }
-        
+
         .auth-back:hover {
             color: var(--gray-700);
         }
-        
+
         .auth-brand {
             text-align: center;
-            margin-bottom: 0;
+            margin-bottom: 4px;
         }
-        
+
         .auth-brand-name {
             font-family: var(--font-display);
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--accent-color);
             letter-spacing: -0.5px;
+            text-decoration: none;
+            display: inline-block;
         }
-        
+
+        .ff-logo--auth {
+            height: 36px;
+        }
+
         .auth-title {
             font-family: var(--font-display);
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 700;
             color: #111;
             text-align: center;
-            margin-bottom: 4px;
-            margin-top: 12px;
+            margin-bottom: 2px;
+            margin-top: 6px;
         }
-        
+
         .auth-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--gray-500);
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
-        
+
+        .auth-social-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
         .btn-social {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 12px;
             border-radius: 10px;
             border: 1.5px solid var(--gray-100);
             background: white;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             color: var(--gray-700);
             cursor: pointer;
             transition: all 0.2s;
-            margin-bottom: 12px;
+            margin-bottom: 0;
         }
-        
+
         .btn-social:hover {
             border-color: var(--gray-300);
             background: var(--gray-50);
             transform: translateY(-1px);
         }
-        
+
         .btn-social svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
         }
-        
+
         .auth-social-divider {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin: 16px 0;
+            gap: 14px;
+            margin: 10px 0;
         }
-        
+
         .auth-social-divider::before,
         .auth-social-divider::after {
             content: '';
@@ -768,113 +637,117 @@
             height: 1px;
             background: var(--gray-100);
         }
-        
+
         .auth-social-divider span {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--gray-400);
             font-weight: 500;
+            white-space: nowrap;
         }
-        
+
         .auth-form-full {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 8px;
         }
-        
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
+            gap: 10px;
         }
-        
+
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
-        
+
         .form-label {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--gray-700);
         }
-        
+
         .form-input {
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1.5px solid var(--gray-100);
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.2s;
             background: white;
         }
-        
+
         .form-input:focus {
             outline: none;
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.1);
         }
-        
+
         .form-input::placeholder {
             color: var(--gray-300);
         }
-        
+
         .auth-error {
             background: #FEF2F2;
             border: 1px solid #FECACA;
             color: #DC2626;
-            padding: 12px 16px;
+            padding: 8px 12px;
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 12px;
         }
-        
+
         .btn-auth-primary {
             width: 100%;
-            padding: 14px 24px;
+            padding: 11px 24px;
             background: var(--accent-color);
             color: white;
-            border: none;
+            border: 2px solid var(--accent-color);
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            margin-top: 16px;
+            margin-top: 4px;
+            flex-shrink: 0;
         }
-        
+
         .btn-auth-primary:hover:not(:disabled) {
-            background: #e55d00;
+            background: white;
+            color: var(--accent-color);
+            border-color: var(--accent-color);
             transform: translateY(-1px);
         }
-        
+
         .btn-auth-primary:disabled {
             opacity: 0.8;
             cursor: not-allowed;
         }
-        
+
         .auth-terms {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--gray-400);
             text-align: center;
-            margin-top: 16px;
-            line-height: 1.6;
+            margin-top: 10px;
+            line-height: 1.5;
         }
-        
+
         .auth-terms a {
             color: var(--accent-color);
             text-decoration: none;
         }
-        
+
         .auth-terms a:hover {
             text-decoration: underline;
         }
-        
+
         .auth-footer-link {
             text-align: center;
-            margin-top: 16px;
-            font-size: 14px;
+            margin-top: 12px;
+            font-size: 13px;
             color: var(--gray-500);
         }
-        
+
         .auth-footer-link a {
             color: var(--accent-color);
             font-weight: 700;
@@ -883,406 +756,94 @@
             border-radius: 6px;
             transition: all 0.2s;
         }
-        
+
         .auth-footer-link a:hover {
             background: rgba(255, 106, 0, 0.1);
             text-decoration: underline;
         }
-        
+
         .auth-visual {
             position: relative;
-            padding-top: 0;
-            align-self: flex-start;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            min-height: 100vh;
         }
-        
+
+        .auth-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 70% 30%, rgba(255,106,0,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 30% 70%, rgba(255,106,0,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
         .auth-visual-content {
             position: relative;
+            z-index: 1;
+            padding: 48px;
+            max-width: 440px;
         }
-        
-        .signup-dashboard-mockup {
-            position: relative;
-            margin-bottom: 60px;
-        }
-        
-        .mockup-window {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-        
-        .mockup-window-header {
-            background: #f8fafc;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .mockup-dots {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .mockup-dots span {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #e5e7eb;
-        }
-        
-        .mockup-dots span:first-child {
-            background: #ef4444;
-        }
-        
-        .mockup-dots span:nth-child(2) {
-            background: #f59e0b;
-        }
-        
-        .mockup-dots span:nth-child(3) {
-            background: #22c55e;
-        }
-        
-        .mockup-url {
-            font-size: 12px;
-            color: #9ca3af;
-            background: #e5e7eb;
-            padding: 5px 14px;
-            border-radius: 6px;
-        }
-        
-        .mockup-window-body {
-            display: flex;
-            height: 280px;
-        }
-        
-        .mockup-sidebar {
-            width: 160px;
-            background: #1a1a2e;
-            padding: 24px 16px;
-        }
-        
-        .mockup-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 28px;
-            padding-left: 6px;
-        }
-        
-        .mockup-logo-icon {
-            width: 28px;
-            height: 28px;
-            background: var(--accent-color);
-            border-radius: 8px;
-        }
-        
-        .mockup-logo span {
-            font-size: 13px;
-            font-weight: 700;
-            color: white;
-        }
-        
-        .mockup-nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 6px;
-        }
-        
-        .mockup-nav-item.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .mockup-nav-icon {
-            width: 18px;
-            height: 18px;
-            background: currentColor;
-            border-radius: 5px;
-            opacity: 0.5;
-        }
-        
-        .mockup-nav-item.active .mockup-nav-icon {
-            background: var(--accent-color);
-            opacity: 1;
-        }
-        
-        .mockup-main-area {
-            flex: 1;
-            padding: 20px;
-            background: #f8fafc;
-        }
-        
-        .mockup-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .mockup-header-bar span {
-            font-size: 16px;
-            font-weight: 700;
-            color: #111;
-        }
-        
-        .mockup-user-avatar {
-            width: 36px;
-            height: 36px;
-            background: var(--accent-color);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: white;
-        }
-        
-        .mockup-kpi-row {
-            display: flex;
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-        
-        .mockup-kpi-card {
-            flex: 1;
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-        
-        .mockup-kpi-label {
-            font-size: 10px;
-            color: #9ca3af;
-            margin-bottom: 6px;
-        }
-        
-        .mockup-kpi-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111;
-        }
-        
-        .mockup-kpi-trend {
-            font-size: 10px;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-        
-        .mockup-kpi-trend.up {
-            color: #22c55e;
-        }
-        
-        .mockup-chart-area {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            height: 100px;
-        }
-        
-        .mockup-chart-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 6px;
-            height: 100%;
-        }
-        
-        .mockup-bar {
-            flex: 1;
-            background: linear-gradient(to top, var(--accent-color), rgba(255, 106, 0, 0.3));
-            border-radius: 4px 4px 0 0;
-        }
-        
-        .floating-card {
-            position: absolute;
-            z-index: 10;
-            background: white;
-            border-radius: 12px;
-            padding: 12px 16px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 8px 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            animation: floatCard 5s ease-in-out infinite;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .floating-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25), 0 12px 24px rgba(0, 0, 0, 0.12);
-        }
-        
-        @keyframes floatCard {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-12px);
-            }
-        }
-        
-        .float-card-1 {
-            top: 30px;
-            right: -50px;
-            animation-delay: 1s;
-        }
-        
-        .float-card-2 {
-            bottom: -40px;
-            right: -45px;
-            animation-delay: 1.5s;
-        }
-        
-        .float-card-3 {
-            bottom: -40px;
-            left: -50px;
-            animation-delay: 0.5s;
-        }
-        
-        .float-card-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, rgba(255, 106, 0, 0.1) 0%, rgba(255, 176, 102, 0.15) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-        }
-        
-        .float-card-icon svg {
-            width: 16px;
-            height: 16px;
-            color: #FF6A00;
-        }
-        
-        .float-card-icon.green {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.15) 100%);
-        }
-        
-        .float-card-icon.green svg {
-            color: #22c55e;
-        }
-        
-        .float-card-icon.orange {
-            background: linear-gradient(135deg, rgba(255, 106, 0, 0.1) 0%, rgba(255, 176, 102, 0.15) 100%);
-        }
-        
-        .float-card-icon.orange svg {
-            color: #FF6A00;
-        }
-        
-        .float-card-icon.blue {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.15) 100%);
-        }
-        
-        .float-card-icon.blue svg {
-            color: #3b82f6;
-        }
-        
-        .float-card-content {
-            text-align: left;
-        }
-        
-        .float-card-label {
-            font-size: 9px;
-            color: #9ca3af;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .float-card-value {
-            font-family: var(--font-display);
-            font-size: 18px;
-            font-weight: 800;
-            color: #111;
-        }
-        
-        .float-card-trend {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            font-size: 10px;
-            font-weight: 600;
-            color: #22c55e;
-            margin-top: 4px;
-        }
-        
+
         .auth-visual-content h2 {
             font-family: var(--font-display);
-            font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            color: #111;
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: white;
             text-align: left;
         }
-        
+
         .auth-visual-content>p {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 500;
-            color: #374151;
+            color: rgba(255,255,255,0.7);
             line-height: 1.7;
             text-align: left;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
-        
+
         .auth-benefits {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
             align-items: flex-start;
         }
-        
+
         .auth-benefit {
             display: flex;
             align-items: center;
-            gap: 14px;
-            font-size: 16px;
+            gap: 12px;
+            font-size: 14px;
             font-weight: 600;
-            color: #111;
+            color: rgba(255,255,255,0.9);
         }
-        
+
         .auth-benefit svg {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             color: #22c55e;
             flex-shrink: 0;
         }
-        
-        @media (max-width: 900px) {
+
+        @media (max-width: 768px) {
             .auth-container {
                 grid-template-columns: 1fr;
-                gap: 40px;
             }
-            .auth-visual {
-                display: none;
-            }
-            .auth-card {
-                padding: 32px 24px;
-            }
+            .auth-visual { display: none; }
+            .auth-card { padding: 28px 24px; min-height: auto; height: auto; }
+            .auth-page { height: auto; min-height: 100vh; }
         }
-        
+
         @media (max-width: 480px) {
             .form-row {
+                grid-template-columns: 1fr;
+            }
+            .auth-social-row {
                 grid-template-columns: 1fr;
             }
         }

@@ -72,9 +72,9 @@ body {
 .sidebar.icons-only .sidebar-brand::before {
     content: "";
     width: 34px;
-    height: 14px;
+    height: 34px;
     display: block;
-    background: url("../assets/logo.svg") center/contain no-repeat;
+    background: url("../assets/forge_flow_icon-removebg-preview.png") center/contain no-repeat;
 }
 
 .sidebar.icons-only .sidebar-footer {
@@ -108,17 +108,19 @@ body {
 }
 
 .sidebar-brand {
-    padding: 20px 18px;
+    padding: 20px 16px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     flex-shrink: 0;
 }
 
 .sidebar-brand img {
-    height: 30px;
-    border-radius: 6px;
+    width: 100%;
+    height: auto;
+    max-height: 90px;
+    object-fit: contain;
     flex-shrink: 0;
 }
 
@@ -134,11 +136,25 @@ body {
     flex: 1;
     padding: 10px 0;
     overflow-y: auto;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
 .sidebar-nav::-webkit-scrollbar {
-    display: none;
+    width: 5px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .sidebar-section-label {
@@ -1757,12 +1773,10 @@ body {
     position: fixed;
     inset: 0;
     background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(8px);
     z-index: 500;
     display: none;
     align-items: center;
     justify-content: center;
-    animation: fadeIn 0.2s ease;
 }
 
 .integration-modal.open {
@@ -1959,8 +1973,6 @@ body {
 .pane-backdrop.open {
     display: block !important;
     background: rgba(15, 23, 42, 0.4);
-    backdrop-filter: blur(3px);
-    animation: fadeIn 0.2s;
 }
 
 @keyframes fadeIn {
@@ -3431,7 +3443,6 @@ body {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
     z-index: 10000;
     display: flex;
     align-items: center;

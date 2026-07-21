@@ -23,26 +23,12 @@ export const IntegrationService = {
       features: ['Invoices', 'Expenses', 'Payments'],
       authType: 'oauth2',
     },
-    xero: {
-      name: 'Xero',
-      color: '#13B5EA',
-      icon: 'X',
-      features: ['Invoices', 'Bills', 'Bank Sync'],
-      authType: 'oauth2',
-    },
     gsheets: {
       name: 'Google Sheets',
       color: '#0F9D58',
       icon: 'G',
       features: ['Import', 'Export', 'Reports'],
       authType: 'oauth2',
-    },
-    webhooks: {
-      name: 'Webhooks',
-      color: '#7C3AED',
-      icon: 'W',
-      features: ['Real-time', 'Custom URL', 'Events'],
-      authType: 'api_key',
     },
   },
 

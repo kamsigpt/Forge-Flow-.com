@@ -7,30 +7,12 @@ window.addEventListener('scroll', () => {
 });
 
 // ============ PARTICLES ============
-function createParticles(containerId, count) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  for (let i = 0; i < count; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    const size = Math.random() * 3 + 1;
-    particle.style.cssText = `
-      width: ${size}px;
-      height: ${size}px;
-      left: ${Math.random() * 100}%;
-      animation-duration: ${Math.random() * 15 + 10}s;
-      animation-delay: ${Math.random() * 10}s;
-      opacity: ${Math.random() * 0.4 + 0.1};
-    `;
-    container.appendChild(particle);
-  }
-}
-createParticles('particles', 30);
-createParticles('ctaParticles', 20);
+// Particles disabled for performance on low-end devices
 
 // ============ PARALLAX ============
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const heroVisual = document.getElementById('heroVisual');
-if (heroVisual) {
+if (heroVisual && !prefersReducedMotion) {
   heroVisual.addEventListener('mousemove', (e) => {
     const rect = heroVisual.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
