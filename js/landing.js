@@ -213,11 +213,13 @@ function handleSocialLogin(provider) {
     return;
   }
   
+  const redirectBase = window.location.href.replace(/[^/]*$/, '');
+
   if (provider === 'google') {
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/app.html'
+        redirectTo: redirectBase + 'app.html'
       }
     }).then(({ data, error }) => {
       if (error) {
@@ -225,11 +227,23 @@ function handleSocialLogin(provider) {
         showAuthError('Failed to connect with Google. Please try again.');
       }
     });
+  } else if (provider === 'microsoft') {
+    supabase.auth.signInWithOAuth({
+      provider: 'azure',
+      options: {
+        redirectTo: redirectBase + 'app.html'
+      }
+    }).then(({ data, error }) => {
+      if (error) {
+        console.error('Microsoft login error:', error);
+        showAuthError('Failed to connect with Microsoft. Please try again.');
+      }
+    });
   } else if (provider === 'facebook') {
     supabase.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
-        redirectTo: window.location.origin + '/app.html'
+        redirectTo: redirectBase + 'app.html'
       }
     }).then(({ data, error }) => {
       if (error) {
