@@ -7,230 +7,378 @@
   <link rel="icon" type="image/png" href="assets/forge_flow_icon-removebg-preview.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/shared.css">
   <link rel="stylesheet" href="css/landing.css">
   <style>
     body { background: #FAFAFA; }
-    
-    .page-hero {
+
+    /* ===== HERO WITH BUILDING BACKGROUND ===== */
+    .contact-hero {
       position: relative;
-      padding: 180px 60px 100px;
-      text-align: center;
-      overflow: hidden;
-      background: linear-gradient(180deg, #FFF7ED 0%, #FAFAFA 100%);
-    }
-    
-    .page-hero-glow {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120%;
-      height: 100%;
-      background: radial-gradient(ellipse at 50% 0%, rgba(255, 140, 66, 0.2) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    
-    .page-hero h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 64px;
-      font-weight: 800;
-      color: #111111;
-      margin-bottom: 24px;
-      letter-spacing: -2px;
-      position: relative;
-      z-index: 1;
-    }
-    
-    .page-hero p {
-      font-size: 20px;
-      color: #6B7280;
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.7;
-      position: relative;
-      z-index: 1;
-    }
-    
-    .contact-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 40px 80px;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 60px;
-    }
-    
-    .contact-info {
-      padding-top: 20px;
-    }
-    
-    .info-card {
-      background: white;
-      border-radius: 24px;
-      padding: 40px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .info-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    .info-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(255, 106, 0, 0.12);
-    }
-    
-    .info-icon {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
-      border-radius: 14px;
+      min-height: 60vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      text-align: center;
+      overflow: hidden;
+      background: #0D0D0D;
+    }
+
+    .contact-hero-buildings {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .contact-hero-buildings svg {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.12;
+    }
+
+    .contact-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(13,13,13,0.5) 0%, rgba(13,13,13,0.95) 100%);
+      z-index: 1;
+    }
+
+    .contact-hero-glow {
+      position: absolute;
+      top: -40%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 106, 0, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .contact-hero-content {
+      position: relative;
+      z-index: 3;
+      padding: 160px 60px 80px;
+      max-width: 800px;
+    }
+
+    .contact-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(255, 106, 0, 0.15);
+      border: 1px solid rgba(255, 106, 0, 0.3);
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #FF8C42;
+      margin-bottom: 28px;
+    }
+
+    .contact-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 5vw, 64px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      color: white;
       margin-bottom: 20px;
     }
-    
-    .info-card h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      color: #111111;
-      margin-bottom: 8px;
+
+    .contact-hero-title .highlight {
+      background: var(--ff-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    
-    .info-card p {
-      font-size: 15px;
-      color: #6B7280;
-      margin-bottom: 0;
+
+    .contact-hero-desc {
+      font-size: 19px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.55);
+      max-width: 560px;
+      margin: 0 auto;
     }
-    
-    .info-card a {
-      color: #FF6A00;
-      text-decoration: none;
-      font-weight: 500;
+
+    /* ===== MAIN CONTACT GRID ===== */
+    .contact-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 60px 100px;
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 48px;
+      align-items: start;
     }
-    
-    .info-card a:hover {
-      text-decoration: underline;
+
+    /* ===== LEFT: INFO PANELS ===== */
+    .contact-info-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-    
-    .contact-form-wrapper {
+
+    .contact-info-card {
       background: white;
-      border-radius: 24px;
-      padding: 48px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid var(--ff-border);
+      border-radius: var(--ff-radius-lg);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.35s var(--ff-ease-out);
+      text-decoration: none;
+      color: inherit;
     }
-    
-    .contact-form-wrapper.visible {
-      opacity: 1;
-      transform: translateY(0);
+
+    .contact-info-card:hover {
+      border-color: var(--ff-primary);
+      box-shadow: 0 4px 20px rgba(255, 106, 0, 0.1);
+      transform: translateY(-3px);
     }
-    
-    .contact-form-wrapper h2 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 28px;
+
+    .contact-info-card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--ff-radius-md);
+      border: 2px solid var(--ff-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.35s var(--ff-ease-out);
+    }
+
+    .contact-info-card:hover .contact-info-card-icon {
+      border-color: var(--ff-primary);
+      background: rgba(255, 106, 0, 0.06);
+    }
+
+    .contact-info-card-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--ff-primary);
+    }
+
+    .contact-info-card-text { flex: 1; }
+
+    .contact-info-card-label {
+      font-family: var(--font-display);
+      font-size: 13px;
       font-weight: 700;
-      color: #111111;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--ff-text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .contact-info-card-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ff-text);
+      line-height: 1.4;
+    }
+
+    .contact-info-card-arrow {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--ff-bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.35s var(--ff-ease-out);
+    }
+
+    .contact-info-card:hover .contact-info-card-arrow {
+      background: var(--ff-primary);
+    }
+
+    .contact-info-card-arrow svg {
+      width: 16px;
+      height: 16px;
+      color: var(--ff-text-secondary);
+      transition: color 0.35s var(--ff-ease-out);
+    }
+
+    .contact-info-card:hover .contact-info-card-arrow svg {
+      color: white;
+    }
+
+    /* ===== RIGHT: CONTACT FORM ===== */
+    .contact-form-card {
+      background: white;
+      border: 2px solid var(--ff-border);
+      border-radius: var(--ff-radius-xl);
+      padding: 48px 44px;
+      transition: all 0.35s var(--ff-ease-out);
+    }
+
+    .contact-form-card:hover {
+      border-color: rgba(255, 106, 0, 0.3);
+      box-shadow: 0 8px 40px rgba(255, 106, 0, 0.08);
+    }
+
+    .contact-form-header {
+      margin-bottom: 36px;
+    }
+
+    .contact-form-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--ff-text);
       margin-bottom: 8px;
+      letter-spacing: -0.5px;
     }
-    
-    .contact-form-wrapper > p {
-      color: #9CA3AF;
-      margin-bottom: 32px;
+
+    .contact-form-subtitle {
+      font-size: 15px;
+      color: var(--ff-text-secondary);
     }
-    
+
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
-    
+
     .form-group {
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
-    
+
     .form-group label {
       display: block;
-      font-family: 'Outfit', sans-serif;
-      font-size: 14px;
+      font-family: var(--font-display);
+      font-size: 13px;
       font-weight: 600;
-      color: #374151;
+      color: var(--ff-text);
       margin-bottom: 8px;
     }
-    
+
     .form-group input,
     .form-group select,
     .form-group textarea {
       width: 100%;
       padding: 14px 18px;
-      border: 2px solid #E5E7EB;
-      border-radius: 12px;
-      font-family: 'Figtree', sans-serif;
-      font-size: 16px;
-      color: #111111;
-      transition: all 0.2s ease;
+      border: 2px solid var(--ff-border);
+      border-radius: var(--ff-radius-md);
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--ff-text);
       background: white;
+      transition: all 0.25s var(--ff-ease-out);
+      box-sizing: border-box;
     }
-    
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #B0B5C0;
+    }
+
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: #FF6A00;
+      border-color: var(--ff-primary);
       box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.1);
     }
-    
+
+    .form-group select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 44px;
+    }
+
     .form-group textarea {
       resize: vertical;
-      min-height: 140px;
+      min-height: 130px;
     }
-    
+
     .submit-btn {
       width: 100%;
       padding: 16px 32px;
-      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      background: var(--ff-gradient);
       color: white;
-      font-family: 'Outfit', sans-serif;
+      font-family: var(--font-display);
       font-size: 16px;
       font-weight: 700;
       border: none;
-      border-radius: 12px;
+      border-radius: var(--ff-radius-md);
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s var(--ff-ease-spring);
       box-shadow: 0 4px 20px rgba(255, 106, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
-    
+
     .submit-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(255, 106, 0, 0.45);
+      box-shadow: 0 8px 32px rgba(255, 106, 0, 0.5);
     }
-    
+
     .submit-btn:active {
       transform: translateY(0);
     }
 
+    .submit-btn.sent {
+      background: #10B981;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+    }
+
+    /* ===== SCROLL FADE ===== */
+    .scroll-fade {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s var(--ff-ease-out);
+    }
+
+    .scroll-fade.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-fade.visible:nth-child(2) { transition-delay: 0.08s; }
+    .scroll-fade.visible:nth-child(3) { transition-delay: 0.16s; }
+    .scroll-fade.visible:nth-child(4) { transition-delay: 0.24s; }
+    .scroll-fade.visible:nth-child(5) { transition-delay: 0.32s; }
+    .scroll-fade.visible:nth-child(6) { transition-delay: 0.40s; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .contact-main { grid-template-columns: 1fr; gap: 40px; }
+    }
+
     @media (max-width: 768px) {
-      .page-hero { padding: 140px 24px 60px; }
-      .page-hero h1 { font-size: 42px; }
-      .contact-container { grid-template-columns: 1fr; padding: 0 24px 60px; }
+      .contact-hero-content { padding: 140px 24px 60px; }
+      .contact-hero-title { font-size: 36px; letter-spacing: -1.5px; }
+      .contact-hero-desc { font-size: 16px; }
+      .contact-main { padding: 48px 20px 60px; }
+      .contact-form-card { padding: 32px 24px; }
       .form-row { grid-template-columns: 1fr; }
+      .nav { padding: 0 20px; }
+      .footer { padding: 40px 20px 20px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .footer-brand { grid-column: span 2; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .footer-bottom a { margin: 0 12px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- NAV -->
   <nav class="nav" id="navbar">
     <div class="nav-inner">
       <a href="index.html" class="nav-brand">
@@ -241,6 +389,7 @@
         <li><a href="index.html#workflow">How It Works</a></li>
         <li><a href="index.html#compare">Why ForgeFlow</a></li>
         <li><a href="pricing-select.html">Pricing</a></li>
+        <li><a href="about.html">About</a></li>
       </ul>
       <div class="nav-actions">
         <button class="btn-nav-ghost" onclick="location.href='login.html'">Sign In</button>
@@ -249,43 +398,231 @@
     </div>
   </nav>
 
-  <div class="page-hero">
-    <div class="page-hero-glow"></div>
-    <h1 class="animate-on-scroll">Get in Touch</h1>
-    <p class="animate-on-scroll">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
-  </div>
+  <!-- HERO WITH BUILDING BACKGROUND -->
+  <section class="contact-hero">
+    <div class="contact-hero-buildings">
+      <svg viewBox="0 0 1920 800" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
+        <!-- Tall building left -->
+        <rect x="80" y="120" width="100" height="680" fill="white" opacity="0.6"/>
+        <rect x="85" y="130" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="105" y="130" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="125" y="130" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="145" y="130" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="160" y="130" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="85" y="158" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="105" y="158" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="125" y="158" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="145" y="158" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="160" y="158" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="85" y="186" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="105" y="186" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="125" y="186" width="12" height="16" rx="1" fill="white" opacity="0.2"/>
+        <rect x="145" y="186" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="160" y="186" width="12" height="16" rx="1" fill="white" opacity="0.4"/>
+        <rect x="85" y="214" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="105" y="214" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="125" y="214" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="145" y="214" width="12" height="16" rx="1" fill="white" opacity="0.2"/>
+        <rect x="160" y="214" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
 
-  <div class="contact-container">
-    <div class="contact-info">
-      <div class="info-card">
-        <div class="info-icon">📧</div>
-        <h3>Email Us</h3>
-        <p>For general inquiries:<br><a href="mailto:hello@forgeflow.io">hello@forgeflow.io</a></p>
+        <!-- Main tower center -->
+        <rect x="420" y="40" width="140" height="760" fill="white" opacity="0.7"/>
+        <rect x="440" y="20" width="100" height="20" fill="white" opacity="0.4"/>
+        <rect x="480" y="0" width="20" height="20" fill="white" opacity="0.3"/>
+        <!-- Windows -->
+        <rect x="435" y="60" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="457" y="60" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="479" y="60" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="501" y="60" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="523" y="60" width="14" height="18" rx="1" fill="white" opacity="0.2"/>
+        <rect x="435" y="92" width="14" height="18" rx="1" fill="white" opacity="0.2"/>
+        <rect x="457" y="92" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="479" y="92" width="14" height="18" rx="1" fill="white" opacity="0.2"/>
+        <rect x="501" y="92" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="523" y="92" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="435" y="124" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="457" y="124" width="14" height="18" rx="1" fill="white" opacity="0.2"/>
+        <rect x="479" y="124" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="501" y="124" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="523" y="124" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="435" y="156" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="457" y="156" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+        <rect x="479" y="156" width="14" height="18" rx="1" fill="white" opacity="0.2"/>
+        <rect x="501" y="156" width="14" height="18" rx="1" fill="white" opacity="0.2"/>
+        <rect x="523" y="156" width="14" height="18" rx="1" fill="white" opacity="0.35"/>
+
+        <!-- Wide building mid-right -->
+        <rect x="680" y="260" width="180" height="540" fill="white" opacity="0.5"/>
+        <rect x="695" y="275" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="721" y="275" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="747" y="275" width="16" height="20" rx="1" fill="white" opacity="0.15"/>
+        <rect x="773" y="275" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="799" y="275" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="825" y="275" width="16" height="20" rx="1" fill="white" opacity="0.15"/>
+        <rect x="695" y="309" width="16" height="20" rx="1" fill="white" opacity="0.15"/>
+        <rect x="721" y="309" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="747" y="309" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="773" y="309" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="799" y="309" width="16" height="20" rx="1" fill="white" opacity="0.15"/>
+        <rect x="825" y="309" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="695" y="343" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="721" y="343" width="16" height="20" rx="1" fill="white" opacity="0.15"/>
+        <rect x="747" y="343" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="773" y="343" width="16" height="20" rx="1" fill="white" opacity="0.15"/>
+        <rect x="799" y="343" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+        <rect x="825" y="343" width="16" height="20" rx="1" fill="white" opacity="0.3"/>
+
+        <!-- Tall slim tower right -->
+        <rect x="1000" y="80" width="90" height="720" fill="white" opacity="0.6"/>
+        <rect x="1012" y="95" width="10" height="14" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1030" y="95" width="10" height="14" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1048" y="95" width="10" height="14" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1066" y="95" width="10" height="14" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1012" y="121" width="10" height="14" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1030" y="121" width="10" height="14" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1048" y="121" width="10" height="14" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1066" y="121" width="10" height="14" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1012" y="147" width="10" height="14" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1030" y="147" width="10" height="14" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1048" y="147" width="10" height="14" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1066" y="147" width="10" height="14" rx="1" fill="white" opacity="0.3"/>
+
+        <!-- Short building far right -->
+        <rect x="1200" y="380" width="120" height="420" fill="white" opacity="0.4"/>
+        <rect x="1215" y="395" width="12" height="16" rx="1" fill="white" opacity="0.25"/>
+        <rect x="1237" y="395" width="12" height="16" rx="1" fill="white" opacity="0.25"/>
+        <rect x="1259" y="395" width="12" height="16" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1281" y="395" width="12" height="16" rx="1" fill="white" opacity="0.25"/>
+        <rect x="1215" y="423" width="12" height="16" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1237" y="423" width="12" height="16" rx="1" fill="white" opacity="0.25"/>
+        <rect x="1259" y="423" width="12" height="16" rx="1" fill="white" opacity="0.25"/>
+        <rect x="1281" y="423" width="12" height="16" rx="1" fill="white" opacity="0.15"/>
+
+        <!-- Tall tower far right -->
+        <rect x="1450" y="160" width="110" height="640" fill="white" opacity="0.55"/>
+        <rect x="1465" y="175" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1487" y="175" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1509" y="175" width="12" height="16" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1531" y="175" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1465" y="203" width="12" height="16" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1487" y="203" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1509" y="203" width="12" height="16" rx="1" fill="white" opacity="0.3"/>
+        <rect x="1531" y="203" width="12" height="16" rx="1" fill="white" opacity="0.15"/>
+
+        <!-- Right edge building -->
+        <rect x="1680" y="300" width="130" height="500" fill="white" opacity="0.45"/>
+        <rect x="1695" y="315" width="14" height="18" rx="1" fill="white" opacity="0.25"/>
+        <rect x="1719" y="315" width="14" height="18" rx="1" fill="white" opacity="0.25"/>
+        <rect x="1743" y="315" width="14" height="18" rx="1" fill="white" opacity="0.15"/>
+        <rect x="1767" y="315" width="14" height="18" rx="1" fill="white" opacity="0.25"/>
+
+        <!-- Antenna spires -->
+        <rect x="483" y="0" width="3" height="20" fill="white" opacity="0.4"/>
+        <rect x="1043" y="60" width="3" height="20" fill="white" opacity="0.35"/>
+        <rect x="1503" y="140" width="3" height="20" fill="white" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="contact-hero-overlay"></div>
+    <div class="contact-hero-glow"></div>
+    <div class="contact-hero-content scroll-fade">
+      <div class="contact-hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        We respond within 24 hours
       </div>
-      
-      <div class="info-card">
-        <div class="info-icon">💬</div>
-        <h3>Live Chat</h3>
-        <p>Available Mon-Fri<br>9am - 6pm EST</p>
+      <h1 class="contact-hero-title">Let's <span class="highlight">Talk</span></h1>
+      <p class="contact-hero-desc">Have questions about ForgeFlow? Need a demo for your team? We'd love to hear from you. Reach out through any channel below.</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTACT SECTION -->
+  <div class="contact-main">
+    <!-- LEFT: INFO PANELS -->
+    <div class="contact-info-stack">
+      <a href="mailto:hello@forgeflow.io" class="contact-info-card scroll-fade">
+        <div class="contact-info-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+        </div>
+        <div class="contact-info-card-text">
+          <div class="contact-info-card-label">Email</div>
+          <div class="contact-info-card-value">hello@forgeflow.io</div>
+        </div>
+        <div class="contact-info-card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a href="https://wa.me/1234567890" target="_blank" class="contact-info-card scroll-fade">
+        <div class="contact-info-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <div class="contact-info-card-text">
+          <div class="contact-info-card-label">WhatsApp</div>
+          <div class="contact-info-card-value">Chat with us instantly</div>
+        </div>
+        <div class="contact-info-card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a href="https://facebook.com/forgeflow" target="_blank" class="contact-info-card scroll-fade">
+        <div class="contact-info-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </div>
+        <div class="contact-info-card-text">
+          <div class="contact-info-card-label">Facebook</div>
+          <div class="contact-info-card-value">@forgeflow</div>
+        </div>
+        <div class="contact-info-card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a href="https://instagram.com/forgeflow" target="_blank" class="contact-info-card scroll-fade">
+        <div class="contact-info-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </div>
+        <div class="contact-info-card-text">
+          <div class="contact-info-card-label">Instagram</div>
+          <div class="contact-info-card-value">@forgeflow</div>
+        </div>
+        <div class="contact-info-card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <div class="contact-info-card scroll-fade">
+        <div class="contact-info-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="contact-info-card-text">
+          <div class="contact-info-card-label">Phone</div>
+          <div class="contact-info-card-value">+1 (555) 234-5678</div>
+        </div>
+        <div class="contact-info-card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
       </div>
-      
-      <div class="info-card">
-        <div class="info-icon">🌍</div>
-        <h3>Location</h3>
-        <p>Remote-first company<br>Team members worldwide</p>
-      </div>
-      
-      <div class="info-card">
-        <div class="info-icon">🏢</div>
-        <h3>Headquarters</h3>
-        <p>123 Manufacturing Way<br>San Francisco, CA 94105</p>
+
+      <div class="contact-info-card scroll-fade">
+        <div class="contact-info-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="contact-info-card-text">
+          <div class="contact-info-card-label">Location</div>
+          <div class="contact-info-card-value">Remote-first — team worldwide</div>
+        </div>
+        <div class="contact-info-card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
       </div>
     </div>
 
-    <div class="contact-form-wrapper">
-      <h2>Send us a message</h2>
-      <p>Fill out the form below and we'll get back to you shortly.</p>
-      
+    <!-- RIGHT: CONTACT FORM -->
+    <div class="contact-form-card scroll-fade">
+      <div class="contact-form-header">
+        <div class="contact-form-title">Send us a message</div>
+        <div class="contact-form-subtitle">Fill out the form and we'll get back to you within 24 hours.</div>
+      </div>
       <form id="contactForm">
         <div class="form-row">
           <div class="form-group">
@@ -297,17 +634,14 @@
             <input type="text" placeholder="Smith" required>
           </div>
         </div>
-        
         <div class="form-group">
           <label>Work Email</label>
-          <input type="email" placeholder="john@acme.com" required>
+          <input type="email" placeholder="john@company.com" required>
         </div>
-        
         <div class="form-group">
           <label>Company</label>
           <input type="text" placeholder="Acme Manufacturing">
         </div>
-        
         <div class="form-group">
           <label>Subject</label>
           <select required>
@@ -317,40 +651,35 @@
             <option>Technical Support</option>
             <option>Partnership Opportunity</option>
             <option>Press & Media</option>
-            <option>Job Application</option>
           </select>
         </div>
-        
         <div class="form-group">
           <label>Message</label>
           <textarea placeholder="How can we help you?" required></textarea>
         </div>
-        
-        <button type="submit" class="submit-btn">Send Message</button>
+        <button type="submit" class="submit-btn" id="submitBtn">
+          Send Message
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
       </form>
     </div>
   </div>
 
+  <!-- FOOTER (matching landing page) -->
   <footer class="footer">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="footer-brand-name"><img src="assets/forge_flow_logo-removebg-preview.png" alt="Forge Flow" class="ff-logo ff-logo--footer"></div>
-        <p>Modern manufacturing operations platform for the digital age.</p>
+        <img src="assets/forge_flow_logo-removebg-preview.png" alt="ForgeFlow" class="ff-logo ff-logo--footer">
+        <p>Modern manufacturing operations platform built for industry leaders. Built for teams who want to move fast and eliminate downtime.</p>
       </div>
       <div class="footer-col">
-        <h4>Product</h4>
+        <h4>Solutions</h4>
         <ul>
-          <li><a href="index.html#features">Features</a></li>
-<li><a href="index.html#pricing">Pricing</a></li>
-          <li><a href="documentation.html">Documentation</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="about.html">About</a></li>
-
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="index.html#features">Production Management</a></li>
+          <li><a href="index.html#features">Inventory Control</a></li>
+          <li><a href="index.html#features">Quality Assurance</a></li>
+          <li><a href="index.html#features">Maintenance Scheduling</a></li>
+          <li><a href="index.html#features">Supply Chain Tracking</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -359,47 +688,57 @@
           <li><a href="documentation.html">Documentation</a></li>
           <li><a href="api-reference.html">API Reference</a></li>
           <li><a href="help.html">Help Center</a></li>
-          <li><a href="status.html">Status</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 ForgeFlow. All rights reserved.</span>
+      <span>&copy; 2026 Hyle Studios. All rights reserved.</span>
       <span>
-        <a href="privacy.html" style="color:inherit;margin-left:20px">Privacy</a>
-        <a href="terms.html" style="color:inherit;margin-left:20px">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="cookies.html">Cookies</a>
       </span>
     </div>
   </footer>
 
   <script>
-    const observer = new IntersectionObserver((entries) => {
+    // Scroll fade
+    const scrollObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          scrollObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.info-card, .contact-form-wrapper, .animate-on-scroll').forEach(el => {
-      el.classList.add('animate-on-scroll');
-      observer.observe(el);
+    document.querySelectorAll('.scroll-fade').forEach(el => {
+      scrollObserver.observe(el);
     });
 
+    // Nav scroll
     window.addEventListener('scroll', () => {
       document.querySelector('.nav').classList.toggle('scrolled', window.scrollY > 30);
     });
 
+    // Form submit
     document.getElementById('contactForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const btn = this.querySelector('.submit-btn');
-      btn.textContent = 'Message Sent!';
-      btn.style.background = '#10B981';
+      const btn = document.getElementById('submitBtn');
+      btn.classList.add('sent');
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Message Sent!';
       setTimeout(() => {
-        btn.textContent = 'Send Message';
-        btn.style.background = '';
+        btn.classList.remove('sent');
+        btn.innerHTML = 'Send Message <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
         this.reset();
-      }, 2000);
+      }, 2500);
     });
   </script>
 </body>
