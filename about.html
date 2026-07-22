@@ -1345,10 +1345,15 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+
+          if (entry.target.classList.contains('about-stats')) {
+            setTimeout(animateCountUp, 400);
+          }
+
           scrollObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
 
     document.querySelectorAll('.scroll-fade').forEach(el => {
       scrollObserver.observe(el);
@@ -1378,19 +1383,6 @@
         requestAnimationFrame(update);
       });
     }
-
-    const countObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animateCountUp();
-          countObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 });
-
-    document.querySelectorAll('.count-up').forEach(el => {
-      countObserver.observe(el);
-    });
 
     // ============ NAV SCROLL ============
     window.addEventListener('scroll', () => {
