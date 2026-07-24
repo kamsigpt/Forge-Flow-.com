@@ -675,8 +675,6 @@ body {
     z-index: 1000;
 }
 
-.user-dropdown:hover .user-dropdown-menu,
-.user-dropdown:focus-within .user-dropdown-menu,
 .user-dropdown.active .user-dropdown-menu {
     opacity: 1 !important;
     visibility: visible !important;
@@ -720,8 +718,7 @@ body {
     display: none;
 }
 
-.user-dropdown:hover .user-dropdown-email,
-.user-dropdown:focus-within .user-dropdown-email {
+.user-dropdown.active .user-dropdown-email {
     display: block;
 }
 

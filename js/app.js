@@ -3073,52 +3073,93 @@ function confirmDeleteAccount() {
 }
 
 function exportAllData() {
-  const allData = {};
-  
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith('forgeflow_')) {
-      try {
-        allData[key] = JSON.parse(localStorage.getItem(key));
-      } catch {
-        allData[key] = localStorage.getItem(key);
-      }
-    }
+  const allTables = document.querySelectorAll('.module-view.active table.data-table, .module-view:not(.active) table.data-table');
+  if (!allTables.length) {
+    showToast('No table data found to export', 'info');
+    return;
+  }
+
+  let csv = '';
+  allTables.forEach(table => {
+    const moduleView = table.closest('.module-view');
+    const moduleId = moduleView ? moduleView.id.replace('mod-', '') : 'data';
+    const headers = [];
+    table.querySelectorAll('thead th').forEach(th => {
+      if (th.textContent.trim() !== 'Actions') headers.push(th.textContent.trim());
+    });
+    if (!headers.length) return;
+
+    csv += '--- ' + moduleId.toUpperCase() + ' ---\n';
+    csv += headers.join(',') + '\n';
+
+    table.querySelectorAll('tbody tr').forEach(row => {
+      if (row.classList.contains('empty-row') || row.style.display === 'none') return;
+      const cells = [];
+      row.querySelectorAll('td').forEach((td, i) => {
+        if (i === headers.length) return; // skip actions col
+        let val = td.textContent.trim().replace(/"/g, '""');
+        cells.push('"' + val + '"');
+      });
+      csv += cells.join(',') + '\n';
+    });
+    csv += '\n';
   });
-  
-  const dataStr = JSON.stringify(allData, null, 2);
-  const blob = new Blob([dataStr], { type: 'application/json' });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-  
   const a = document.createElement('a');
   a.href = url;
-  a.download = `forgeflow-export-${new Date().toISOString().split('T')[0]}.json`;
+  a.download = 'forgeflow-all-data-' + new Date().toISOString().split('T')[0] + '.csv';
   a.click();
-  
   URL.revokeObjectURL(url);
-  showToast('Data exported successfully!', 'success');
+  showToast('All data exported as CSV!', 'success');
 }
 
 function exportCurrentModule() {
-  const moduleName = document.getElementById('topbarBreadcrumb')?.textContent || 'module';
-  const storageKey = 'forgeflow_' + moduleName.toLowerCase().replace(/\s+/g, '_') + 's';
-  
-  let data = localStorage.getItem(storageKey);
-  if (!data) {
-    showToast('No data to export in ' + moduleName, 'info');
+  const moduleView = document.querySelector('.module-view.active');
+  if (!moduleView) {
+    showToast('No active module to export', 'info');
     return;
   }
-  
-  const dataStr = JSON.stringify(JSON.parse(data), null, 2);
-  const blob = new Blob([dataStr], { type: 'application/json' });
+
+  const table = moduleView.querySelector('table.data-table');
+  if (!table) {
+    showToast('No table found in this module', 'info');
+    return;
+  }
+
+  const moduleName = document.getElementById('topbarBreadcrumb')?.textContent || 'module';
+  const headers = [];
+  table.querySelectorAll('thead th').forEach(th => {
+    if (th.textContent.trim() !== 'Actions') headers.push(th.textContent.trim());
+  });
+
+  if (!headers.length) {
+    showToast('No data to export', 'info');
+    return;
+  }
+
+  let csv = headers.join(',') + '\n';
+
+  table.querySelectorAll('tbody tr').forEach(row => {
+    if (row.classList.contains('empty-row') || row.style.display === 'none') return;
+    const cells = [];
+    row.querySelectorAll('td').forEach((td, i) => {
+      if (i === headers.length) return;
+      let val = td.textContent.trim().replace(/"/g, '""');
+      cells.push('"' + val + '"');
+    });
+    csv += cells.join(',') + '\n';
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-  
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${moduleName.toLowerCase().replace(/\s+/g, '-')}-export.json`;
+  a.download = moduleName.toLowerCase().replace(/\s+/g, '-') + '-' + new Date().toISOString().split('T')[0] + '.csv';
   a.click();
-  
   URL.revokeObjectURL(url);
-  showToast(moduleName + ' data exported!', 'success');
+  showToast(moduleName + ' exported as CSV!', 'success');
 }
 
 function clearModuleData(moduleName) {
@@ -3878,9 +3919,31 @@ function checkIsSuperAdmin() {
 function closeUserDropdown() {
   const dropdown = document.querySelector('.user-dropdown');
   if (dropdown) {
-    dropdown.style.visibility = '';
-    dropdown.style.opacity = '';
+    dropdown.classList.remove('active');
   }
+}
+
+function toggleUserDropdown(e) {
+  e.stopPropagation();
+  const dropdown = document.querySelector('.user-dropdown');
+  if (dropdown) {
+    dropdown.classList.toggle('active');
+  }
+}
+
+function initUserDropdown() {
+  const avatar = document.querySelector('.user-avatar-top');
+  if (!avatar || avatar.dataset.dropdownBound) return;
+  avatar.dataset.dropdownBound = 'true';
+
+  avatar.addEventListener('click', toggleUserDropdown);
+
+  document.addEventListener('click', function(e) {
+    const dropdown = document.querySelector('.user-dropdown');
+    if (dropdown && !dropdown.contains(e.target)) {
+      dropdown.classList.remove('active');
+    }
+  });
 }
 
 // ============ FILTER FUNCTIONALITY ============
@@ -4230,6 +4293,7 @@ window.switchSettingsTab = switchSettingsTab;
 window.clearDemoData = clearDemoData;
 window.saveSettings = saveSettings;
 window.closeUserDropdown = closeUserDropdown;
+window.toggleUserDropdown = toggleUserDropdown;
 window.triggerMRP = triggerMRP;
 window.confirmSalesOrder = confirmSalesOrder;
 window.saveRecord = saveRecord;
@@ -4286,6 +4350,7 @@ window.openHelpPage = openHelpPage;
 window.clearDemoData = clearDemoData;
 window.switchTeamsTab = switchTeamsTab;
 window.closeUserDropdown = closeUserDropdown;
+window.toggleUserDropdown = toggleUserDropdown;
 window.openPane = openPane;
 window.closePane = closePane;
 window.updateStatus = updateStatus;
@@ -4343,6 +4408,7 @@ async function initializeApplication() {
     bindStorageSyncListener();
     restoreAllIntegrationStates();
     initGlobalSearch();
+    initUserDropdown();
 
     setTimeout(() => {
       initFilters();
