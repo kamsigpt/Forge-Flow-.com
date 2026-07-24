@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up — ForgeFlow</title>
+    <link rel="icon" type="image/png" href="./assets/forge_flow_icon-removebg-preview-BiUyx8AG.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script type="module" crossorigin src="./assets/signup-BSGtNWqZ.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/dist-CuPr2paP.js">
+  <link rel="stylesheet" crossorigin href="./assets/shared-DUSsljj7.css">
+</head>
+
+<body class="auth-page">
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <a href="index.html" class="auth-back">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to home
+            </a>
+
+            <div class="auth-brand">
+                <a href="index.html" class="auth-brand-name"><img src="./assets/forge_flow_logo-removebg-preview-B7wxy1uv.png" alt="Forge Flow" class="ff-logo ff-logo--auth"></a>
+            </div>
+
+            <h1 class="auth-title">Create your account</h1>
+            <p class="auth-subtitle">Get started with ForgeFlow today</p>
+
+            <div class="auth-social-row">
+                <button class="btn-social google" onclick="handleGoogleLogin()">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google
+                </button>
+                <button class="btn-social microsoft" onclick="handleMicrosoftLogin()">
+                    <svg viewBox="0 0 24 24" fill="white">
+                        <path d="M1 1h10v10H1z" fill="#F25022"/>
+                        <path d="M13 1h10v10H13z" fill="#7FBA00"/>
+                        <path d="M1 13h10v10H1z" fill="#00A4EF"/>
+                        <path d="M13 13h10v10H13z" fill="#FFB900"/>
+                    </svg>
+                    Microsoft
+                </button>
+            </div>
+
+            <div class="auth-social-divider">
+                <span>or continue with email</span>
+            </div>
+
+            <form class="auth-form-full" id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-input" id="firstName" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-input" id="lastName" placeholder="Smith" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Company Name</label>
+                    <input type="text" class="form-input" id="companyName" placeholder="Acme Manufacturing" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Work Email</label>
+                    <input type="email" class="form-input" id="email" placeholder="john@acme.com" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="password" placeholder="Min. 6 characters" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm password" required>
+                    </div>
+                </div>
+            </form>
+
+            <div id="signupError" class="auth-error" style="display:none"></div>
+
+            <button type="button" class="btn-auth-primary" id="signupBtn">
+                Create Account
+            </button>
+
+            <p class="auth-terms">
+                By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+            </p>
+
+            <div class="auth-footer-link">
+                Already have an account? <a href="login.html">Sign in</a>
+            </div>
+        </div>
+
+        <div class="auth-visual">
+            <img src="./assets/signup-poster-BRk6sXnG.png" alt="Sign up for ForgeFlow" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        </div>
+    </div>
+
+
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .auth-page {
+            height: 100vh;
+            overflow: hidden;
+            background: #0f172a;
+            display: flex;
+            align-items: stretch;
+            padding: 0;
+        }
+
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            width: 100%;
+            max-width: none;
+            min-height: 100vh;
+            padding-top: 0;
+            align-items: stretch;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 0;
+            padding: 28px 48px;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .auth-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-500);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 16px;
+            margin-top: 8px;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .auth-back:hover {
+            color: var(--gray-700);
+        }
+
+        .auth-brand {
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .auth-brand-name {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent-color);
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .ff-logo--auth {
+            height: 36px;
+        }
+
+        .auth-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            color: #111;
+            text-align: center;
+            margin-bottom: 2px;
+            margin-top: 6px;
+        }
+
+        .auth-subtitle {
+            font-size: 13px;
+            color: var(--gray-500);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .auth-social-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1.5px solid var(--gray-100);
+            background: white;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 0;
+        }
+
+        .btn-social:hover {
+            border-color: var(--gray-300);
+            background: var(--gray-50);
+            transform: translateY(-1px);
+        }
+
+        .btn-social svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .auth-social-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 10px 0;
+        }
+
+        .auth-social-divider::before,
+        .auth-social-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-100);
+        }
+
+        .auth-social-divider span {
+            font-size: 11px;
+            color: var(--gray-400);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .auth-form-full {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .form-input {
+            padding: 10px 12px;
+            border: 1.5px solid var(--gray-100);
+            border-radius: 10px;
+            font-size: 13px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-300);
+        }
+
+        .auth-error {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #DC2626;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .btn-auth-primary {
+            width: 100%;
+            padding: 11px 24px;
+            background: var(--accent-color);
+            color: white;
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .btn-auth-primary:hover:not(:disabled) {
+            background: white;
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+
+        .btn-auth-primary:disabled {
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        .auth-terms {
+            font-size: 11px;
+            color: var(--gray-400);
+            text-align: center;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .auth-terms a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .auth-terms a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-footer-link {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .auth-footer-link a {
+            color: var(--accent-color);
+            font-weight: 700;
+            text-decoration: none;
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .auth-footer-link a:hover {
+            background: rgba(255, 106, 0, 0.1);
+            text-decoration: underline;
+        }
+
+        .auth-visual {
+            position: relative;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .auth-visual::before {
+            display: none;
+        }
+
+        .auth-visual-content {
+            position: relative;
+            z-index: 1;
+            padding: 48px;
+            max-width: 440px;
+        }
+
+        .auth-visual-content h2 {
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: white;
+            text-align: left;
+        }
+
+        .auth-visual-content>p {
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+            text-align: left;
+            margin-bottom: 28px;
+        }
+
+        .auth-benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .auth-benefit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .auth-benefit svg {
+            width: 22px;
+            height: 22px;
+            color: #22c55e;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+            }
+            .auth-visual { display: none; }
+            .auth-card { padding: 28px 24px; min-height: auto; height: auto; }
+            .auth-page { height: auto; min-height: 100vh; }
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .auth-social-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+
+</html>

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Purchase — ForgeFlow</title>
+  <link rel="icon" type="image/png" href="./assets/forge_flow_icon-removebg-preview-BiUyx8AG.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <style>
+    :root {
+      --ff-primary: #FF6A00;
+      --ff-primary-dark: #E55D00;
+      --ff-gradient: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Figtree', sans-serif;
+      --gray-50: #F9FAFB;
+      --gray-100: #E5E7EB;
+      --gray-200: #D1D5DB;
+      --gray-300: #9CA3AF;
+      --gray-400: #6B7280;
+      --gray-500: #4B5563;
+      --gray-700: #374151;
+      --gray-800: #1F2937;
+      --gray-900: #111827;
+      --success: #10B981;
+      --danger: #EF4444;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+      font-family: var(--font-body);
+      color: #1A1A1A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .payment-container {
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+      max-width: 900px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      animation: slideUp 0.4s var(--ease);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .payment-brand {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .payment-brand-name {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ff-primary);
+    }
+
+    .payment-main {
+      padding: 32px;
+    }
+
+    .payment-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 8px;
+    }
+
+    .payment-subtitle {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+    }
+
+    .order-summary {
+      background: var(--gray-50);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .order-header {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .order-plan {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--gray-200);
+      margin-bottom: 12px;
+    }
+
+    .order-plan-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .order-plan-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--ff-primary);
+      color: white;
+      text-transform: uppercase;
+    }
+
+    .order-price {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .order-price-label {
+      font-size: 14px;
+      color: var(--gray-600);
+    }
+
+    .order-price-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .order-total-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .order-total-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ff-primary);
+    }
+
+    .order-total-period {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--gray-500);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      background: var(--gray-50);
+      color: var(--gray-800);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--ff-primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.1);
+    }
+
+    .btn-pay {
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--ff-gradient);
+      color: white;
+      border: none;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(255, 106, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .btn-pay:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255, 106, 0, 0.5);
+    }
+
+    .btn-pay:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .payment-secure {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+
+    .payment-secure svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .payment-sidebar {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 32px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .payment-sidebar-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .payment-features {
+      list-style: none;
+      flex-grow: 1;
+    }
+
+    .payment-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .payment-features li svg {
+      width: 18px;
+      height: 18px;
+      color: var(--success);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .payment-trust {
+      margin-top: auto;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .payment-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 12px;
+    }
+
+    .payment-trust-item svg {
+      width: 16px;
+      height: 16px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .payment-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-500);
+      font-size: 13px;
+      margin-bottom: 24px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .payment-back:hover {
+      color: var(--gray-700);
+    }
+
+    .payment-error {
+      background: #FEE2E2;
+      border: 1px solid #FECACA;
+      color: #DC2626;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .payment-error.show {
+      display: block;
+    }
+
+    .paystack-branding {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    .paystack-branding img {
+      height: 20px;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 768px) {
+      .payment-container {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-sidebar {
+        order: -1;
+        padding: 24px;
+      }
+
+      .payment-features {
+        display: none;
+      }
+
+      .payment-trust {
+        display: none;
+      }
+    }
+
+    .loading-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .success-overlay.show {
+      display: flex;
+    }
+
+    .success-modal {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      text-align: center;
+      max-width: 400px;
+      animation: slideUp 0.4s var(--ease);
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      color: white;
+    }
+
+    .success-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 8px;
+    }
+
+    .success-message {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+    }
+  </style>
+  <link rel="stylesheet" crossorigin href="./assets/landing-wzpLF6l1.css">
+  <link rel="stylesheet" crossorigin href="./assets/shared-DUSsljj7.css">
+</head>
+<body>
+  <div class="payment-container">
+    <div class="payment-main">
+      <a href="pricing-select.html" class="payment-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to plan selection
+      </a>
+
+      <div class="payment-brand">
+        <span class="payment-brand-name"><img src="./assets/forge_flow_logo-removebg-preview-B7wxy1uv.png" alt="Forge Flow" class="ff-logo ff-logo--payment"></span>
+      </div>
+
+      <h1 class="payment-title">Complete Your Purchase</h1>
+      <p class="payment-subtitle">Enter your details to activate your subscription</p>
+
+      <div class="order-summary">
+        <div class="order-header">Order Summary</div>
+        <div class="order-plan">
+          <span class="order-plan-name" id="planName">Starter Plan</span>
+          <span class="order-plan-badge" id="planBadge">STARTER</span>
+        </div>
+        <div class="order-price">
+          <span class="order-price-label">Monthly subscription</span>
+          <span class="order-price-value" id="monthlyPrice">$150</span>
+        </div>
+        <div class="order-price" id="annualDiscountRow" style="display: none;">
+          <span class="order-price-label">Annual discount (20%)</span>
+          <span class="order-price-value" style="color: #10B981;" id="discountAmount">-$30</span>
+        </div>
+        <div class="order-total">
+          <span class="order-total-label">Total today</span>
+          <span>
+            <span class="order-total-value" id="totalPrice">$150</span>
+            <span class="order-total-period">/ month</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="payment-error" id="paymentError">
+        Payment failed. Please try again or contact support.
+      </div>
+
+      <form id="paymentForm" onsubmit="initiatePayment(event)">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" id="customerEmail" placeholder="you@company.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" id="customerName" placeholder="John Smith" required>
+        </div>
+        
+        <button type="submit" class="btn-pay" id="payButton">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+            <line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+          Pay Now
+        </button>
+
+        <div class="payment-secure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          Secured by Paystack
+        </div>
+
+        <div class="paystack-branding">
+          <img src="https://paystack.com/public/assets/img/logo.png" alt="Powered by Paystack" onerror="this.style.display='none'">
+        </div>
+      </form>
+    </div>
+
+    <div class="payment-sidebar">
+      <h2 class="payment-sidebar-title">What's Included</h2>
+      
+      <ul class="payment-features" id="planFeatures">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Up to 15 users
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Basic inventory tracking
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Sales orders management
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Purchase requests
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          BOM management
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Email support
+        </li>
+      </ul>
+
+      <div class="payment-trust">
+        <div class="payment-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          256-bit SSL encryption
+        </div>
+        <div class="payment-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          PCI DSS compliant
+        </div>
+        <div class="payment-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Cancel anytime
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-modal">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h2 class="success-title">Payment Successful!</h2>
+      <p class="success-message">Your subscription has been activated. Redirecting you to your dashboard...</p>
+    </div>
+  </div>
+
+  <script>
+    let currentPlan = null;
+    let isAnnual = false;
+
+    const planDetails = {
+      starter: {
+        name: 'Starter Plan',
+        label: 'STARTER',
+        monthly: 15000,
+        annual: 12000,
+        features: [
+          'Up to 15 users',
+          'Basic inventory tracking',
+          'Sales orders management',
+          'Purchase requests',
+          'BOM management',
+          'Email support'
+        ]
+      },
+      professional: {
+        name: 'Professional Plan',
+        label: 'PROFESSIONAL',
+        monthly: 25000,
+        annual: 20000,
+        features: [
+          'Up to 30 users',
+          'Full inventory management',
+          'Sales orders management',
+          'Purchase requests',
+          'BOM management',
+          'Workfloor operations',
+          'Advanced reporting',
+          'API access',
+          'Priority support'
+        ]
+      }
+    };
+
+    function getPlanDetails() {
+      const selectedPlan = sessionStorage.getItem('forgeflow_selected_plan');
+      const annualParam = new URLSearchParams(window.location.search).get('annual');
+      
+      currentPlan = selectedPlan;
+      isAnnual = annualParam === 'true';
+      
+      if (!currentPlan || !planDetails[currentPlan]) {
+        window.location.href = 'pricing-select.html';
+        return;
+      }
+
+      const plan = planDetails[currentPlan];
+      const price = isAnnual ? plan.annual : plan.monthly;
+      const monthlyEquivalent = isAnnual ? plan.annual : plan.monthly;
+
+      document.getElementById('planName').textContent = plan.name;
+      document.getElementById('planBadge').textContent = plan.label;
+      document.getElementById('monthlyPrice').textContent = '$' + (price / 100);
+      document.getElementById('totalPrice').textContent = '$' + (price / 100);
+
+      if (isAnnual) {
+        document.getElementById('annualDiscountRow').style.display = 'flex';
+        const monthlyPrice = plan.monthly;
+        const discount = (monthlyPrice - plan.annual) / 100;
+        document.getElementById('discountAmount').textContent = '-$' + discount;
+        document.querySelector('.order-total-period').textContent = '/ month, billed annually';
+      }
+
+      const featuresList = document.getElementById('planFeatures');
+      featuresList.innerHTML = plan.features.map(feature => `
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          ${feature}
+        </li>
+      `).join('');
+
+      const savedUser = JSON.parse(localStorage.getItem('forgeflow_user') || '{}');
+      if (savedUser.email) {
+        document.getElementById('customerEmail').value = savedUser.email;
+      }
+      if (savedUser.initials) {
+        const nameFromInitials = savedUser.initials.replace(/([A-Z])/g, ' $1').trim();
+        document.getElementById('customerName').value = nameFromInitials || '';
+      }
+    }
+
+    function initiatePayment(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('customerEmail').value.trim();
+      const name = document.getElementById('customerName').value.trim();
+      
+      if (!email || !name) {
+        showError('Please fill in all fields');
+        return;
+      }
+
+      const payButton = document.getElementById('payButton');
+      payButton.disabled = true;
+      payButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
+
+      const plan = planDetails[currentPlan];
+      const amount = isAnnual ? plan.annual : plan.monthly;
+      
+      const paymentData = {
+        key: 'pk_test_YOUR_PUBLIC_KEY',
+        email: email,
+        amount: amount,
+        currency: 'USD',
+        ref: 'ff_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        metadata: {
+          custom_fields: [
+            {
+              display_name: 'Plan',
+              variable_name: 'plan',
+              value: currentPlan
+            },
+            {
+              display_name: 'Billing',
+              variable_name: 'billing',
+              value: isAnnual ? 'annual' : 'monthly'
+            },
+            {
+              display_name: 'Customer Name',
+              variable_name: 'customer_name',
+              value: name
+            }
+          ]
+        },
+        callback: function(response) {
+          if (response.status === 'success') {
+            handlePaymentSuccess(email, name, response.reference);
+          } else {
+            showError('Payment was not completed. Please try again.');
+            resetButton();
+          }
+        },
+        onClose: function() {
+          resetButton();
+        }
+      };
+
+      if (typeof PaystackPop !== 'undefined') {
+        const handler = PaystackPop.setup(paymentData);
+        handler.openIframe();
+      } else {
+        handleDemoPayment(email, name);
+      }
+    }
+
+    function handlePaymentSuccess(email, name, reference) {
+      // Activate subscription
+      activateSubscriptionInPayment(currentPlan);
+      
+      const forgeflowUser = {
+        initials: name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2),
+        email: email,
+        planName: planDetails[currentPlan].name,
+        planLabel: planDetails[currentPlan].label,
+        paymentRef: reference,
+        subscription: currentPlan,
+        billing: isAnnual ? 'annual' : 'monthly'
+      };
+      
+      localStorage.setItem('forgeflow_user', JSON.stringify(forgeflowUser));
+      
+      const successOverlay = document.getElementById('successOverlay');
+      successOverlay.classList.add('show');
+      
+      setTimeout(() => {
+        window.location.href = 'app.html';
+      }, 2000);
+    }
+    
+    function activateSubscriptionInPayment(planKey) {
+      const now = new Date();
+      const nextMonth = new Date(now);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      
+      const plan = planDetails[planKey];
+      const amount = isAnnual ? plan.annual : plan.monthly;
+      
+      const subscription = {
+        status: 'active',
+        plan: planKey,
+        planName: plan.name.replace(' Plan', ''),
+        startDate: now.toISOString(),
+        trialEndDate: null,
+        currentPeriodStart: now.toISOString(),
+        currentPeriodEnd: nextMonth.toISOString(),
+        billingCycle: isAnnual ? 'annual' : 'monthly',
+        lastPaymentDate: now.toISOString(),
+        nextPaymentDate: nextMonth.toISOString(),
+        paymentHistory: [
+          {
+            id: 'sub_' + Date.now(),
+            date: now.toISOString(),
+            description: plan.name + ' - ' + (isAnnual ? 'Annual' : 'Monthly'),
+            amount: amount,
+            status: 'paid',
+            invoiceId: 'INV-' + Date.now()
+          }
+        ]
+      };
+      
+      localStorage.setItem('forgeflow_subscription', JSON.stringify(subscription));
+    }
+
+    function handleDemoPayment(email, name) {
+      console.log('Demo Mode - Paystack not loaded. Simulating payment...');
+      
+      setTimeout(() => {
+        handlePaymentSuccess(email, name, 'demo_ref_' + Date.now());
+      }, 1500);
+    }
+
+    function showError(message) {
+      const errorEl = document.getElementById('paymentError');
+      errorEl.textContent = message;
+      errorEl.classList.add('show');
+      
+      setTimeout(() => {
+        errorEl.classList.remove('show');
+      }, 5000);
+    }
+
+    function resetButton() {
+      const payButton = document.getElementById('payButton');
+      payButton.disabled = false;
+      payButton.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+          <line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+        Pay Now
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      getPlanDetails();
+    });
+  </script>
+</body>
+</html>

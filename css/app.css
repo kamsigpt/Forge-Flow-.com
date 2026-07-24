@@ -1655,6 +1655,13 @@ body {
     height: 100%;
 }
 
+.integration-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
 .integration-header-content {
     flex: 1;
     min-width: 0;
@@ -3940,4 +3947,93 @@ body {
         grid-template-columns: 1fr;
         gap: 12px;
     }
+}
+
+
+/* Global Search Dropdown */
+
+.search-results-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    min-width: 360px;
+    max-height: 420px;
+    overflow-y: auto;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    z-index: 9999;
+    display: none;
+    margin-top: 6px;
+}
+
+.search-results-dropdown.open {
+    display: block;
+}
+
+.search-results-section {
+    padding: 8px 0;
+}
+
+.search-results-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--gray-400);
+    padding: 8px 16px 4px;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.search-result-item:hover {
+    background: var(--gray-50);
+}
+
+.search-result-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--gray-500);
+    flex-shrink: 0;
+    text-transform: capitalize;
+}
+
+.search-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-800);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-subtitle {
+    font-size: 11px;
+    color: var(--gray-400);
+    margin-top: 1px;
+}
+
+.search-history-item .search-result-icon {
+    background: var(--sky-pale);
+    color: var(--cobalt);
 }

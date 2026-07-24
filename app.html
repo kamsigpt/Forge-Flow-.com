@@ -1019,11 +1019,7 @@
             <div class="integration-card" data-provider="zoho">
               <div class="integration-header">
                 <div class="integration-logo">
-                  <svg viewBox="0 0 48 48" fill="none">
-                    <rect width="48" height="48" rx="12" fill="#E42527"/>
-                    <path d="M24 12L36 12V24C36 30 30 34 24 36C18 34 12 30 12 24V18L24 12Z" fill="white"/>
-                    <path d="M24 20L32 20L32 28L24 28L24 32L20 32L20 28L24 28Z" fill="#E42527"/>
-                  </svg>
+                  <img src="assets/zoho suite logo.png" alt="Zoho Suite">
                 </div>
                 <div class="integration-header-content">
                   <div class="integration-header-top">
@@ -1045,7 +1041,6 @@
               </div>
               <div class="integration-actions">
                 <button class="btn-primary" id="zoho-connect" onclick="connectIntegration('zoho')">Connect</button>
-                <button class="btn-secondary" id="zoho-config" onclick="configureIntegration('zoho')" style="display:none">Configure</button>
               </div>
             </div>
 
@@ -1053,11 +1048,7 @@
             <div class="integration-card" data-provider="shopify">
               <div class="integration-header">
                 <div class="integration-logo">
-                  <svg viewBox="0 0 48 48" fill="none">
-                    <rect width="48" height="48" rx="12" fill="#96BF48"/>
-                    <path d="M24 10C20 10 16 14 16 18L14 38H20L21 30H28L29 38H36L32 14C30 11 27 10 24 10Z" fill="white"/>
-                    <ellipse cx="24" cy="26" rx="8" ry="6" fill="#96BF48"/>
-                  </svg>
+                  <img src="assets/shopify logo.png" alt="Shopify">
                 </div>
                 <div class="integration-header-content">
                   <div class="integration-header-top">
@@ -1079,7 +1070,6 @@
               </div>
               <div class="integration-actions">
                 <button class="btn-primary" id="shopify-connect" onclick="connectIntegration('shopify')">Connect</button>
-                <button class="btn-secondary" id="shopify-config" onclick="configureIntegration('shopify')" style="display:none">Configure</button>
               </div>
             </div>
 
@@ -1087,12 +1077,7 @@
             <div class="integration-card" data-provider="quickbooks">
               <div class="integration-header">
                 <div class="integration-logo">
-                  <svg viewBox="0 0 48 48" fill="none">
-                    <rect width="48" height="48" rx="12" fill="#2CA01C"/>
-                    <path d="M10 14C10 11.8 11.8 10 14 10H26C30 10 34 14 34 18C34 20.8 32.4 23.2 30 24.4V26C30 28.2 28.2 30 26 30H18V34H14C11.8 34 10 32.2 10 30V14Z" fill="white"/>
-                    <circle cx="34" cy="34" r="10" fill="white"/>
-                    <path d="M28 34L34 40L40 34" stroke="#2CA01C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+                  <img src="assets/quick ooks logo.png" alt="QuickBooks">
                 </div>
                 <div class="integration-header-content">
                   <div class="integration-header-top">
@@ -1110,45 +1095,10 @@
               <div class="integration-features">
                 <span class="feature-tag">Invoices</span>
                 <span class="feature-tag">Expenses</span>
-                <span class="feature-tag"> Payments</span>
+                <span class="feature-tag">Payments</span>
               </div>
               <div class="integration-actions">
                 <button class="btn-primary" id="quickbooks-connect" onclick="connectIntegration('quickbooks')">Connect</button>
-                <button class="btn-secondary" id="quickbooks-config" onclick="configureIntegration('quickbooks')" style="display:none">Configure</button>
-              </div>
-            </div>
-
-            <!-- Xero -->
-            <div class="integration-card" data-provider="xero">
-              <div class="integration-header">
-                <div class="integration-logo">
-                  <svg viewBox="0 0 48 48" fill="none">
-                    <rect width="48" height="48" rx="12" fill="#13B5EA"/>
-                    <path d="M24 8L40 24L24 40H18L34 24L18 8H24Z" fill="white"/>
-                    <path d="M24 16L32 24L24 32H20L28 24L20 16H24Z" fill="#13B5EA"/>
-                  </svg>
-                </div>
-                <div class="integration-header-content">
-                  <div class="integration-header-top">
-                    <div class="integration-info">
-                      <h3>Xero</h3>
-                      <p>Cloud Accounting</p>
-                    </div>
-                    <span class="integration-status disconnected" id="xero-status">Not Connected</span>
-                  </div>
-                </div>
-              </div>
-              <div class="integration-desc">
-                Connect with Xero to sync invoices, bills and bank transactions automatically.
-              </div>
-              <div class="integration-features">
-                <span class="feature-tag">Invoices</span>
-                <span class="feature-tag">Bills</span>
-                <span class="feature-tag">Bank Sync</span>
-              </div>
-              <div class="integration-actions">
-                <button class="btn-primary" id="xero-connect" onclick="connectIntegration('xero')">Connect</button>
-                <button class="btn-secondary" id="xero-config" onclick="configureIntegration('xero')" style="display:none">Configure</button>
               </div>
             </div>
 
@@ -1156,18 +1106,7 @@
             <div class="integration-card" data-provider="gsheets">
               <div class="integration-header">
                 <div class="integration-logo">
-                  <svg viewBox="0 0 48 48" fill="none">
-                    <rect width="48" height="48" rx="12" fill="white"/>
-                    <rect x="6" y="6" width="36" height="36" rx="6" fill="#0F9D58"/>
-                    <rect x="10" y="12" width="12" height="24" rx="3" fill="white"/>
-                    <rect x="26" y="12" width="12" height="24" rx="3" fill="white"/>
-                    <rect x="12" y="16" width="8" height="3" rx="1.5" fill="#0F9D58"/>
-                    <rect x="12" y="21" width="6" height="3" rx="1.5" fill="#0F9D58"/>
-                    <rect x="12" y="26" width="8" height="3" rx="1.5" fill="#0F9D58"/>
-                    <rect x="28" y="16" width="8" height="3" rx="1.5" fill="#0F9D58"/>
-                    <rect x="28" y="21" width="6" height="3" rx="1.5" fill="#0F9D58"/>
-                    <rect x="28" y="26" width="8" height="3" rx="1.5" fill="#0F9D58"/>
-                  </svg>
+                  <img src="assets/google sheets logo.png" alt="Google Sheets">
                 </div>
                 <div class="integration-header-content">
                   <div class="integration-header-top">
@@ -1189,42 +1128,6 @@
               </div>
               <div class="integration-actions">
                 <button class="btn-primary" id="gsheets-connect" onclick="connectIntegration('gsheets')">Connect</button>
-                <button class="btn-secondary" id="gsheets-config" onclick="configureIntegration('gsheets')" style="display:none">Configure</button>
-              </div>
-            </div>
-
-            <!-- Webhooks -->
-            <div class="integration-card" data-provider="webhooks">
-              <div class="integration-header">
-                <div class="integration-logo">
-                  <svg viewBox="0 0 48 48" fill="none">
-                    <rect width="48" height="48" rx="12" fill="#7C3AED"/>
-                    <circle cx="16" cy="24" r="8" stroke="white" stroke-width="3" fill="none"/>
-                    <circle cx="36" cy="14" r="6" stroke="white" stroke-width="3" fill="none"/>
-                    <circle cx="36" cy="34" r="6" stroke="white" stroke-width="3" fill="none"/>
-                    <path d="M22 20L30 15M22 28L30 33" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                  </svg>
-                </div>
-                <div class="integration-header-content">
-                  <div class="integration-header-top">
-                    <div class="integration-info">
-                      <h3>Webhooks</h3>
-                      <p>Custom Integrations</p>
-                    </div>
-                    <span class="integration-status disconnected" id="webhooks-status">Not Connected</span>
-                  </div>
-                </div>
-              </div>
-              <div class="integration-desc">
-                Send real-time events to any HTTP endpoint. Build custom integrations with your own APIs.
-              </div>
-              <div class="integration-features">
-                <span class="feature-tag">Real-time</span>
-                <span class="feature-tag">Custom URL</span>
-                <span class="feature-tag">Events</span>
-              </div>
-              <div class="integration-actions">
-                <button class="btn-primary" id="webhooks-connect" onclick="connectIntegration('webhooks')">Configure</button>
               </div>
             </div>
 
@@ -1907,7 +1810,6 @@
                     </div>
                     <div class="integration-actions">
                       <button class="btn-primary" id="settings-zoho-connect" onclick="connectIntegration('zoho')">Connect</button>
-                      <button class="btn-secondary" id="settings-zoho-config" onclick="configureIntegration('zoho')" style="display:none">Configure</button>
                     </div>
                   </div>
 
@@ -1941,7 +1843,6 @@
                     </div>
                     <div class="integration-actions">
                       <button class="btn-primary" id="settings-shopify-connect" onclick="connectIntegration('shopify')">Connect</button>
-                      <button class="btn-secondary" id="settings-shopify-config" onclick="configureIntegration('shopify')" style="display:none">Configure</button>
                     </div>
                   </div>
 
@@ -1976,41 +1877,6 @@
                     </div>
                     <div class="integration-actions">
                       <button class="btn-primary" id="settings-quickbooks-connect" onclick="connectIntegration('quickbooks')">Connect</button>
-                      <button class="btn-secondary" id="settings-quickbooks-config" onclick="configureIntegration('quickbooks')" style="display:none">Configure</button>
-                    </div>
-                  </div>
-
-                  <!-- Xero -->
-                  <div class="integration-card" data-provider="xero">
-                    <div class="integration-header">
-                      <div class="integration-logo">
-                        <svg viewBox="0 0 48 48" fill="none">
-                          <rect width="48" height="48" rx="12" fill="#13B5EA"/>
-                          <path d="M24 8L40 24L24 40H18L34 24L18 8H24Z" fill="white"/>
-                          <path d="M24 16L32 24L24 32H20L28 24L20 16H24Z" fill="#13B5EA"/>
-                        </svg>
-                      </div>
-                      <div class="integration-header-content">
-                        <div class="integration-header-top">
-                          <div class="integration-info">
-                            <h3>Xero</h3>
-                            <p>Cloud Accounting</p>
-                          </div>
-                          <span class="integration-status disconnected" id="settings-xero-status">Not Connected</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="integration-desc">
-                      Connect with Xero to sync invoices, bills and bank transactions automatically.
-                    </div>
-                    <div class="integration-features">
-                      <span class="feature-tag">Invoices</span>
-                      <span class="feature-tag">Bills</span>
-                      <span class="feature-tag">Bank Sync</span>
-                    </div>
-                    <div class="integration-actions">
-                      <button class="btn-primary" id="settings-xero-connect" onclick="connectIntegration('xero')">Connect</button>
-                      <button class="btn-secondary" id="settings-xero-config" onclick="configureIntegration('xero')" style="display:none">Configure</button>
                     </div>
                   </div>
 
@@ -2051,42 +1917,6 @@
                     </div>
                     <div class="integration-actions">
                       <button class="btn-primary" id="settings-gsheets-connect" onclick="connectIntegration('gsheets')">Connect</button>
-                      <button class="btn-secondary" id="settings-gsheets-config" onclick="configureIntegration('gsheets')" style="display:none">Configure</button>
-                    </div>
-                  </div>
-
-                  <!-- Webhooks -->
-                  <div class="integration-card" data-provider="webhooks">
-                    <div class="integration-header">
-                      <div class="integration-logo">
-                        <svg viewBox="0 0 48 48" fill="none">
-                          <rect width="48" height="48" rx="12" fill="#7C3AED"/>
-                          <circle cx="16" cy="24" r="8" stroke="white" stroke-width="3" fill="none"/>
-                          <circle cx="36" cy="14" r="6" stroke="white" stroke-width="3" fill="none"/>
-                          <circle cx="36" cy="34" r="6" stroke="white" stroke-width="3" fill="none"/>
-                          <path d="M22 20L30 15M22 28L30 33" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                      </div>
-                      <div class="integration-header-content">
-                        <div class="integration-header-top">
-                          <div class="integration-info">
-                            <h3>Webhooks</h3>
-                            <p>Custom Integrations</p>
-                          </div>
-                          <span class="integration-status disconnected" id="settings-webhooks-status">Not Connected</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="integration-desc">
-                      Send real-time events to any HTTP endpoint. Build custom integrations with your own APIs.
-                    </div>
-                    <div class="integration-features">
-                      <span class="feature-tag">Real-time</span>
-                      <span class="feature-tag">Custom URL</span>
-                      <span class="feature-tag">Events</span>
-                    </div>
-                    <div class="integration-actions">
-                      <button class="btn-primary" id="settings-webhooks-connect" onclick="connectIntegration('webhooks')">Configure</button>
                     </div>
                   </div>
 

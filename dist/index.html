@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeFlow — Manufacturing Operations Platform</title>
+  <link rel="icon" type="image/png" href="./assets/forge_flow_icon-removebg-preview-BiUyx8AG.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
+  <script type="module" crossorigin src="./assets/main-Dhyg8vDy.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/dist-CuPr2paP.js">
+  <link rel="stylesheet" crossorigin href="./assets/landing-wzpLF6l1.css">
+  <link rel="stylesheet" crossorigin href="./assets/shared-DUSsljj7.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="./assets/forge_flow_logo-removebg-preview-B7wxy1uv.png" alt="ForgeFlow" class="ff-logo ff-logo--nav">
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Solutions</a></li>
+        <li><a href="#workflow">How It Works</a></li>
+        <li><a href="#compare">Why ForgeFlow</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-nav-ghost" onclick="openAuthModal('login')">Sign In</button>
+        <button class="btn-nav-primary" onclick="location.href='signup.html'">Get Free Trial</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-mesh"></div>
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          The Future of<br>
+          <span class="highlight">Manufacturing Operations</span>
+        </h1>
+        <p class="hero-desc">End-to-end production management, real-time inventory tracking, intelligent MRP scheduling, and data-driven analytics — all in one powerful platform.</p>
+        <div class="hero-ctas">
+          <button class="btn-primary btn-lg" onclick="location.href='signup.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Get Free Trial
+          </button>
+          <button class="btn-ghost btn-lg" onclick="scrollToSection('showcase')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Watch Overview
+          </button>
+        </div>
+        <div class="hero-trust">
+          <div class="hero-trust-item">
+            <span class="check">✓</span>
+            <span>No credit card required</span>
+          </div>
+          <div class="hero-trust-item">
+            <span class="check">✓</span>
+            <span>Full platform access</span>
+          </div>
+          <div class="hero-trust-item">
+            <span class="check">✓</span>
+            <span>Cancel anytime</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual" id="heroVisual">
+        <div class="hero-float-card card-1" data-depth="0.3">
+          <div class="float-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="float-card-label">Production Output</div>
+          <div class="float-card-val" id="productionOutput">94%</div>
+          <div class="float-card-badge">↑ 12% vs last month</div>
+        </div>
+        <div class="hero-float-card card-2" data-depth="-0.2">
+          <div class="float-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="float-card-label">Cost Savings</div>
+          <div class="float-card-val" id="costSavings">$1.2M</div>
+          <div class="float-card-badge" style="color:#FF6A00">YTD savings</div>
+        </div>
+        <div class="hero-float-card card-3" data-depth="0.1">
+          <div class="float-card-icon" style="background:rgba(16,185,129,0.1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="float-card-label">On-Time Delivery</div>
+          <div class="float-card-val" style="color:#10B981">98.7%</div>
+          <div class="float-card-badge" style="color:#10B981">↑ 3.2% improvement</div>
+        </div>
+        <div class="hero-dashboard" id="heroDashboard">
+          <div class="dash-topbar">
+            <span class="dash-dot r"></span>
+            <span class="dash-dot y"></span>
+            <span class="dash-dot g"></span>
+            <span class="dash-addr">forgeflow.io/dashboard</span>
+          </div>
+          <div class="dash-body">
+            <div class="dash-header">
+              <div class="dash-title">Production Overview</div>
+              <div class="dash-status">
+                <span class="status-dot"></span>
+                All systems operational
+              </div>
+            </div>
+            <div class="dash-kpis">
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">Active Orders</div>
+                <div class="dash-kpi-val count-up" data-target="147">0</div>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">Machines Online</div>
+                <div class="dash-kpi-val count-up" data-target="64">0</div>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">OEE Score</div>
+                <div class="dash-kpi-val count-up" data-target="92">0</div>
+                <span style="font-size:10px;color:#10B981;font-weight:600">↑ 4.2%</span>
+              </div>
+              <div class="dash-kpi">
+                <div class="dash-kpi-label">Quality Yield</div>
+                <div class="dash-kpi-val count-up" data-target="99.2">0</div>
+                <span style="font-size:10px;color:#10B981;font-weight:600">99.2%</span>
+              </div>
+            </div>
+            <div class="dash-chart">
+              <div class="dash-chart-header">
+                <span>Production Output (Last 12 Months)</span>
+                <span class="dash-chart-legend">
+                  <span class="legend-dot" style="background:#FF6A00"></span>Current
+                  <span class="legend-dot" style="background:#E5E7EB"></span>Target
+                </span>
+              </div>
+              <div class="dash-bars">
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:50%"></div>
+                  <div class="dash-bar" style="height:40%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:60%"></div>
+                  <div class="dash-bar" style="height:55%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:55%"></div>
+                  <div class="dash-bar" style="height:50%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:75%"></div>
+                  <div class="dash-bar" style="height:70%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:65%"></div>
+                  <div class="dash-bar" style="height:62%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:85%"></div>
+                  <div class="dash-bar" style="height:78%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:80%"></div>
+                  <div class="dash-bar" style="height:76%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:92%"></div>
+                  <div class="dash-bar" style="height:88%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:85%"></div>
+                  <div class="dash-bar" style="height:82%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:95%"></div>
+                  <div class="dash-bar" style="height:90%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:90%"></div>
+                  <div class="dash-bar" style="height:88%"></div>
+                </div>
+                <div class="dash-bar-group">
+                  <div class="dash-bar-target" style="height:100%"></div>
+                  <div class="dash-bar" style="height:96%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="dash-footer">
+              <div class="dash-footer-item">
+                <span class="dash-footer-dot" style="background:#10B981"></span>
+                Machine Health: <strong>92%</strong>
+              </div>
+              <div class="dash-footer-item">
+                <span class="dash-footer-dot" style="background:#FF6A00"></span>
+                Inventory: <strong>2,847 units</strong>
+              </div>
+              <div class="dash-footer-item">
+                <span class="dash-footer-dot" style="background:#3B82F6"></span>
+                Insights: <strong>Active</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-glow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section" id="features">
+    <div class="features-header scroll-fade">
+      <h2 class="section-title">Everything you need to run<br>your manufacturing operations</h2>
+      <p class="section-desc">From raw material procurement to finished goods delivery — track every detail with precision and confidence.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card scroll-fade">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3 class="feature-title">Predictive Maintenance</h3>
+        <p class="feature-desc">Proactive maintenance scheduling identifies equipment wear patterns and alerts you before failures happen, reducing downtime by up to 40%.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+      <div class="feature-card scroll-fade">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3 class="feature-title">Production Optimization</h3>
+        <p class="feature-desc">Real-time production scheduling optimizes machine utilization, labor allocation, and material flow across all workcenters.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+      <div class="feature-card scroll-fade">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <h3 class="feature-title">Inventory Intelligence</h3>
+        <p class="feature-desc">Multi-warehouse tracking with demand forecasting, automated reorder points, and smart inventory optimization.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+      <div class="feature-card scroll-fade">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3 class="feature-title">Quality Control</h3>
+        <p class="feature-desc">Advanced defect detection with real-time quality monitoring, statistical process control, and automated inspection workflows.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+      <div class="feature-card scroll-fade">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3 class="feature-title">Machine Monitoring</h3>
+        <p class="feature-desc">Real-time equipment monitoring with IoT integration, vibration analysis, and automated alerts for abnormal operating conditions.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+      <div class="feature-card scroll-fade">
+        <div class="feature-icon-wrap">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="feature-title">Smart Scheduling</h3>
+        <p class="feature-desc">Intelligent production scheduling that considers machine capacity, material availability, and delivery deadlines simultaneously.</p>
+        <span class="feature-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE 1 -->
+  <section class="showcase-section" id="showcase">
+    <div class="showcase-content scroll-fade">
+      <h2 class="section-title">Real-time visibility into<br>your entire operation</h2>
+      <p class="section-desc">See exactly what's happening across all your workcenters. KPI dashboards surface the metrics that matter most to your business.</p>
+      <div class="showcase-points">
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Production Analytics</h4>
+            <p>Track output, efficiency, and yields across all work orders in real time</p>
+          </div>
+        </div>
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Smart Alerts</h4>
+            <p>Automated notifications for low stock, machine issues, and production delays</p>
+          </div>
+        </div>
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Financial Integration</h4>
+            <p>Track labor, material, and overhead costs with variance analysis</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="showcase-visual scroll-fade">
+      <div class="showcase-float-card float-card-left">
+        <div class="float-card-icon" style="background:rgba(16,185,129,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="float-card-label">On-Time Delivery</div>
+        <div class="float-card-val" style="font-size:22px;color:#10B981">98%</div>
+      </div>
+      <div class="showcase-float-card float-card-right">
+        <div class="float-card-icon" style="background:rgba(249,115,22,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="float-card-label" style="font-size:9px">Cost Savings</div>
+        <div class="float-card-val" style="font-size:22px">$24K</div>
+      </div>
+      <div class="showcase-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--gray-700)">Operations Overview</span>
+          <span style="font-size:10px;color:var(--gray-400)">Mar 2026</span>
+        </div>
+        <canvas id="previewChart" height="140"></canvas>
+        <table class="mini-table">
+          <thead>
+            <tr><th>Order</th><th>Product</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>MFG-0031</strong></td><td>Aluminium Frame</td><td><span class="badge badge-production">In Progress</span></td></tr>
+            <tr><td><strong>MFG-0030</strong></td><td>Steel Bracket</td><td><span class="badge badge-draft">Pending</span></td></tr>
+            <tr><td><strong>MFG-0029</strong></td><td>Conveyor Unit</td><td><span class="badge badge-complete">Complete</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE 2 -->
+  <section class="showcase-section reverse">
+    <div class="showcase-content scroll-fade">
+      <h2 class="section-title">Complete factory<br>digital twin visualization</h2>
+      <p class="section-desc">Monitor your entire factory floor in real-time with 3D digital twin technology. See machine status, material flow, and production bottlenecks instantly.</p>
+      <div class="showcase-points">
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>IoT Connectivity</h4>
+            <p>Connect any machine or sensor with industrial IoT protocols</p>
+          </div>
+        </div>
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Real-Time Analytics</h4>
+            <p>Live production data with sub-second latency updates</p>
+          </div>
+        </div>
+        <div class="showcase-point">
+          <div class="showcase-point-icon">
+            <svg class="showcase-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="showcase-point-text">
+            <h4>Predictive Insights</h4>
+            <p>System analyzes usage patterns and predicts maintenance needs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="showcase-visual scroll-fade">
+      <div class="showcase-float-card float-card-left">
+        <div class="float-card-icon" style="background:rgba(16,185,129,0.1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="float-card-label">Machine Uptime</div>
+        <div class="float-card-val" style="font-size:22px;color:#10B981">99.2%</div>
+      </div>
+      <div class="showcase-screen">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--gray-700)">Factory Floor Live</span>
+          <span style="font-size:10px;color:var(--gray-400)">Updated: Live</span>
+        </div>
+        <div class="factory-grid">
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">CNC-001</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">CNC-002</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator idle"></div>
+            <div class="machine-name">CNC-003</div>
+            <div class="machine-status">Idle</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">LTH-001</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator maintenance"></div>
+            <div class="machine-name">LTH-002</div>
+            <div class="machine-status">Maint.</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">ASM-001</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator online"></div>
+            <div class="machine-name">ASM-002</div>
+            <div class="machine-status">Active</div>
+          </div>
+          <div class="factory-machine">
+            <div class="machine-indicator idle"></div>
+            <div class="machine-name">PAK-001</div>
+            <div class="machine-status">Idle</div>
+          </div>
+        </div>
+        <div class="factory-stats">
+          <div class="factory-stat">
+            <span class="factory-stat-val">64</span>
+            <span class="factory-stat-label">Machines Online</span>
+          </div>
+          <div class="factory-stat">
+            <span class="factory-stat-val">8</span>
+            <span class="factory-stat-label">Workcenters</span>
+          </div>
+          <div class="factory-stat">
+            <span class="factory-stat-val">92%</span>
+            <span class="factory-stat-label">Utilization</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="workflow-section" id="workflow">
+    <div class="workflow-inner">
+      <div class="features-header scroll-fade">
+        <h2 class="section-title">From raw material to delivery<br>in one seamless flow</h2>
+        <p class="section-desc">ForgeFlow connects every step of your manufacturing process, eliminating data silos and reducing manual work.</p>
+      </div>
+      <div class="workflow-steps">
+        <div class="workflow-step scroll-fade">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="step-label">Capture Demand</div>
+          <div class="step-desc">Sales orders, forecasts, and custom requests captured automatically from any channel</div>
+        </div>
+        <div class="workflow-step scroll-fade">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="step-label">Intelligent Planning</div>
+          <div class="step-desc">System generates production schedules, material requirements, and resource allocation in seconds</div>
+        </div>
+        <div class="workflow-step scroll-fade">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="step-label">Execute & Track</div>
+          <div class="step-desc">Monitor every work operation live on the shop floor with real-time IoT data</div>
+        </div>
+        <div class="workflow-step scroll-fade">
+          <div class="step-bubble">
+            <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="step-label">Deliver & Optimize</div>
+          <div class="step-desc">Fulfill orders on time and feed performance data back into planning for continuous improvement</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section class="compare-section" id="compare">
+    <div class="compare-inner">
+      <div class="compare-header scroll-fade">
+        <h2 class="section-title">Built for Smart Manufacturers</h2>
+        <p class="section-desc">See how we compare to traditional systems and spreadsheets</p>
+      </div>
+      <div class="compare-table-wrap scroll-fade">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th class="forgeflow-col">ForgeFlow</th>
+              <th>Legacy ERP</th>
+              <th>Spreadsheets</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Predictive maintenance scheduling</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>Real-time production monitoring</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>Automated MRP scheduling</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="prt">Partial</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>Digital twin visualization</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>IoT machine connectivity</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="prt">Add-on</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td>Advanced quality defect detection</td>
+              <td class="forgeflow-col"><span class="chk">✓</span></td>
+              <td><span class="crs">✗</span></td>
+              <td><span class="crs">✗</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing-section" id="pricing">
+    <div class="pricing-header scroll-fade">
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-desc">No hidden fees. No implementation costs. Start free, scale as you grow.</p>
+      <div class="pricing-toggle">
+        <span class="toggle-label">Monthly</span>
+        <div class="toggle-switch" id="pricingToggle" onclick="togglePricing()"></div>
+        <span class="toggle-label">Annual</span>
+        <span class="toggle-save">Save 20%</span>
+      </div>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card scroll-fade">
+        <div class="pricing-plan">Starter</div>
+        <div class="pricing-price" id="price-starter">$150<sup>/mo</sup></div>
+        <div class="pricing-tagline">Everything you need to move from spreadsheets to a real system</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Up to 15 users</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Basic inventory tracking</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Sales orders management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Purchase requests</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>BOM management</li>
+          <li class="faded"><span class="pricing-cross">✗</span>Advanced reporting</li>
+          <li class="faded"><span class="pricing-cross">✗</span>Advanced analytics</li>
+        </ul>
+        <button class="btn-pricing btn-pricing-outline" onclick="location.href='signup.html'">Start Free Trial</button>
+      </div>
+      <div class="pricing-card popular scroll-fade">
+        <div class="popular-badge">Most Popular</div>
+        <div class="pricing-plan">Professional</div>
+        <div class="pricing-price" id="price-pro">$250<sup>/mo</sup></div>
+        <div class="pricing-tagline">Scale your operations with advanced tools and data-driven insights</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Up to 30 users</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Full inventory management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Production scheduling</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>BOM management</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced reporting</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Predictive analytics</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>API access</li>
+        </ul>
+        <button class="btn-pricing btn-pricing-fill" onclick="location.href='signup.html'">Start Free Trial</button>
+      </div>
+      <div class="pricing-card scroll-fade">
+        <div class="pricing-plan">Enterprise</div>
+        <div class="pricing-price" id="price-enterprise">Contact Us</div>
+        <div class="pricing-tagline">Custom solutions for complex multi-warehouse operations</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited users</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Full platform access</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Multi-warehouse</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Workflow automation</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Digital twin access</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Custom integrations</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Dedicated support</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>SLA guarantee</li>
+          <li><span class="pricing-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>On-premise option</li>
+        </ul>
+        <button class="btn-pricing btn-pricing-outline" onclick="openContactSalesModal()">Contact Sales</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" id="faq">
+    <div class="faq-inner">
+      <div class="faq-header scroll-fade">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-desc">Everything manufacturers need to know before choosing ForgeFlow</p>
+      </div>
+      <div class="faq-grid">
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>How long does it take to migrate from our existing ERP or spreadsheets to ForgeFlow?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Most customers are fully operational within 2-4 weeks. Our onboarding team handles data migration from legacy ERPs (SAP, Oracle, Dynamics), spreadsheets, or any custom system. We map your BOMs, work centers, inventory counts, and open work orders so you hit the ground running — no production downtime required.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Can ForgeFlow handle multi-warehouse and multi-site inventory tracking?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Absolutely. ForgeFlow supports unlimited warehouses and production sites with real-time stock visibility across all locations. You can set location-specific reorder points, track inter-warehouse transfers, manage lot and serial numbers, and consolidate reporting across your entire supply chain from a single dashboard.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>How does ForgeFlow integrate with our existing machinery and IoT sensors?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>We support OPC-UA, MQTT, and Modbus protocols out of the box — covering 95% of industrial equipment. Our integration layer also connects to MTConnect-compatible CNC controllers, PLCs, and third-party sensor arrays. For proprietary systems, our open API and webhook architecture lets your automation team build custom connectors with minimal effort.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>What kind of data security and compliance standards does ForgeFlow meet?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>ForgeFlow is SOC 2 Type II certified and GDPR compliant with AES-256 encryption at rest and TLS 1.3 in transit. Enterprise customers get dedicated instances with optional on-premise or private cloud deployment. We also support role-based access control, audit logging, and SSO integration via SAML 2.0 for IT governance requirements.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Can the system scale to handle high-volume production environments with thousands of work orders?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Yes. ForgeFlow is built on a cloud-native architecture designed for throughput. We process millions of inventory transactions and tens of thousands of concurrent work orders daily across our customer base. Auto-scaling infrastructure means your system performance stays consistent whether you're running 50 or 5,000 active work orders.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>How does ForgeFlow's MRP engine handle complex BOMs with multi-level dependencies?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Our MRP engine processes multi-level bills of materials with variable lead times, safety stock rules, and lot-size constraints in real time. It considers machine capacity, labor availability, and material constraints simultaneously — generating production schedules that are actually executable, not just theoretically optimal. Alternatives are automatically proposed when material or capacity conflicts arise.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>What does implementation look like for a mid-size manufacturer with 50-200 employees?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>You'll be assigned a dedicated implementation specialist who handles the entire rollout: requirement analysis, data migration, system configuration, user training, and go-live support. Mid-size deployments typically take 3-6 weeks. We provide hands-on training for shop floor operators, planners, and management — and your first 30 days include unlimited support calls.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Can we customize ForgeFlow for our specific manufacturing process — whether it's discrete, process, or hybrid?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>ForgeFlow supports discrete, process, batch, and hybrid manufacturing models out of the box. Custom fields, configurable workflows, and role-based dashboards let you tailor the platform to your operation without code changes. Enterprise plans include full workflow automation and custom integrations for highly specialized requirements like pharma batch records or aerospace traceability.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>How does ForgeFlow's predictive maintenance reduce unplanned downtime compared to traditional schedules?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Instead of fixed calendar-based maintenance, ForgeFlow analyzes real-time sensor data — vibration patterns, temperature trends, cycle counts, and historical failure data — to predict when components are likely to fail. Our customers report a 30-40% reduction in unplanned downtime and 15-25% savings on maintenance costs by servicing equipment only when data indicates it's needed.</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-fade">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>What kind of ROI can we realistically expect, and how quickly?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Most mid-size manufacturers see measurable ROI within 3-6 months. Typical savings include 20-30% reduction in inventory carrying costs through better demand forecasting, 15-25% decrease in scrap rates via real-time quality monitoring, and 10-20% improvement in on-time delivery from optimized scheduling. We provide a free ROI assessment during the sales process based on your current operation data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-glow"></div>
+    <div class="cta-particles" id="ctaParticles"></div>
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to transform your manufacturing operations?</h2>
+      <p class="cta-desc">Join thousands of manufacturers who've upgraded to modern operations. Book a demo today — no credit card required.</p>
+      <div class="cta-actions">
+        <button class="btn-cta-primary" onclick="location.href='signup.html'">
+          Get Free Trial
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-cta-secondary" onclick="scrollToSection('features')">Learn More</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="./assets/forge_flow_logo-removebg-preview-B7wxy1uv.png" alt="ForgeFlow" class="ff-logo ff-logo--footer">
+        <p>Modern manufacturing operations platform built for industry leaders. Built for teams who want to move fast and eliminate downtime.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="#">Production Management</a></li>
+          <li><a href="#">Inventory Control</a></li>
+          <li><a href="#">Quality Assurance</a></li>
+          <li><a href="#">Maintenance Scheduling</a></li>
+          <li><a href="#">Supply Chain Tracking</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="api-reference.html">API Reference</a></li>
+          <li><a href="help.html">Help Center</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Hyle Studios. All rights reserved.</span>
+      <span>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="cookies.html">Cookies</a>
+      </span>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="auth-modal">
+      <button class="modal-close" onclick="closeAuthModal()">×</button>
+      <div class="auth-modal-brand">
+        <img src="./assets/forge_flow_logo-removebg-preview-B7wxy1uv.png" alt="ForgeFlow" class="ff-logo ff-logo--auth-modal">
+      </div>
+      <h2 class="auth-modal-title" id="authModalTitle">Welcome back</h2>
+      <p class="auth-modal-subtitle" id="authModalSubtitle">Sign in to continue to your dashboard</p>
+
+      <button class="btn-social google" onclick="handleSocialLogin('google')">
+        <svg viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continue with Google
+      </button>
+      <button class="btn-social microsoft" onclick="handleSocialLogin('microsoft')">
+        <svg viewBox="0 0 24 24" fill="white">
+          <path d="M1 1h10v10H1z" fill="#F25022"/>
+          <path d="M13 1h10v10H13z" fill="#7FBA00"/>
+          <path d="M1 13h10v10H1z" fill="#00A4EF"/>
+          <path d="M13 13h10v10H13z" fill="#FFB900"/>
+        </svg>
+        Continue with Microsoft
+      </button>
+
+      <div class="auth-social-divider">
+        <span>or continue with email</span>
+      </div>
+
+      <form class="auth-form" id="authForm" onsubmit="handleAuth(event)">
+        <div class="form-group" id="nameGroup" style="display:none">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" id="authName" placeholder="John Smith">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Work Email</label>
+          <input type="email" class="form-input" id="authEmail" placeholder="you@company.com" required>
+        </div>
+        <div class="form-group" id="passwordGroup">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="authPassword" placeholder="••••••••" required>
+        </div>
+        <div class="form-group" id="confirmPasswordGroup" style="display:none">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" class="form-input" id="authConfirmPassword" placeholder="••••••••">
+        </div>
+        <div class="form-group" id="companyGroup" style="display:none">
+          <label class="form-label">Company Name</label>
+          <input type="text" class="form-input" id="authCompany" placeholder="Acme Manufacturing">
+        </div>
+        <div class="form-group" id="planGroup" style="display:none">
+          <label class="form-label">Select Plan</label>
+          <div class="plan-select-grid">
+            <div class="plan-opt selected" onclick="selectPlan(this, 'starter')">
+              <div class="plan-opt-name">Starter</div>
+              <div class="plan-opt-price">$150/mo</div>
+            </div>
+            <div class="plan-opt" onclick="selectPlan(this, 'professional')">
+              <div class="plan-opt-name">Professional</div>
+              <div class="plan-opt-price">$250/mo</div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn-auth-submit" id="authSubmitBtn">Sign in</button>
+      </form>
+
+      <div class="auth-footer" id="authFooter">
+        <span id="authFooterText">Don't have an account? <a href="signup.html" style="color: var(--accent-color); font-weight: 700; text-decoration: none; padding: 4px 12px; border-radius: 6px; transition: all 0.2s;">Sign up free</a></span>
+      </div>
+
+      <p class="auth-terms" id="authTerms">
+        By continuing, you agree to ForgeFlow's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- CONTACT SALES MODAL -->
+  <div id="contactSalesModal" class="modal-overlay">
+    <div class="modal-container">
+      <button class="modal-close" onclick="closeContactSalesModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <h2 class="modal-title">Contact Sales</h2>
+        <p class="modal-subtitle">Talk to our enterprise team about your manufacturing needs</p>
+      </div>
+      
+      <form id="contactSalesForm" onsubmit="submitContactSalesForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="csFirstName">First Name *</label>
+            <input type="text" id="csFirstName" name="firstName" required placeholder="John">
+          </div>
+          <div class="form-group">
+            <label for="csLastName">Last Name *</label>
+            <input type="text" id="csLastName" name="lastName" required placeholder="Smith">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="csEmail">Work Email *</label>
+          <input type="email" id="csEmail" name="email" required placeholder="john@company.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="csPhone">Phone Number *</label>
+          <input type="tel" id="csPhone" name="phone" required placeholder="+1 (555) 123-4567">
+        </div>
+        
+        <div class="form-group">
+          <label for="csCompanyName">Company Name *</label>
+          <input type="text" id="csCompanyName" name="companyName" required placeholder="Acme Manufacturing Inc.">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="csCompanySize">Company Size *</label>
+            <select id="csCompanySize" name="companySize" required>
+              <option value="">Select size...</option>
+              <option value="1-50">1-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+              <option value="201-500">201-500 employees</option>
+              <option value="501-1000">501-1,000 employees</option>
+              <option value="1001-5000">1,001-5,000 employees</option>
+              <option value="5000+">5,000+ employees</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="csIndustry">Industry</label>
+            <select id="csIndustry" name="industry">
+              <option value="">Select industry...</option>
+              <option value="automotive">Automotive</option>
+              <option value="aerospace">Aerospace & Defense</option>
+              <option value="electronics">Electronics</option>
+              <option value="food">Food & Beverage</option>
+              <option value="pharmaceuticals">Pharmaceuticals</option>
+              <option value="chemicals">Chemicals</option>
+              <option value="machinery">Industrial Machinery</option>
+              <option value="metal">Metal Fabrication</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="csCurrentSystem">Current ERP / Manufacturing System</label>
+          <select id="csCurrentSystem" name="currentSystem">
+            <option value="">Select system...</option>
+            <option value="none">No current system</option>
+            <option value="sap">SAP</option>
+            <option value="oracle">Oracle</option>
+            <option value="microsoft">Microsoft Dynamics</option>
+            <option value="infor">Infor</option>
+            <option value="sage">Sage</option>
+            <option value="excel">Spreadsheets / Excel</option>
+            <option value="custom">Custom / Legacy System</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="csMessage">Additional Requirements</label>
+          <textarea id="csMessage" name="message" rows="4" placeholder="Tell us about your specific requirements, integration needs, or questions..."></textarea>
+        </div>
+        
+        <button type="submit" id="contactSalesSubmit" class="modal-submit-btn">
+          Send Request
+        </button>
+        
+        <p class="modal-disclaimer">By submitting this form, you agree to be contacted by our sales team. We respect your privacy and will never share your information.</p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openContactSalesModal() {
+      document.getElementById('contactSalesModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeContactSalesModal() {
+      document.getElementById('contactSalesModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitContactSalesForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('contactSalesForm');
+      const submitBtn = document.getElementById('contactSalesSubmit');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+      const formData = {
+        firstName: document.getElementById('csFirstName').value,
+        lastName: document.getElementById('csLastName').value,
+        email: document.getElementById('csEmail').value,
+        phone: document.getElementById('csPhone').value,
+        companyName: document.getElementById('csCompanyName').value,
+        companySize: document.getElementById('csCompanySize').value,
+        industry: document.getElementById('csIndustry').value,
+        currentSystem: document.getElementById('csCurrentSystem').value,
+        message: document.getElementById('csMessage').value,
+        timestamp: new Date().toISOString(),
+        source: 'landing_page'
+      };
+      console.log('Contact Sales Form Submitted:', formData);
+      sessionStorage.setItem('forgeflow_lead', JSON.stringify(formData));
+      setTimeout(() => {
+        closeContactSalesModal();
+        alert('Thank you for your interest in ForgeFlow Enterprise! Our sales team will contact you within 24 hours.');
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send Request';
+      }, 1500);
+    }
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item.active').forEach(el => el.classList.remove('active'));
+      if (!isActive) item.classList.add('active');
+    }
+    window.openContactSalesModal = openContactSalesModal;
+    window.closeContactSalesModal = closeContactSalesModal;
+    window.submitContactSalesForm = submitContactSalesForm;
+    window.toggleFaq = toggleFaq;
+    document.getElementById('contactSalesModal').addEventListener('click', function(e) {
+      if (e.target === this) closeContactSalesModal();
+    });
+  </script>
+
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-overlay.open .modal-container {
+      transform: scale(1) translateY(0);
+    }
+    .modal-container {
+      background: white;
+      border-radius: 24px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 48px;
+      position: relative;
+      transform: scale(0.95) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #f3f4f6;
+      color: #6b7280;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .modal-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #FF6A00 0%, #E55D00 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: white;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .modal-subtitle {
+      font-size: 15px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: var(--font-body);
+      color: #111;
+      background: #fafafa;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #FF6A00;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.1);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #9ca3af;
+    }
+    .form-group select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 44px;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .modal-submit-btn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #FF6A00 0%, #E55D00 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .modal-submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 106, 0, 0.4);
+    }
+    .modal-submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .modal-disclaimer {
+      font-size: 12px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    @media (max-width: 640px) {
+      .modal-container {
+        padding: 32px 24px;
+        max-height: 95vh;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .modal-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+
+</body>
+</html>

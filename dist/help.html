@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeFlow Help & Documentation</title>
+  <style>
+    html {
+      overflow-y: auto;
+    }
+    body {
+      background: var(--gray-50);
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+    .help-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .help-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .help-header h1 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--gray-800);
+      margin-bottom: 8px;
+    }
+    .help-header p {
+      font-size: 16px;
+      color: var(--gray-500);
+    }
+    .help-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--cobalt), var(--cobalt-light));
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+    .help-logo span {
+      font-size: 24px;
+      font-weight: 800;
+      color: white;
+    }
+    .help-section {
+      background: var(--white);
+      border: 1px solid var(--gray-100);
+      border-radius: var(--radius-xl);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .help-section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-100);
+      cursor: pointer;
+    }
+    .help-section-header:hover {
+      background: var(--sky-pale);
+    }
+    .help-section-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--cobalt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .help-section-icon svg {
+      width: 20px;
+      height: 20px;
+      color: white;
+    }
+    .help-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+    .help-section-body {
+      padding: 20px;
+      display: block;
+    }
+    .help-section-body p {
+      font-size: 14px;
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .help-section-body ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .help-section-body li {
+      font-size: 14px;
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+    .help-section-body strong {
+      color: var(--gray-800);
+    }
+    .help-flow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 20px 0;
+      padding: 16px;
+      background: var(--sky-pale);
+      border-radius: var(--radius-lg);
+      flex-wrap: wrap;
+    }
+    .help-flow-step {
+      padding: 8px 14px;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--cobalt);
+    }
+    .help-flow-arrow {
+      color: var(--gray-400);
+      font-weight: bold;
+    }
+    .help-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--cobalt);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+    .help-back:hover {
+      background: var(--cobalt-dark);
+    }
+    .help-tip {
+      display: flex;
+      gap: 10px;
+      padding: 12px 14px;
+      background: rgba(16,185,129,0.1);
+      border-radius: var(--radius-md);
+      margin-top: 16px;
+    }
+    .help-tip svg {
+      width: 18px;
+      height: 18px;
+      color: var(--success);
+      flex-shrink: 0;
+    }
+    .help-tip p {
+      font-size: 13px;
+      color: var(--gray-700);
+      margin: 0;
+    }
+  </style>
+  <link rel="stylesheet" crossorigin href="./assets/app-CdVvZqmb.css">
+  <link rel="stylesheet" crossorigin href="./assets/shared-DUSsljj7.css">
+</head>
+<body>
+  <div class="help-container">
+    <a href="app.html" class="help-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to App
+    </a>
+    
+    <div class="help-header">
+      <div class="help-logo"><span>FF</span></div>
+      <h1>ForgeFlow Help Center</h1>
+      <p>Your complete guide to understanding and using the manufacturing management system</p>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <span class="help-section-title">Dashboard</span>
+      </div>
+      <div class="help-section-body">
+        <p>The Dashboard is your <strong>command center</strong> that provides a real-time overview of your entire manufacturing operations. It's the first thing you see when you log in.</p>
+        <p><strong>What it shows:</strong></p>
+        <ul>
+          <li><strong>KPI Cards</strong> - Key metrics like total sales revenue, inventory value, active manufacturing orders, and staff count</li>
+          <li><strong>Charts</strong> - Visual representations of sales trends and order status distribution</li>
+          <li><strong>Low Stock Alerts</strong> - Items that have fallen below minimum threshold levels</li>
+          <li><strong>Recent Maintenance</strong> - Latest machine maintenance requests and their status</li>
+          <li><strong>MRP Summary</strong> - Material shortages, demand pipeline, and production capacity</li>
+        </ul>
+        <div class="help-tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <p><strong>Pro Tip:</strong> Click "Export Report" to download a comprehensive CSV export of all your data.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manufacturing Orders -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>
+        </div>
+        <span class="help-section-title">Manufacturing Orders</span>
+      </div>
+      <div class="help-section-body">
+        <p>Manufacturing Orders (MFG) are the <strong>core production documents</strong> that define what needs to be manufactured, in what quantity, and by when.</p>
+        <p><strong>How it works:</strong></p>
+        <ul>
+          <li>Created from <strong>Sales Orders</strong> when products aren't available in inventory</li>
+          <li>Each MFG order contains <strong>materials list</strong> from the Bill of Materials</li>
+          <li>Contains <strong>production stages</strong> (Cutting, Assembly, Packaging, etc.)</li>
+          <li>Tracks <strong>labor costs</strong> and total production cost</li>
+        </ul>
+        <div class="help-flow">
+          <span class="help-flow-step">Sales Order</span>
+          <span class="help-flow-arrow">→</span>
+          <span class="help-flow-step">Manufacturing Order</span>
+          <span class="help-flow-arrow">→</span>
+          <span class="help-flow-step">Work Operations</span>
+          <span class="help-flow-arrow">→</span>
+          <span class="help-flow-step">Completed</span>
+        </div>
+        <p><strong>Status Flow:</strong> Pending → Approved → In Production → Packed → Shipped → Delivered</p>
+      </div>
+    </div>
+
+    <!-- Work Operations -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <span class="help-section-title">Work Operations (Workfloor)</span>
+      </div>
+      <div class="help-section-body">
+        <p>The Workfloor is the <strong>real-time production execution interface</strong> where operators and supervisors manage day-to-day manufacturing activities.</p>
+        <p><strong>What you can do:</strong></p>
+        <ul>
+          <li><strong>Track Operations</strong> - View all active, pending, and completed production tasks</li>
+          <li><strong>Monitor Progress</strong> - See actual vs estimated time for each operation</li>
+          <li><strong>Assign Staff & Machines</strong> - Allocate resources to specific operations</li>
+          <li><strong>Control Flow</strong> - Start, Pause, Resume, or Complete operations</li>
+        </ul>
+        <p><strong>Operation Statuses:</strong></p>
+        <ul>
+          <li><span style="color:var(--gray-400)">●</span> <strong>Pending</strong> - Waiting to start</li>
+          <li><span style="color:var(--cobalt)">●</span> <strong>In Progress</strong> - Currently being worked on</li>
+          <li><span style="color:#F59E0B">●</span> <strong>Paused</strong> - Temporarily stopped</li>
+          <li><span style="color:var(--success)">●</span> <strong>Completed</strong> - Finished</li>
+        </ul>
+        <div class="help-tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <p>When an operation is completed, materials are automatically consumed from inventory!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventory -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <span class="help-section-title">Inventory Management</span>
+      </div>
+      <div class="help-section-body">
+        <p>Inventory tracks all your <strong>raw materials and finished goods</strong> across warehouses and bin locations.</p>
+        <p><strong>Key Features:</strong></p>
+        <ul>
+          <li><strong>Multi-Warehouse Support</strong> - Track stock across multiple locations (WH-A, WH-B)</li>
+          <li><strong>Bin Locations</strong> - Know exactly where each item is stored</li>
+          <li><strong>Stock States:</strong></li>
+          <ul>
+            <li><strong>Available</strong> - Stock ready for use</li>
+            <li><strong>Allocated</strong> - Reserved for production orders</li>
+            <li><strong>Consumed</strong> - Used in completed operations</li>
+          </ul>
+          <li><strong>Low Stock Alerts</strong> - Automatic warnings when items fall below minimum levels</li>
+        </ul>
+        <p><strong>Integration:</strong> Inventory automatically updates when materials are allocated to manufacturing orders or consumed during operations.</p>
+      </div>
+    </div>
+
+    <!-- Sales Orders -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <span class="help-section-title">Sales Orders</span>
+      </div>
+      <div class="help-section-body">
+        <p>Sales Orders capture <strong>customer demand</strong> and drive the entire production process through the MRP system.</p>
+        <p><strong>Workflow:</strong></p>
+        <ul>
+          <li><strong>Quote</strong> - Initial customer request/estimate</li>
+          <li><strong>Confirmed</strong> - Customer has accepted the quote</li>
+          <li><strong>Pending MFG</strong> - Waiting for manufacturing</li>
+          <li><strong>In Production</strong> - Being manufactured</li>
+          <li><strong>Ready to Ship</strong> - Completed and awaiting delivery</li>
+          <li><strong>Shipped</strong> - On the way to customer</li>
+          <li><strong>Delivered</strong> - Fully fulfilled</li>
+        </ul>
+        <p><strong>MRP Integration:</strong> When you confirm a sales order, the system automatically checks if you have enough finished goods. If not, it suggests creating a Manufacturing Order.</p>
+      </div>
+    </div>
+
+    <!-- Purchase Requests -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </div>
+        <span class="help-section-title">Purchase Requests</span>
+      </div>
+      <div class="help-section-body">
+        <p>Purchase Requests (PR) handle <strong>procurement of materials</strong> from suppliers when inventory is insufficient.</p>
+        <p><strong>How it works:</strong></p>
+        <ul>
+          <li>Created automatically when <strong>low stock</strong> is detected</li>
+          <li>Can be created <strong>manually</strong> from inventory items</li>
+          <li>Tracks <strong>supplier, quantity, cost, and delivery dates</strong></li>
+          <li>Status flow: <strong>Pending → Approved → Received</strong></li>
+        </ul>
+        <p>Approved purchase requests can be sent to suppliers to replenish inventory.</p>
+      </div>
+    </div>
+
+    <!-- Bill of Materials -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <span class="help-section-title">Bill of Materials (BOM)</span>
+      </div>
+      <div class="help-section-body">
+        <p>The Bill of Materials defines the <strong>recipe for making each product</strong> - exactly what materials are needed and in what quantities.</p>
+        <p><strong>What it contains:</strong></p>
+        <ul>
+          <li><strong>Materials List</strong> - All raw materials required</li>
+          <li><strong>Quantities</strong> - How much of each material per unit</li>
+          <li><strong>Wastage %</strong> - Expected material loss during production</li>
+          <li><strong>Sub-assemblies</strong> - Pre-made components</li>
+        </ul>
+        <p><strong>Example:</strong></p>
+        <p><em>Product: Printed Packaging Box</em><br>
+        BOM: 1x Cardboard Sheet + 0.02L Ink + 0.01kg Glue</p>
+        <p>The BOM is used by the MRP engine to calculate total material requirements when a Manufacturing Order is created.</p>
+      </div>
+    </div>
+
+    <!-- Staff -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <span class="help-section-title">Staff Management</span>
+      </div>
+      <div class="help-section-body">
+        <p>Staff module manages your <strong>employees, roles, and access levels</strong> within the system.</p>
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li><strong>Employee Records</strong> - Name, role, department, hourly rate</li>
+          <li><strong>Role Assignment</strong> - Define what each person can do</li>
+          <li><strong>Current Assignment</strong> - Track who is working on what</li>
+          <li><strong>Access Control</strong> - Different permission levels (Operator, Manager, Admin)</li>
+        </ul>
+        <p>Staff can be assigned to Work Operations to track labor usage and productivity.</p>
+      </div>
+    </div>
+
+    <!-- Maintenance -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <span class="help-section-title">Machine Maintenance</span>
+      </div>
+      <div class="help-section-body">
+        <p>Track machine <strong>health, repairs, and scheduled maintenance</strong> to minimize downtime.</p>
+        <p><strong>What it tracks:</strong></p>
+        <ul>
+          <li><strong>Maintenance Requests</strong> - Issues reported by operators</li>
+          <li><strong>Severity Levels</strong> - Critical, High, Medium, Low</li>
+          <li><strong>Status</strong> - Pending, Approved, Scheduled, Resolved, Completed</li>
+          <li><strong>Service History</strong> - Full audit trail of all maintenance</li>
+        </ul>
+        <p><strong>Impact on Operations:</strong> When a machine is down, related Work Operations can be paused until repairs are complete.</p>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <span class="help-section-title">Settings</span>
+      </div>
+      <div class="help-section-body">
+        <p>Configure your <strong>account, company, and application preferences</strong>.</p>
+        <p><strong>Settings Sections:</strong></p>
+        <ul>
+          <li><strong>General</strong> - Profile, timezone, date format, currency, defaults</li>
+          <li><strong>Company</strong> - Organization details, logo, branding</li>
+          <li><strong>Notifications</strong> - Email and push notification preferences</li>
+          <li><strong>Security</strong> - Password, 2FA, session management, API keys</li>
+          <li><strong>Subscription</strong> - Plan details and usage</li>
+          <li><strong>Appearance</strong> - Theme, colors, layout options</li>
+          <li><strong>Integrations</strong> - Connect third-party services</li>
+          <li><strong>Data</strong> - Export/import data, danger zone</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForgeFlow — Dashboard</title>
+<link rel="icon" type="image/png" href="./assets/forge_flow_icon-removebg-preview-BiUyx8AG.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script type="module" crossorigin src="./assets/app-CCr0IhTo.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/dist-CuPr2paP.js">
+  <link rel="stylesheet" crossorigin href="./assets/app-CdVvZqmb.css">
+  <link rel="stylesheet" crossorigin href="./assets/shared-DUSsljj7.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-name"><img src="./assets/forge%20flow%20white%20logo%20wirh%20icon-Bv-27pGn.png" alt="Forge Flow" class="ff-logo ff-logo--sidebar"></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <div class="sidebar-nav-item active" onclick="showModule('dashboard', this)">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Dashboard</span>
+      </div>
+
+      <div class="sidebar-section-label">Operations</div>
+      <div class="sidebar-nav-item" onclick="showModule('manufacturing', this)" data-plan-required="trial,starter,professional,enterprise">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg><span>Manufacturing</span>
+        <span class="sidebar-count">12</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('workops', this)" data-plan-required="professional,enterprise" data-upgrade-to="professional">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Work Operations</span>
+        <span class="sidebar-pro-badge">PRO</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('inventory', this)" data-plan-required="trial,starter,professional,enterprise" data-inventory-type="full">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span>Inventory</span>
+        <span class="sidebar-count alert">3</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('sales', this)" data-plan-required="trial,starter,professional,enterprise">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Sales Orders</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('purchase', this)" data-plan-required="trial,starter,professional,enterprise">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Purchase Req.</span>
+      </div>
+
+      <div class="sidebar-section-label">Catalogue</div>
+      <div class="sidebar-nav-item" onclick="showModule('bom', this)" data-plan-required="trial,starter,professional,enterprise">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Product BOM</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('uom', this)" data-plan-required="trial,starter,professional,enterprise">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><span>Unit of Measure</span>
+      </div>
+
+      <div class="sidebar-section-label">People & Assets</div>
+      <div class="sidebar-nav-item" onclick="showModule('suppliers', this)" data-plan-required="trial,starter,professional,enterprise">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Suppliers</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('staff', this)" data-plan-required="trial,starter,professional,enterprise">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Staff</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('teams', this)" data-plan-required="professional,enterprise" data-upgrade-to="professional" data-superadmin-only="true">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Teams & Roles</span>
+        <span class="sidebar-pro-badge">PRO</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('maintenance', this)" data-plan-required="professional,enterprise" data-upgrade-to="professional">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Maintenance</span>
+        <span class="sidebar-pro-badge">PRO</span>
+      </div>
+
+      <div class="sidebar-section-label">System</div>
+      <div class="sidebar-nav-item" onclick="showModule('integrations', this)" data-plan-required="professional,enterprise" data-upgrade-to="professional">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span>Integrations</span>
+        <span class="sidebar-pro-badge">PRO</span>
+      </div>
+      <div class="sidebar-nav-item" onclick="showModule('settings', this)">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="sidebar-logout-btn" onclick="doLogout()" title="Sign out">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN AREA ============ -->
+  <div class="app-main">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <span class="topbar-breadcrumb" id="topbarBreadcrumb">Dashboard</span>
+      
+      <div class="topbar-center">
+        <div class="topbar-search">
+          <svg class="topbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="topbarSearchInput" name="" class="topbar-search-input" placeholder="Search anything..." autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      
+      <div class="topbar-actions">
+        <div class="notification-dropdown">
+          <button class="topbar-icon-btn" title="Notifications" onclick="toggleNotifications()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot" id="notifDot"></span>
+          </button>
+          <div class="notification-menu" id="notificationMenu">
+            <div class="notification-header">
+              <span>Notifications</span>
+              <button class="mark-read-btn" onclick="markAllRead()">Mark all read</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+              <div class="notification-item unread" data-type="alert">
+                <div class="notif-icon alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                <div class="notif-content">
+                  <div class="notif-title">Low Stock Alert</div>
+                  <div class="notif-desc">Aluminium Sheet 2mm is below minimum stock</div>
+                  <div class="notif-time">2 minutes ago</div>
+                </div>
+              </div>
+              <div class="notification-item unread" data-type="alert">
+                <div class="notif-icon alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                <div class="notif-content">
+                  <div class="notif-title">Low Stock Alert</div>
+                  <div class="notif-desc">Solvent Chemical A is critically low (2L)</div>
+                  <div class="notif-time">15 minutes ago</div>
+                </div>
+              </div>
+              <div class="notification-item unread" data-type="operation">
+                <div class="notif-icon operation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <div class="notif-content">
+                  <div class="notif-title">Operation Completed</div>
+                  <div class="notif-desc">OP-0095 (Final Assembly) has been completed</div>
+                  <div class="notif-time">1 hour ago</div>
+                </div>
+              </div>
+              <div class="notification-item unread" data-type="system">
+                <div class="notif-icon system"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                <div class="notif-content">
+                  <div class="notif-title">Login Alert</div>
+                  <div class="notif-desc">New login from Chrome on MacBook Pro</div>
+                  <div class="notif-time">3 hours ago</div>
+                </div>
+              </div>
+              <div class="notification-item unread" data-type="order">
+                <div class="notif-icon order"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                <div class="notif-content">
+                  <div class="notif-title">New Sales Order</div>
+                  <div class="notif-desc">SO-0125 received from Apex Engineering</div>
+                  <div class="notif-time">5 hours ago</div>
+                </div>
+              </div>
+              <div class="notification-item" data-type="maintenance">
+                <div class="notif-icon maintenance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+                <div class="notif-content">
+                  <div class="notif-title">Maintenance Due</div>
+                  <div class="notif-desc">CNC Router #2 scheduled for maintenance</div>
+                  <div class="notif-time">Yesterday</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="topbar-icon-btn" title="Help" onclick="openHelpPage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <span class="plan-badge" id="planBadge" data-plan="">
+          <span class="plan-badge-text">FREE TRIAL</span>
+          <span class="plan-badge-countdown">14 days left</span>
+          <span class="plan-active-text">Active</span>
+        </span>
+        <button class="demo-data-btn" onclick="clearDemoData()" title="Clear all demo data">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Clear Data
+        </button>
+        <div class="user-dropdown">
+          <div class="user-avatar-top" id="sidebarAvatar">JD</div>
+          <div class="user-dropdown-menu">
+            <div class="user-dropdown-header">
+              <div class="user-avatar-large" id="sidebarAvatarLarge">JD</div>
+              <div>
+                <div class="user-dropdown-name" id="sidebarName">John Demo</div>
+                <div class="user-dropdown-email">john@demo.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item" onclick="showModule('settings', this); closeUserDropdown();">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Account
+            </a>
+            <a href="#" class="user-dropdown-item" onclick="showModule('settings', this); closeUserDropdown();">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Settings
+            </a>
+            <a href="#" class="user-dropdown-item" onclick="showModule('teams', this); closeUserDropdown();">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Teams
+            </a>
+            <a href="#" class="user-dropdown-item" onclick="openSettingsSubscription()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              Subscription
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <a href="#" class="user-dropdown-item logout" onclick="doLogout()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Log out
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Content -->
+    <div class="app-content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <div class="module-view active" id="mod-dashboard">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Dashboard Overview</div>
+            <div class="module-subtitle">Your manufacturing operations at a glance — March 2026</div>
+          </div>
+          <div class="module-actions">
+            <button class="btn-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              This Month
+            </button>
+            <button class="btn-primary" onclick="exportAllData()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Report
+            </button>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <span class="kpi-trend up">↑ 12%</span>
+            </div>
+            <div class="kpi-value">4,200</div>
+            <div class="kpi-label">Total Sales Revenue</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%"></div></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              </div>
+              <span class="kpi-trend up">↑ 3%</span>
+            </div>
+            <div class="kpi-value">10,450</div>
+            <div class="kpi-label">Inventory Value</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:60%"></div></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>
+              </div>
+              <span class="kpi-trend up">↑ 4 new</span>
+            </div>
+            <div class="kpi-value">12</div>
+            <div class="kpi-label">Active MFG Orders</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:55%"></div></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <span class="kpi-trend down">3 items</span>
+            </div>
+            <div class="kpi-value" style="color:var(--danger)">3</div>
+            <div class="kpi-label">Low Stock Alerts</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:30%;background:var(--danger)"></div></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              </div>
+              <span class="kpi-trend up">↑ 8%</span>
+            </div>
+            <div class="kpi-value">7,800</div>
+            <div class="kpi-label">Purchase Cost MTD</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:45%"></div></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <span class="kpi-trend warn">3 on leave</span>
+            </div>
+            <div class="kpi-value">24</div>
+            <div class="kpi-label">Total Staff</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:80%"></div></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <span class="kpi-trend up">2 POs active</span>
+            </div>
+            <div class="kpi-value">8</div>
+            <div class="kpi-label">Suppliers</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:90%"></div></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg>
+              </div>
+              <span class="kpi-trend up">↑ 3 new</span>
+            </div>
+            <div class="kpi-value">31</div>
+            <div class="kpi-label">Active Customers</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:85%"></div></div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-card-title">Sales Revenue & Production Output</div>
+            <div class="chart-card-sub">Last 12 months — dual axis</div>
+            <canvas id="dashLineChart" height="160"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-title">Order Status Distribution</div>
+            <div class="chart-card-sub">Current manufacturing orders</div>
+            <canvas id="dashPieChart" height="160"></canvas>
+          </div>
+        </div>
+
+        <!-- MRP Summary Section -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+          <div class="table-card" style="border-left:3px solid var(--danger)">
+            <div style="padding:16px">
+              <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">MRP Material Shortages</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">Aluminium Sheet 2mm</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--danger)">-38 SHT</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">Solvent Chemical A</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--danger)">-8 L</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">Packaging Box</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--warn)">-76 PCS</span>
+                </div>
+              </div>
+              <button class="btn-secondary" style="margin-top:12px;width:100%;font-size:12px" onclick="showModule('purchase',null)">Generate Purchase Requests</button>
+            </div>
+          </div>
+          <div class="table-card" style="border-left:3px solid var(--cobalt)">
+            <div style="padding:16px">
+              <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Demand Pipeline</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">Pending Orders</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--gray-800)">3</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">In Production</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--cobalt)">1</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">Ready to Ship</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--success)">1</span>
+                </div>
+              </div>
+              <button class="btn-secondary" style="margin-top:12px;width:100%;font-size:12px" onclick="showModule('sales',null)">View Orders</button>
+            </div>
+          </div>
+          <div class="table-card" style="border-left:3px solid var(--warn)">
+            <div style="padding:16px">
+              <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Production Capacity</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">Active Operations</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--gray-800)">8</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">Machines Busy</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--warn)">4/6</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:var(--gray-700)">Efficiency Rate</span>
+                  <span style="font-size:12px;font-weight:600;color:var(--success)">94%</span>
+                </div>
+              </div>
+              <button class="btn-secondary" style="margin-top:12px;width:100%;font-size:12px" onclick="showModule('workops',null)">View Workfloor</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="table-card">
+            <div class="table-card-header">
+              <span style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--gray-800)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:6px;vertical-align:middle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Low Stock Alerts
+              </span>
+              <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="showModule('purchase',null)">Create PR</button>
+            </div>
+            <div style="padding:14px">
+              <div class="alerts-list">
+                <div class="alert-row danger">
+                  <span class="alert-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </span>
+                  <div class="alert-body">
+                    <div class="alert-title">Aluminium Sheet 2mm</div>
+                    <div class="alert-desc">12 sheets remaining — minimum stock: 50</div>
+                  </div>
+                </div>
+                <div class="alert-row warn">
+                  <span class="alert-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                  </span>
+                  <div class="alert-body">
+                    <div class="alert-title">Packaging Box (Large)</div>
+                    <div class="alert-desc">24 units — reorder threshold reached</div>
+                  </div>
+                </div>
+                <div class="alert-row danger">
+                  <span class="alert-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6v6l4 8H5l4-8V3z"/><line x1="9" y1="3" x2="15" y2="3"/></svg>
+                  </span>
+                  <div class="alert-body">
+                    <div class="alert-title">Solvent Chemical A</div>
+                    <div class="alert-desc">2L remaining — minimum is 10L</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-card-header">
+              <span style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--gray-800)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:6px;vertical-align:middle"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Recent Maintenance
+              </span>
+            </div>
+            <table class="data-table">
+              <thead><tr><th>Machine</th><th>Issue</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong>CNC Router #2</strong></td><td>Spindle bearing failure</td><td><span class="badge badge-danger">Critical</span></td></tr>
+                <tr><td><strong>Laser Cutter A</strong></td><td>Lens cleaning</td><td><span class="badge badge-active">Resolved</span></td></tr>
+                <tr><td><strong>Assembly Belt 3</strong></td><td>Belt tension adjustment</td><td><span class="badge badge-pending">Scheduled</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== MANUFACTURING ===== -->
+      <div class="module-view" id="mod-manufacturing">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Manufacturing Orders</div>
+            <div class="module-subtitle">Manage and track all production jobs end-to-end</div>
+          </div>
+          <div class="module-actions">
+            <button class="filter-chip active">All</button>
+            <button class="filter-chip">In Production</button>
+            <button class="filter-chip">Pending</button>
+            <button class="btn-primary" onclick="openPane('mfgPane','New Manufacturing Order')">＋ New Order</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search orders...">
+            </div>
+            <div class="table-filters">
+              <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Order ID</th><th>Product</th><th>Sales Ref.</th><th>Qty</th><th>Labour Cost</th><th>Total Cost</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr data-status="In Production"><td><strong>MFG-0031</strong></td><td>Aluminium Frame Kit</td><td>SO-0124</td><td>50 pcs</td><td>$20.00</td><td>$1,840.00</td><td><span class="badge badge-production">In Production</span></td><td>Mar 10</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('mfgPane','MFG-0031 — Aluminium Frame Kit','In Production')">View</button><button class="act-btn act-btn-complete" onclick="updateStatus(this,'Completed')">Complete</button></div></td></tr>
+              <tr data-status="Pending"><td><strong>MFG-0030</strong></td><td>Steel Bracket Assembly</td><td>SO-0123</td><td>200 pcs</td><td>$40.00</td><td>$3,200.00</td><td><span class="badge badge-pending">Pending</span></td><td>Mar 9</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('mfgPane','MFG-0030 — Steel Bracket Assembly','Pending')">View</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'Approved')">Approve</button><button class="act-btn act-btn-reject" onclick="updateStatus(this,'Rejected')">Reject</button></div></td></tr>
+              <tr data-status="Packed"><td><strong>MFG-0029</strong></td><td>Conveyor Belt Unit</td><td>SO-0121</td><td>10 units</td><td>$1,200.00</td><td>$4,750.00</td><td><span class="badge badge-complete">Packed</span></td><td>Mar 7</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('mfgPane','MFG-0029 — Conveyor Belt Unit','Packed')">View</button><button class="act-btn act-btn-deliver" onclick="updateStatus(this,'Delivered')">Deliver</button></div></td></tr>
+              <tr data-status="Shipped"><td><strong>MFG-0028</strong></td><td>Custom Enclosure Box</td><td>SO-0119</td><td>75 pcs</td><td>$80.00</td><td>$2,100.00</td><td><span class="badge badge-shipped">Shipped</span></td><td>Mar 5</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('mfgPane','MFG-0028 — Custom Enclosure Box','Shipped')">View</button></div></td></tr>
+              <tr data-status="Delivered"><td><strong>MFG-0027</strong></td><td>Aluminium Frame Kit</td><td>SO-0117</td><td>30 pcs</td><td>$90.00</td><td>$1,100.00</td><td><span class="badge badge-delivered">Delivered</span></td><td>Mar 2</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('mfgPane','MFG-0027 — Aluminium Frame Kit','Delivered')">View</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== WORK OPERATIONS ===== -->
+      <div class="module-view" id="mod-workops">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Workfloor Operations</div>
+            <div class="module-subtitle">Real-time production execution and task tracking</div>
+          </div>
+          <div class="module-actions">
+            <button class="filter-chip active">All</button>
+            <button class="filter-chip">In Progress</button>
+            <button class="filter-chip">Pending</button>
+            <button class="filter-chip">Paused</button>
+            <button class="btn-primary" onclick="openPane('workopsPane','New Operation')">＋ New Operation</button>
+          </div>
+        </div>
+
+        <!-- KPI Summary Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 20px;">
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background: var(--sky-pale);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--cobalt)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+            </div>
+            <div class="kpi-value">8</div>
+            <div class="kpi-label">Active Operations</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background: var(--gray-100);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--gray-400)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+            </div>
+            <div class="kpi-value">5</div>
+            <div class="kpi-label">Pending Operations</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background: var(--success-bg);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--success)"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+            </div>
+            <div class="kpi-value">23</div>
+            <div class="kpi-label">Completed Today</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-header">
+              <div class="kpi-icon" style="background: var(--danger-bg);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--danger)"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+            </div>
+            <div class="kpi-value" style="color:var(--danger)">2</div>
+            <div class="kpi-label">Machine Downtime</div>
+          </div>
+        </div>
+
+        <div class="table-card" style="overflow-x:auto">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search operations...">
+            </div>
+            <div class="table-filters">
+              <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+            </div>
+          </div>
+          <table class="data-table" style="min-width:900px">
+            <thead>
+              <tr><th>Operation ID</th><th>MFG Ref.</th><th>Product</th><th>Stage</th><th>Assigned Staff</th><th>Machine</th><th>Est. Time</th><th>Actual</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr data-status="In Progress"><td><strong>OP-0101</strong></td><td>MFG-0031</td><td>Aluminium Frame Kit</td><td>Cutting</td><td>Maria Santos</td><td>CNC Router #2</td><td>45 min</td><td>32 min</td><td><span class="badge badge-production">In Progress</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('workopsPane','OP-0101 — Cutting','In Progress')">View</button><button class="act-btn act-btn-complete" onclick="updateStatus(this,'Completed')">Complete</button><button class="act-btn act-btn-edit" onclick="updateStatus(this,'Paused')">Pause</button></div></td></tr>
+              <tr data-status="In Progress"><td><strong>OP-0100</strong></td><td>MFG-0031</td><td>Aluminium Frame Kit</td><td>Forming</td><td>James Okonkwo</td><td>Hydraulic Press #1</td><td>30 min</td><td>18 min</td><td><span class="badge badge-production">In Progress</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('workopsPane','OP-0100 — Forming','In Progress')">View</button><button class="act-btn act-btn-complete" onclick="updateStatus(this,'Completed')">Complete</button><button class="act-btn act-btn-edit" onclick="updateStatus(this,'Paused')">Pause</button></div></td></tr>
+              <tr data-status="Paused"><td><strong>OP-0099</strong></td><td>MFG-0030</td><td>Steel Bracket Assembly</td><td>Cutting</td><td>Maria Santos</td><td>Laser Cutter A</td><td>120 min</td><td>45 min</td><td><span class="badge badge-pending" style="background:var(--warn-bg);color:#B45309">Paused</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('workopsPane','OP-0099 — Cutting','Paused')">View</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'In Progress')">Resume</button></div></td></tr>
+              <tr data-status="Pending"><td><strong>OP-0098</strong></td><td>MFG-0031</td><td>Aluminium Frame Kit</td><td>Assembly</td><td>Kevin Huang</td><td>Assembly Belt 3</td><td>60 min</td><td>—</td><td><span class="badge badge-draft">Pending</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('workopsPane','OP-0098 — Assembly','Pending')">View</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'In Progress')">Start</button></div></td></tr>
+              <tr data-status="Pending"><td><strong>OP-0097</strong></td><td>MFG-0031</td><td>Aluminium Frame Kit</td><td>QA Inspection</td><td>Kevin Huang</td><td>QA Station</td><td>20 min</td><td>—</td><td><span class="badge badge-draft">Pending</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('workopsPane','OP-0097 — QA Inspection','Pending')">View</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'In Progress')">Start</button></div></td></tr>
+              <tr data-status="Pending"><td><strong>OP-0096</strong></td><td>MFG-0031</td><td>Aluminium Frame Kit</td><td>Packaging</td><td>James Okonkwo</td><td>Packaging Station</td><td>15 min</td><td>—</td><td><span class="badge badge-draft">Pending</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('workopsPane','OP-0096 — Packaging','Pending')">View</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'In Progress')">Start</button></div></td></tr>
+              <tr data-status="Completed"><td><strong>OP-0095</strong></td><td>MFG-0029</td><td>Conveyor Belt Unit</td><td>Final Assembly</td><td>James Okonkwo</td><td>Assembly Belt 1</td><td>90 min</td><td>85 min</td><td><span class="badge badge-complete">Completed</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('workopsPane','OP-0095 — Final Assembly','Completed')">View</button></div></td></tr>
+              <tr data-status="Completed"><td><strong>OP-0094</strong></td><td>MFG-0029</td><td>Conveyor Belt Unit</td><td>Welding</td><td>Maria Santos</td><td>Weld Station #2</td><td>60 min</td><td>55 min</td><td><span class="badge badge-complete">Completed</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('workopsPane','OP-0094 — Welding','Completed')">View</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== INVENTORY ===== -->
+      <div class="module-view" id="mod-inventory">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Inventory Management</div>
+            <div class="module-subtitle">Multi-warehouse stock tracking with bin locations and real-time levels</div>
+          </div>
+          <div class="module-actions">
+            <button class="filter-chip active">All Warehouses</button>
+            <button class="filter-chip">WH-A</button>
+            <button class="filter-chip">WH-B</button>
+            <button class="btn-primary" onclick="openPane('invPane','Add Inventory Item')">＋ Add Item</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search inventory...">
+            </div>
+<div class="table-filters">
+              <button class="filter_chip">Raw Materials</button>
+              <button class="filter_chip">Finished Goods</button>
+              <button class="filter_chip active">All Items</button>
+              <button class="btn-secondary" style="font-size:12px;margin-left:auto" onclick="exportCurrentModule()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Description</th><th>Category</th><th>Warehouse / Bin</th><th>UOM</th><th>Available</th><th>Allocated</th><th>Consumed</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-status="Low Stock"><td><strong>RM-1001</strong></td><td>Aluminium Sheet 2mm</td><td>Raw Material</td><td>WH-A / Rack B3</td><td>SHT</td><td style="color:var(--danger)">12</td><td style="color:var(--warn)">8</td><td>30</td><td>50</td><td><span class="badge badge-pending" style="background:var(--danger-bg);color:var(--danger)">Low Stock</span></td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('invPane','RM-1001: Aluminium Sheet 2mm','Low Stock')">View</button><button class="act-btn act-btn-approve" onclick="openPane('prPane','New Purchase Request')">Reorder</button></div></td></tr>
+              <tr data-status="OK"><td><strong>RM-1002</strong></td><td>Steel Rod 10mm</td><td>Raw Material</td><td>WH-A / Rack C1</td><td>M</td><td style="color:var(--success)">340</td><td style="color:var(--warn)">50</td><td>110</td><td>500</td><td><span class="badge badge-active">OK</span></td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('invPane','RM-1002: Steel Rod 10mm','OK')">View</button></div></td></tr>
+              <tr data-status="Low Stock"><td><strong>RM-1003</strong></td><td>Packaging Box (Large)</td><td>Packaging</td><td>WH-B / Shelf 2</td><td>PCS</td><td style="color:var(--warn)">24</td><td>10</td><td>66</td><td>100</td><td><span class="badge badge-pending" style="background:var(--warn-bg);color:#B45309">Low Stock</span></td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('invPane','RM-1003: Packaging Box','Low Stock')">View</button><button class="act-btn act-btn-approve" onclick="openPane('prPane','New Purchase Request')">Reorder</button></div></td></tr>
+              <tr data-status="OK"><td><strong>FG-2001</strong></td><td>Aluminium Frame Kit</td><td>Finished Good</td><td>WH-B / FG Zone</td><td>KIT</td><td style="color:var(--success)">85</td><td>—</td><td>—</td><td>85</td><td><span class="badge badge-active">Available</span></td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('invPane','FG-2001: Aluminium Frame Kit','OK')">View</button></div></td></tr>
+              <tr data-status="Low Stock"><td><strong>RM-1004</strong></td><td>Solvent Chemical A</td><td>Chemical</td><td>WH-A / Chem Store</td><td>L</td><td style="color:var(--danger)">2</td><td>3</td><td>5</td><td>10</td><td><span class="badge badge-pending" style="background:var(--danger-bg);color:var(--danger)">Critical</span></td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('invPane','RM-1004: Solvent Chemical A','Low Stock')">View</button><button class="act-btn act-btn-approve" onclick="openPane('prPane','New Purchase Request')">Reorder</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== SALES ===== -->
+      <div class="module-view" id="mod-sales">
+        <div class="module-header">
+          <div><div class="module-title">Sales Orders</div><div class="module-subtitle">Quote-to-delivery MRP fulfillment workflow</div></div>
+          <div class="module-actions">
+            <button class="filter-chip active">All Orders</button>
+            <button class="filter-chip">Pending</button>
+            <button class="filter-chip">In Production</button>
+            <button class="filter-chip">Ready</button>
+            <button class="filter-chip">Shipped</button>
+            <button class="btn-primary" onclick="openPane('salesPane','New Sales Order')">＋ New Sales Order</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search sales orders...">
+            </div>
+            <div class="table-filters">
+              <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>SO Number</th><th>Customer</th><th>Product</th><th>Qty</th><th>Total</th><th>Status</th><th>MFG Ref.</th><th>Delivery</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-status="In Production"><td><strong>SO-0124</strong></td><td>Apex Engineering Ltd</td><td>Aluminium Frame Kit</td><td>50</td><td>$4,100.00</td><td><span class="badge badge-production">In Production</span></td><td>MFG-0031</td><td>Mar 25</td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('salesPane','SO-0124 Details','In Production')">View</button></div></td></tr>
+              <tr data-status="Pending MFG"><td><strong>SO-0123</strong></td><td>Global Fabrications Co</td><td>Steel Bracket Assembly</td><td>200</td><td>$3,700.00</td><td><span class="badge badge-pending">Pending MFG</span></td><td>MFG-0030</td><td>Mar 28</td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('salesPane','SO-0123 Details','Pending MFG')">View</button><button class="act-btn act-btn-approve" onclick="triggerMRP('SO-0123')">Trigger MFG</button></div></td></tr>
+              <tr data-status="Quote"><td><strong>SO-0122</strong></td><td>TechForm Industries</td><td>Custom Enclosure Box</td><td>100</td><td>$2,900.00</td><td><span class="badge badge-draft">Quote</span></td><td>—</td><td>Apr 5</td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('salesPane','SO-0122 Details','Quote')">View</button><button class="act-btn act-btn-approve" onclick="confirmSalesOrder(this,'SO-0122')">Confirm</button><button class="act-btn act-btn-reject" onclick="updateStatus(this,'Cancelled')">Cancel</button></div></td></tr>
+              <tr data-status="Ready"><td><strong>SO-0121</strong></td><td>ProFab Solutions</td><td>Conveyor Belt Unit</td><td>10</td><td>$5,200.00</td><td><span class="badge badge-active" style="background:#DBEAFE;color:#1D4ED8">Ready to Ship</span></td><td>MFG-0029</td><td>Mar 15</td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('salesPane','SO-0121 Details','Ready')">View</button><button class="act-btn act-btn-deliver" onclick="updateStatus(this,'Shipped')">Ship Order</button></div></td></tr>
+              <tr data-status="Shipped"><td><strong>SO-0120</strong></td><td>Northern Steel Ltd</td><td>Aluminium Frame Kit</td><td>30</td><td>$2,860.00</td><td><span class="badge badge-shipped">Shipped</span></td><td>MFG-0027</td><td>Mar 10</td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('salesPane','SO-0120 Details','Shipped')">View</button><button class="act-btn act-btn-complete" onclick="updateStatus(this,'Delivered')">Confirm Delivery</button></div></td></tr>
+              <tr data-status="Delivered"><td><strong>SO-0120</strong></td><td>Northern Steel Ltd</td><td>Aluminium Frame Kit</td><td>30</td><td>$2,860.00</td><td><span class="badge badge-delivered">Delivered</span></td><td>MFG-0027</td><td>Mar 2</td><td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('salesPane','SO-0120 Details','Delivered')">View</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== PURCHASE ===== -->
+      <div class="module-view" id="mod-purchase">
+        <div class="module-header">
+          <div><div class="module-title">Purchase Requests</div><div class="module-subtitle">Material procurement and supplier PO management</div></div>
+          <div class="module-actions">
+            <button class="filter-chip active">All Requests</button>
+            <button class="filter-chip">Pending</button>
+            <button class="filter-chip">Approved</button>
+            <button class="btn-primary" onclick="openPane('prPane','New Purchase Request')">＋ New Request</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search requests...">
+            </div>
+            <div class="table-filters">
+              <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>PR Number</th><th>Material</th><th>Supplier</th><th>Qty</th><th>UOM</th><th>Est. Cost</th><th>Status</th><th>Requested By</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-status="Pending"><td><strong>PR-0041</strong></td><td>Aluminium Sheet 2mm</td><td>MetalWorks Supply</td><td>200</td><td>SHT</td><td>$1,700.00</td><td><span class="badge badge-pending">Pending</span></td><td>J. Smith</td><td>Mar 13</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('prPane','PR-0041 Details','Pending')">View</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'Approved')">Approve</button><button class="act-btn act-btn-reject" onclick="updateStatus(this,'Rejected')">Reject</button></div></td></tr>
+              <tr data-status="Approved"><td><strong>PR-0040</strong></td><td>Packaging Box (Large)</td><td>PackRight Ltd</td><td>500</td><td>PCS</td><td>$400.00</td><td><span class="badge badge-active">Approved</span></td><td>T. Johnson</td><td>Mar 12</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('prPane','PR-0040 Details','Approved')">View</button><button class="act-btn act-btn-complete" onclick="updateStatus(this,'Received')">Receive</button></div></td></tr>
+              <tr data-status="Approved"><td><strong>PR-0039</strong></td><td>Solvent Chemical A</td><td>ChemSupply Direct</td><td>25</td><td>L</td><td>$50.00</td><td><span class="badge badge-active">Approved</span></td><td>Auto-Gen</td><td>Mar 11</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('prPane','PR-0039 Details','Approved')">View</button><button class="act-btn act-btn-complete" onclick="updateStatus(this,'Received')">Receive</button></div></td></tr>
+              <tr data-status="Received"><td><strong>PR-0038</strong></td><td>Steel Rod 10mm</td><td>MetalWorks Supply</td><td>500</td><td>M</td><td>$100.00</td><td><span class="badge badge-complete">Received</span></td><td>J. Smith</td><td>Mar 8</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('prPane','PR-0038 Details','Received')">View</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== BOM ===== -->
+      <div class="module-view" id="mod-bom">
+        <div class="module-header">
+          <div><div class="module-title">Product Bill of Materials</div><div class="module-subtitle">Multi-level BOMs with sub-assemblies, wastage, and fractional consumption tracking</div></div>
+          <div class="module-actions">
+            <button class="filter-chip active">All BOMs</button>
+            <button class="filter-chip">Active</button>
+            <button class="filter-chip">Draft</button>
+            <button class="btn-primary" onclick="openPane('bomPane','New BOM')">＋ Create BOM</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search BOMs...">
+            </div>
+            <div class="table-filters">
+              <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>BOM ID</th><th>Product Name</th><th>Version</th><th>Components</th><th>Est. Material Cost</th><th>Wastage %</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-status="Active"><td><strong>BOM-001</strong></td><td>Aluminium Frame Kit</td><td>v2.1</td><td>6 materials</td><td>$8.40</td><td>3.5%</td><td><span class="badge badge-active">Active</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('bomPane','BOM-001: Aluminium Frame Kit','Active')">View BOM</button><button class="act-btn act-btn-edit" onclick="openPane('bomPane','BOM-001: Aluminium Frame Kit','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>BOM-002</strong></td><td>Steel Bracket Assembly</td><td>v1.3</td><td>4 materials + 1 sub-asm.</td><td>$0.20</td><td>2.0%</td><td><span class="badge badge-active">Active</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('bomPane','BOM-002: Steel Bracket Assembly','Active')">View BOM</button><button class="act-btn act-btn-edit" onclick="openPane('bomPane','BOM-002: Steel Bracket Assembly','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>BOM-003</strong></td><td>Conveyor Belt Unit</td><td>v1.0</td><td>12 materials + 3 sub-asm.</td><td>$20.00</td><td>1.5%</td><td><span class="badge badge-active">Active</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('bomPane','BOM-003: Conveyor Belt Unit','Active')">View BOM</button><button class="act-btn act-btn-edit" onclick="openPane('bomPane','BOM-003: Conveyor Belt Unit','Active')">Edit</button></div></td></tr>
+              <tr data-status="Draft"><td><strong>BOM-004</strong></td><td>Custom Enclosure Box</td><td>v1.1</td><td>5 materials</td><td>$6.80</td><td>4.0%</td><td><span class="badge badge-draft">Draft</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('bomPane','BOM-004: Custom Enclosure Box','Draft')">View BOM</button><button class="act-btn act-btn-edit" onclick="openPane('bomPane','BOM-004: Custom Enclosure Box','Draft')">Edit</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'Active')">Activate</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== UOM ===== -->
+      <div class="module-view" id="mod-uom">
+        <div class="module-header">
+          <div><div class="module-title">Unit of Measurement</div><div class="module-subtitle">Configure measurement units and conversion rules across all materials</div></div>
+          <div class="module-actions">
+            <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">Export</button>
+            <button class="btn-primary" onclick="openPane('uomPane','Add Unit of Measurement')">＋ Add UOM</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Full Name</th><th>Category</th><th>Base Unit?</th><th>Conversion Factor</th><th>Used In</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-status="Active"><td><strong>KG</strong></td><td>Kilogram</td><td>Weight</td><td>Yes</td><td>1.0</td><td>12 items</td><td><div class="action-group"><button class="act-btn act-btn-edit" onclick="openPane('uomPane','Edit UOM: Kilogram','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>G</strong></td><td>Gram</td><td>Weight</td><td>No</td><td>0.001 KG</td><td>4 items</td><td><div class="action-group"><button class="act-btn act-btn-edit" onclick="openPane('uomPane','Edit UOM: Gram','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>SHT</strong></td><td>Sheet</td><td>Count</td><td>Yes</td><td>1.0</td><td>3 items</td><td><div class="action-group"><button class="act-btn act-btn-edit" onclick="openPane('uomPane','Edit UOM: Sheet','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>REAM</strong></td><td>Ream (500 sheets)</td><td>Count</td><td>No</td><td>500 SHT</td><td>2 items</td><td><div class="action-group"><button class="act-btn act-btn-edit" onclick="openPane('uomPane','Edit UOM: Ream','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>L</strong></td><td>Litre</td><td>Volume</td><td>Yes</td><td>1.0</td><td>5 items</td><td><div class="action-group"><button class="act-btn act-btn-edit" onclick="openPane('uomPane','Edit UOM: Litre','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>ML</strong></td><td>Millilitre</td><td>Volume</td><td>No</td><td>0.001 L</td><td>2 items</td><td><div class="action-group"><button class="act-btn act-btn-edit" onclick="openPane('uomPane','Edit UOM: Millilitre','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>PCS</strong></td><td>Pieces</td><td>Count</td><td>Yes</td><td>1.0</td><td>28 items</td><td><div class="action-group"><button class="act-btn act-btn-edit" onclick="openPane('uomPane','Edit UOM: Pieces','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>M</strong></td><td>Metre</td><td>Length</td><td>Yes</td><td>1.0</td><td>7 items</td><td><div class="action-group"><button class="act-btn act-btn-edit" onclick="openPane('uomPane','Edit UOM: Metre','Active')">Edit</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== SUPPLIERS ===== -->
+      <div class="module-view" id="mod-suppliers">
+        <div class="module-header">
+          <div><div class="module-title">Supplier Management</div><div class="module-subtitle">Manage your vendor network and procurement contacts</div></div>
+<div class="module-actions">
+            <button class="filter_chip active">All Suppliers</button>
+            <button class="filter_chip">Active</button>
+            <button class="filter_chip">Inactive</button>
+            <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">Export</button>
+            <button class="btn-primary" onclick="openPane('supplierPane','Add Supplier')">＋ Add Supplier</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search suppliers...">
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Company Name</th><th>Primary Contact</th><th>Phone</th><th>Email</th><th>Materials Supplied</th><th>Active POs</th><th>Rating</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-status="Active"><td><strong>SUP-001</strong></td><td>MetalWorks Supply Co</td><td>David Chen</td><td>+1 555-0182</td><td>d.chen@metalworks.com</td><td>Aluminium, Steel</td><td>2</td><td>★★★★★</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('supplierPane','SUP-001: MetalWorks Supply Co','Active')">View</button><button class="act-btn act-btn-edit" onclick="openPane('supplierPane','SUP-001: MetalWorks Supply Co','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>SUP-002</strong></td><td>PackRight Ltd</td><td>Sarah Miller</td><td>+1 555-0245</td><td>s.miller@packright.com</td><td>Packaging, Labels</td><td>1</td><td>★★★★</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('supplierPane','SUP-002: PackRight Ltd','Active')">View</button><button class="act-btn act-btn-edit" onclick="openPane('supplierPane','SUP-002: PackRight Ltd','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>SUP-003</strong></td><td>ChemSupply Direct</td><td>Robert Lee</td><td>+1 555-0391</td><td>r.lee@chemsupply.com</td><td>Chemicals, Solvents</td><td>1</td><td>★★★★</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('supplierPane','SUP-003: ChemSupply Direct','Active')">View</button><button class="act-btn act-btn-edit" onclick="openPane('supplierPane','SUP-003: ChemSupply Direct','Active')">Edit</button></div></td></tr>
+              <tr data-status="Active"><td><strong>SUP-004</strong></td><td>FastFix Hardware</td><td>Lisa Wang</td><td>+1 555-0478</td><td>l.wang@fastfix.com</td><td>Fasteners, Screws</td><td>0</td><td>★★★</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('supplierPane','SUP-004: FastFix Hardware','Active')">View</button><button class="act-btn act-btn-edit" onclick="openPane('supplierPane','SUP-004: FastFix Hardware','Active')">Edit</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== STAFF ===== -->
+      <div class="module-view" id="mod-staff">
+        <div class="module-header">
+          <div><div class="module-title">Staff Management</div><div class="module-subtitle">Manage employees, roles, and production assignments with role-based access</div></div>
+<div class="module-actions">
+            <button class="filter_chip active">All Staff</button>
+            <button class="filter_chip">Active</button>
+            <button class="filter_chip">On Leave</button>
+            <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">Export</button>
+            <button class="btn-primary" onclick="openPane('staffPane','Add Staff Member')">＋ Add Staff</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search staff...">
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Full Name</th><th>Role</th><th>Department</th><th>Hourly Rate</th><th>Current Assignment</th><th>Status</th><th>Access Level</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-status="Active"><td><strong>STF-001</strong></td><td>James Okonkwo</td><td>Production Supervisor</td><td>Manufacturing</td><td>$32/hr</td><td>MFG-0031</td><td><span class="badge badge-active">Active</span></td><td>Manager</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('staffPane','STF-001: James Okonkwo','Active')">View</button></div></td></tr>
+              <tr data-status="Active"><td><strong>STF-002</strong></td><td>Maria Santos</td><td>CNC Operator</td><td>Manufacturing</td><td>$24/hr</td><td>MFG-0031</td><td><span class="badge badge-active">Active</span></td><td>Operator</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('staffPane','STF-002: Maria Santos','Active')">View</button></div></td></tr>
+              <tr data-status="Active"><td><strong>STF-003</strong></td><td>Tom Bradley</td><td>Warehouse Manager</td><td>Inventory</td><td>$28/hr</td><td>—</td><td><span class="badge badge-active">Active</span></td><td>Warehouse</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('staffPane','STF-003: Tom Bradley','Active')">View</button></div></td></tr>
+              <tr data-status="Active"><td><strong>STF-004</strong></td><td>Aisha Patel</td><td>Sales Representative</td><td>Sales</td><td>$22/hr</td><td>—</td><td><span class="badge badge-active">Active</span></td><td>Sales</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('staffPane','STF-004: Aisha Patel','Active')">View</button></div></td></tr>
+              <tr data-status="On Leave"><td><strong>STF-005</strong></td><td>Kevin Huang</td><td>Quality Inspector</td><td>QA</td><td>$26/hr</td><td>MFG-0029</td><td><span class="badge badge-pending">On Leave</span></td><td>Operator</td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('staffPane','STF-005: Kevin Huang','On Leave')">View</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== TEAMS & ROLES ===== -->
+      <div class="module-view" id="mod-teams">
+        <div class="module-header">
+          <div><div class="module-title">Teams & Roles</div><div class="module-subtitle">Manage team roles, permissions, and user access</div></div>
+        </div>
+        
+        <div class="teams-tabs">
+          <button class="teams-tab active" onclick="switchTeamsTab('roles')" data-tab="roles">Roles & Permissions</button>
+          <button class="teams-tab" onclick="switchTeamsTab('users')" data-tab="users">Users</button>
+        </div>
+        
+        <!-- Roles Tab -->
+        <div class="teams-tab-content active" id="teamsTabRoles">
+          <div class="teams-actions">
+            <button class="btn-primary" onclick="console.log('Create Role clicked'); window.openCreateRoleModal()">＋ Create Role</button>
+          </div>
+          <div class="roles-grid" id="rolesList"></div>
+        </div>
+        
+        <!-- Users Tab -->
+        <div class="teams-tab-content" id="teamsTabUsers">
+          <div class="teams-actions">
+            <button class="btn-primary" onclick="console.log('Invite User clicked'); window.openInviteUserModal()">＋ Invite User</button>
+          </div>
+          <div class="table-card">
+            <table class="data-table">
+              <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Last Active</th><th>Actions</th></tr></thead>
+              <tbody id="teamMembersList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create/Edit Role Modal -->
+      <div class="modal-backdrop" id="roleModalBackdrop" onclick="closeRoleModal()"></div>
+      <div class="modal" id="roleModal" style="max-width:600px">
+        <div class="modal-header">
+          <h3 id="roleModalTitle">Create New Role</h3>
+          <button class="modal-close" onclick="closeRoleModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Role Name</label>
+            <input type="text" id="roleNameInput" placeholder="e.g., Production Operator, Procurement Manager">
+          </div>
+          <div class="form-group">
+            <label>Role Tier</label>
+            <select id="roleTierInput">
+              <option value="team">Team Member / Worker</option>
+              <option value="admin">Admin</option>
+              <option value="superadmin">Super Admin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Module Access</label>
+            <p class="section-desc" style="margin-bottom:12px">Select which modules this role can access</p>
+            <div class="module-selection-grid" id="moduleSelectionGrid"></div>
+          </div>
+          <div class="form-group">
+            <label>Action Permissions</label>
+            <p class="section-desc" style="margin-bottom:12px">Configure what actions users can perform</p>
+            <div id="actionPermissionsGrid"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="closeRoleModal()">Cancel</button>
+          <button class="btn-primary" id="saveRoleBtn" onclick="saveNewRole()">Create Role</button>
+        </div>
+      </div>
+
+      <!-- Invite User Modal -->
+      <div class="modal-backdrop" id="inviteModalBackdrop" onclick="closeInviteModal()"></div>
+      <div class="modal" id="inviteModal">
+        <div class="modal-header">
+          <h3>Invite New User</h3>
+          <button class="modal-close" onclick="closeInviteModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="inviteNameInput" placeholder="e.g., John Doe">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="inviteEmailInput" placeholder="e.g., john@company.com">
+          </div>
+          <div class="form-group">
+            <label>Assign Role</label>
+            <select id="inviteRoleInput">
+              <option value="">Select a role</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="closeInviteModal()">Cancel</button>
+          <button class="btn-primary" onclick="sendInvite()">Send Invite</button>
+        </div>
+      </div>
+
+      <!-- ===== MAINTENANCE ===== -->
+      <div class="module-view" id="mod-maintenance">
+        <div class="module-header">
+          <div><div class="module-title">Machine Maintenance</div><div class="module-subtitle">Track maintenance requests, approvals, and full service history</div></div>
+<div class="module-actions">
+            <button class="filter_chip active">All Requests</button>
+            <button class="filter_chip">Pending</button>
+            <button class="filter_chip">Scheduled</button>
+            <button class="btn-secondary" style="font-size:12px" onclick="exportCurrentModule()">Export</button>
+            <button class="btn-primary" onclick="openPane('maintPane','New Maintenance Request')">＋ Log Maintenance</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search maintenance records...">
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Machine</th><th>Description</th><th>Reported By</th><th>Created</th><th>Est. End Date</th><th>Severity</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-status="Pending"><td><strong>MNT-014</strong></td><td>CNC Router #2</td><td>Spindle bearing failure — stop required</td><td>J. Okonkwo</td><td>Mar 13</td><td>Mar 15</td><td><span class="badge badge-danger">Critical</span></td><td><span class="badge badge-pending">Pending</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('maintPane','MNT-014 Details','Pending')">View</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'Approved')">Approve</button><button class="act-btn act-btn-reject" onclick="updateStatus(this,'Rejected')">Reject</button></div></td></tr>
+              <tr data-status="Resolved"><td><strong>MNT-013</strong></td><td>Laser Cutter A</td><td>Scheduled lens cleaning and calibration</td><td>M. Santos</td><td>Mar 10</td><td>Mar 11</td><td><span class="badge badge-info">Low</span></td><td><span class="badge badge-active">Resolved</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('maintPane','MNT-013 Details','Resolved')">View</button></div></td></tr>
+              <tr data-status="Scheduled"><td><strong>MNT-012</strong></td><td>Assembly Belt 3</td><td>Belt tension adjustment and guide replacement</td><td>T. Bradley</td><td>Mar 8</td><td>Mar 15</td><td><span class="badge badge-pending">Medium</span></td><td><span class="badge badge-info">Scheduled</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('maintPane','MNT-012 Details','Scheduled')">View</button><button class="act-btn act-btn-approve" onclick="updateStatus(this,'Approved')">Approve</button></div></td></tr>
+              <tr data-status="Completed"><td><strong>MNT-011</strong></td><td>Hydraulic Press #1</td><td>Hydraulic fluid top-up and seal inspection</td><td>K. Huang</td><td>Mar 5</td><td>Mar 6</td><td><span class="badge badge-info">Low</span></td><td><span class="badge badge-complete">Completed</span></td>
+                <td><div class="action-group"><button class="act-btn act-btn-view" onclick="openPane('maintPane','MNT-011 Details','Completed')">View</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== INTEGRATIONS ===== -->
+      <div class="module-view" id="mod-integrations">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Integrations</div>
+            <div class="module-subtitle">Connect ForgeFlow with your favorite apps and services</div>
+          </div>
+        </div>
+
+        <div class="integrations-section">
+          <div class="integration-section-title">Business Applications</div>
+          <div class="integrations-grid">
+            
+            <!-- Zoho -->
+            <div class="integration-card" data-provider="zoho">
+              <div class="integration-header">
+                <div class="integration-logo">
+                  <img src="./assets/zoho%20suite%20logo-CXpPVdWu.png" alt="Zoho Suite">
+                </div>
+                <div class="integration-header-content">
+                  <div class="integration-header-top">
+                    <div class="integration-info">
+                      <h3>Zoho Suite</h3>
+                      <p>CRM, Books, Projects & Flow</p>
+                    </div>
+                    <span class="integration-status disconnected" id="zoho-status">Not Connected</span>
+                  </div>
+                </div>
+              </div>
+              <div class="integration-desc">
+                Sync contacts, invoices, projects and automate workflows between ForgeFlow and Zoho apps.
+              </div>
+              <div class="integration-features">
+                <span class="feature-tag">CRM Sync</span>
+                <span class="feature-tag">Invoices</span>
+                <span class="feature-tag">Projects</span>
+              </div>
+              <div class="integration-actions">
+                <button class="btn-primary" id="zoho-connect" onclick="connectIntegration('zoho')">Connect</button>
+              </div>
+            </div>
+
+            <!-- Shopify -->
+            <div class="integration-card" data-provider="shopify">
+              <div class="integration-header">
+                <div class="integration-logo">
+                  <img src="./assets/shopify%20logo-CQDLu_e0.png" alt="Shopify">
+                </div>
+                <div class="integration-header-content">
+                  <div class="integration-header-top">
+                    <div class="integration-info">
+                      <h3>Shopify</h3>
+                      <p>eCommerce Platform</p>
+                    </div>
+                    <span class="integration-status disconnected" id="shopify-status">Not Connected</span>
+                  </div>
+                </div>
+              </div>
+              <div class="integration-desc">
+                Sync orders, products and inventory with your Shopify store. Real-time stock updates.
+              </div>
+              <div class="integration-features">
+                <span class="feature-tag">Orders</span>
+                <span class="feature-tag">Products</span>
+                <span class="feature-tag">Inventory</span>
+              </div>
+              <div class="integration-actions">
+                <button class="btn-primary" id="shopify-connect" onclick="connectIntegration('shopify')">Connect</button>
+              </div>
+            </div>
+
+            <!-- QuickBooks -->
+            <div class="integration-card" data-provider="quickbooks">
+              <div class="integration-header">
+                <div class="integration-logo">
+                  <img src="./assets/quick%20ooks%20logo-lXyCve0v.png" alt="QuickBooks">
+                </div>
+                <div class="integration-header-content">
+                  <div class="integration-header-top">
+                    <div class="integration-info">
+                      <h3>QuickBooks</h3>
+                      <p>Accounting Software</p>
+                    </div>
+                    <span class="integration-status disconnected" id="quickbooks-status">Not Connected</span>
+                  </div>
+                </div>
+              </div>
+              <div class="integration-desc">
+                Sync invoices, payments and expenses with QuickBooks for accurate financial tracking.
+              </div>
+              <div class="integration-features">
+                <span class="feature-tag">Invoices</span>
+                <span class="feature-tag">Expenses</span>
+                <span class="feature-tag">Payments</span>
+              </div>
+              <div class="integration-actions">
+                <button class="btn-primary" id="quickbooks-connect" onclick="connectIntegration('quickbooks')">Connect</button>
+              </div>
+            </div>
+
+            <!-- Google Sheets -->
+            <div class="integration-card" data-provider="gsheets">
+              <div class="integration-header">
+                <div class="integration-logo">
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABrrFhUAAAAmVBMVEX////y8vIUn1vx8fEfpGMXoF4bomEipWWO0bERnlkmpmgXilWM0K/Z6+MckVofoGIalVxPt4UdjlkZmVseiFgje1Mei1kZllsfglZMtoIXm1shhljO693l9OyV1LVowZXD59Wn28I8sHhZuog/sXmCy6hvwposo2pFq3pProFHo3cukmJms5AuiWBTpH7F5NWTy7ITk1J8vp7SF37SAAAF/klEQVR4nO3db3fSSBjGYTYpsdmyBQGBlrJqtetaddv6/T/cBgI0IfPnmcnQZ57kvo/H4ylv/F3MBPWFHQwwDMMwDMMwDMMwDMMwDMMwDMMwDMMwDMMwDMMwDMMsu/v743uH3ej2iTvEb59v7u//VO4dbRf7ZZd/cbd4bPNFU08HeHcEuNxw5zjv7qs23wdAnMDG1O8DIE3gxtTvCjC+FCfw2djvByDqSah//rkAXFSvgCiBO3O/I0B2AJAjMAp6A7LxpTSB92EfAa8AUgTC3AAVgBCBsAAXVQAZAmH61QAiBM4KIEHgvAACBML0Kz4GpQiEPQBNgOgFgh4AFUDsAucHiFwgSL8ZIG6BoP0agKgFQvS/HgANQMwCbwMQsUCIfgJAvAIh+00A0Qq0z68eAANArAIB+okAkQq0z6/eACNAnALt++kAUQq0ra/02wFiFGib7wYQoUBR4FvuAxCfQKv2ej8JIDqBNweITSBgPxEgMoHQACNpAgH7dwAPBICoBEID/EMBiEkgYP8O4DsJICKBgP3bvw1n32gA8QiEBhh/FCYQsH97BbLxN8rnQLFRJAIB+0uA8b9EgEgEQgKUAjPSc3A0ikQgZP/+CEweCbdgFItA6P4CYLz88ZMGMLrjzvcHUPSXB2ArMFv8+u/ng+kcjPb7xN3vC6DrL4/AeHa9Wn2wb/Vhxd0fECDLqgLT9Xq9Wq8MK15er+fc/Z4AhgNQXIIdwfV8bVjRv57Pix/c/X4Apv6KwPxgMN/v2F/+uvh5wd3vBWDu3wlsCa4Xc9OKVxcLkQCq/hrA4UkwWdT32n7Y1RV3vwcAqb+8BpPpdKHddDfufncA2vu/vweTqW3c/a4AynwlQLllxwBc+6sC17Udvsjd7wbg3p9ls2vjuPudAHz6izPQFQBNvq3fcga4++kA3v1mAe5+KoAun9JvFODupwFo82n9hcBEN+5+CoA+n9qfDW8FAwToz4ZD3Rng7rcBGOqd+rUC3P1mAGM+vX8HMJwtl8tj9/Iw7n4DgLneuX8rMJEDYKv36FffAu5+FYA93iW/ArC7BSfj7h+4t/v3D4e3ZfXssAgAqMlB+o8CEZ2AM+ef9JcCs8q4+z0AnPobAKdngLvfGcAtv9lfCMwkn4D2/ScC3P1uAI756v66AHe/C4Brvq6/JsDdTwdwzjcAVAS4+6kAHvmG/i3Bftz9NACffHO/JACvelv/UYC73wrgmW/tPxBw95sBfOtJ/aUAd78ewD+e2r8T4O5XA1RS/mg5mwB3/ylA4708L8CQH8B2mM8MMOTuBwAAAAAAAFAAKK9Vw/oIUAvrIUA9rHcAp2F9A2iEEQES7v4wAIqy/UtpLwBUZft+C0DSbYA0tQAk3QZIbQBJtwFSG0AiCsB5ac8BUitA0mmA1AqQdBkgTa0ASZcBUjtA0mWA1A6QyAN4/cprxuE1VaIRIJELUOvwBUjEApyEeAIkQgGaJX4AiUwAVaQXQNJzgKTnAKf9UQNYI90BGv2xAtAinQGa/ZEBOEYe/uRHBVD08wOofvMqAP1S4yz98gHM+VUAZb90AFt+BUDdLxvAnn8E0ORLBqDUHwG0/WIBiPl7AH2/HADVa417rnnN0N8HAFN+HwDM/d0HsPQDgLufBkB40HUXgPik7ywA9aMOAACoLekcgO8AAAAAAAAAAACAXADibJ0dB/DOz3Pu/gAA3vXbfvkALfK3/dIB2uTv+kUDtKrf98sFaFm/zxcL0Db/2C8SoHV9pV8cQID4Wr8sgDD11XxBAIHiT/tFAIRrb/bHDhC2vZkfL0Dwck1/TABnajbmRwBw/mxjf48AlPk9AtD08wO8wdU35Of8/ySWcebnecbdP7hn7c+/cvcPHjjz8/yBu3/wxJmf50/c/YPBkjE/5/9/lQeDZ8b+/Jm7frsJW37O/y1Wttu8MOXnLxvu9nJ34QUo+flLBN97vtxmOmPI/xHJ+7/b89Xy9i3rb5dXUTz/Knv6/Ti9eqNNH39H8PmPYRiGYRiGYRiGYRiGYRiGYRiGYRiGYRiGYRiGYVjs+x/3j+KLcR9NGwAAAABJRU5ErkJggg==" alt="Google Sheets">
+                </div>
+                <div class="integration-header-content">
+                  <div class="integration-header-top">
+                    <div class="integration-info">
+                      <h3>Google Sheets</h3>
+                      <p>Spreadsheets</p>
+                    </div>
+                    <span class="integration-status disconnected" id="gsheets-status">Not Connected</span>
+                  </div>
+                </div>
+              </div>
+              <div class="integration-desc">
+                Import and export data to Google Sheets. Create custom reports and dashboards.
+              </div>
+              <div class="integration-features">
+                <span class="feature-tag">Import</span>
+                <span class="feature-tag">Export</span>
+                <span class="feature-tag">Reports</span>
+              </div>
+              <div class="integration-actions">
+                <button class="btn-primary" id="gsheets-connect" onclick="connectIntegration('gsheets')">Connect</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Integration Detail Modal -->
+        <div class="integration-modal" id="integrationModal" style="display:none">
+          <div class="integration-modal-content">
+            <div class="integration-modal-header">
+              <h3 id="modalIntegrationTitle">Configure Integration</h3>
+              <button class="modal-close" onclick="closeIntegrationModal()">×</button>
+            </div>
+            <div class="integration-modal-body" id="modalIntegrationBody">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS ===== -->
+      <div class="module-view" id="mod-settings">
+        <div class="settings-container">
+          <div class="settings-sidebar" id="settingsTab">
+            <div class="settings-nav-item active" data-tab="general" onclick="switchSettingsTab(this, 'general')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              General
+            </div>
+            <div class="settings-nav-item" data-tab="company" onclick="switchSettingsTab(this, 'company')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Company Profile
+            </div>
+            <div class="settings-nav-item" data-tab="notifications" onclick="switchSettingsTab(this, 'notifications')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Notifications
+            </div>
+            <div class="settings-nav-item" data-tab="security" onclick="switchSettingsTab(this, 'security')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Security
+            </div>
+            <div class="settings-nav-item" data-tab="billing" onclick="switchSettingsTab(this, 'billing')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              Subscription
+            </div>
+            <div class="settings-nav-item" data-tab="appearance" onclick="switchSettingsTab(this, 'appearance')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              Appearance
+            </div>
+            <div class="settings-nav-item" data-tab="integrations" onclick="switchSettingsTab(this, 'integrations')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              Integrations
+            </div>
+            <div class="settings-nav-item" data-tab="data" onclick="switchSettingsTab(this, 'data')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+              Data Management
+            </div>
+          </div>
+
+          <div class="settings-content">
+            <!-- General Settings -->
+            <div class="settings-panel active" id="settings-general">
+              <div class="settings-header">
+                <h2>General Settings</h2>
+                <p>Manage your account preferences and default settings</p>
+              </div>
+              
+              <div class="settings-section">
+                <h3>User Profile</h3>
+                <div class="settings-form">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>First Name</label>
+                      <input type="text" id="settingsFirstName" placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                      <label>Last Name</label>
+                      <input type="text" id="settingsLastName" placeholder="Enter last name">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Email Address</label>
+                      <input type="email" id="settingsEmail" placeholder="Enter email address">
+                    </div>
+                    <div class="form-group">
+                      <label>Phone Number</label>
+                      <input type="tel" id="settingsPhone" placeholder="Enter phone number">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" id="settingsJobTitle" placeholder="Enter job title">
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Regional Settings</h3>
+                <div class="settings-form">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Timezone</label>
+                      <select id="settingsTimezone">
+                        <option value="America/New_York">America/New_York (EST)</option>
+                        <option value="America/Chicago">America/Chicago (CST)</option>
+                        <option value="America/Los_Angeles">America/Los_Angeles (PST)</option>
+                        <option value="Europe/London">Europe/London (GMT)</option>
+                        <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Date Format</label>
+                      <select id="settingsDateFormat">
+                        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Currency</label>
+                      <select id="settingsCurrency">
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="JPY">JPY (¥)</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Language</label>
+                      <select id="settingsLanguage">
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Default Preferences</h3>
+                <div class="settings-form">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Default Warehouse</label>
+                      <select id="settingsDefaultWarehouse">
+                        <option value="WH-A">WH-A (Main)</option>
+                        <option value="WH-B">WH-B (Secondary)</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Default Unit of Measure</label>
+                      <select id="settingsDefaultUOM">
+                        <option value="metric">Metric</option>
+                        <option value="imperial">Imperial</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="toggle-group">
+                    <div class="toggle-item">
+                      <div class="toggle-info">
+                        <span class="toggle-label">Auto-save drafts</span>
+                        <span class="toggle-desc">Automatically save your work every 30 seconds</span>
+                      </div>
+                      <label class="toggle-switch"><input type="checkbox" id="toggleAutoSave"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="toggle-item">
+                      <div class="toggle-info">
+                        <span class="toggle-label">Show productivity tips</span>
+                        <span class="toggle-desc">Display tips and shortcuts on the dashboard</span>
+                      </div>
+                      <label class="toggle-switch"><input type="checkbox" id="toggleProductivityTips"><span class="toggle-slider"></span></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn-primary" onclick="saveSettings('General')">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Company Settings -->
+            <div class="settings-panel" id="settings-company">
+              <div class="settings-header">
+                <h2>Company Profile</h2>
+                <p>Manage your organization details and branding</p>
+              </div>
+              
+              <div class="settings-section">
+                <h3>Company Information</h3>
+                <div class="settings-form">
+                  <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" id="companyName" placeholder="Enter company name">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Industry</label>
+                      <select id="companyIndustry">
+                        <option value="">Select industry...</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option value="Automotive">Automotive</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Food & Beverage">Food & Beverage</option>
+                        <option value="Textile">Textile</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Company Size</label>
+                      <select id="companySize">
+                        <option value="">Select size...</option>
+                        <option value="1-10">1-10 employees</option>
+                        <option value="11-50">11-50 employees</option>
+                        <option value="51-200">51-200 employees</option>
+                        <option value="200+">200+ employees</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Business Address</label>
+                    <textarea id="companyAddress" placeholder="Enter business address"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Contact Information</h3>
+                <div class="settings-form">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Primary Email</label>
+                      <input type="email" id="companyEmail" placeholder="company@example.com">
+                    </div>
+                    <div class="form-group">
+                      <label>Phone</label>
+                      <input type="tel" id="companyPhone" placeholder="+1 555-0000">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Website</label>
+                      <input type="url" id="companyWebsite" placeholder="https://example.com">
+                    </div>
+                    <div class="form-group">
+                      <label>Tax ID / VAT Number</label>
+                      <input type="text" id="companyTaxId" placeholder="Enter tax ID">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Branding</h3>
+                <div class="settings-form">
+                  <div class="logo-upload">
+                    <div class="logo-preview" id="companyLogoPreview">
+                      <span class="logo-placeholder">FF</span>
+                    </div>
+                    <div class="logo-actions">
+                      <button class="btn-secondary" onclick="uploadCompanyLogo()">Upload Logo</button>
+                      <button class="btn-secondary" style="color:var(--danger)" onclick="removeCompanyLogo()">Remove</button>
+                      <p>Recommended: 512x512px, PNG or JPG</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn-primary" onclick="saveSettings('Company')">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Notifications Settings -->
+            <div class="settings-panel" id="settings-notifications">
+              <div class="settings-header">
+                <h2>Notification Preferences</h2>
+                <p>Control how and when you receive notifications</p>
+              </div>
+              
+              <div class="settings-section">
+                <h3>Email Notifications</h3>
+                <div class="toggle-group">
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Order Updates</span>
+                      <span class="toggle-desc">Get notified when sales orders status changes</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="notifOrderUpdates" checked><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Inventory Alerts</span>
+                      <span class="toggle-desc">Low stock and reorder notifications</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="notifInventoryAlerts" checked><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Production Updates</span>
+                      <span class="toggle-desc">Manufacturing order progress notifications</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="notifProductionUpdates" checked><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Maintenance Alerts</span>
+                      <span class="toggle-desc">Machine maintenance and downtime alerts</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="notifMaintenanceAlerts" checked><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Daily Summary</span>
+                      <span class="toggle-desc">Daily operations summary email</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="notifDailySummary"><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Push Notifications</h3>
+                <div class="toggle-group">
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Enable Push Notifications</span>
+                      <span class="toggle-desc">Receive real-time notifications in your browser</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="notifPushEnabled" checked><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Sound Alerts</span>
+                      <span class="toggle-desc">Play sound for important notifications</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="notifSoundAlerts"><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Alert Thresholds</h3>
+                <div class="settings-form">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Low Stock Alert (%)</label>
+                      <input type="number" id="notifLowStockThreshold" value="20">
+                    </div>
+                    <div class="form-group">
+                      <label>Critical Stock Alert (%)</label>
+                      <input type="number" id="notifCriticalStockThreshold" value="10">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Production Delay Alert (hours)</label>
+                      <input type="number" id="notifProductionDelayAlert" value="4">
+                    </div>
+                    <div class="form-group">
+                      <label>Maintenance Due (days)</label>
+                      <input type="number" id="notifMaintenanceDueDays" value="7">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn-primary" onclick="saveSettings('Notifications')">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="settings-panel" id="settings-security">
+              <div class="settings-header">
+                <h2>Security Settings</h2>
+                <p>Manage your account security and access controls</p>
+              </div>
+              
+              <div class="settings-section">
+                <h3>Password</h3>
+                <div class="settings-form">
+                  <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" placeholder="Enter current password" id="currentPassword">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>New Password</label>
+                      <input type="password" placeholder="Enter new password" id="newPassword">
+                    </div>
+                    <div class="form-group">
+                      <label>Confirm Password</label>
+                      <input type="password" placeholder="Confirm new password" id="confirmPassword">
+                    </div>
+                  </div>
+                  <button class="btn-secondary" onclick="updatePassword()">Update Password</button>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Two-Factor Authentication</h3>
+                <div class="toggle-group">
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Enable 2FA</span>
+                      <span class="toggle-desc">Add an extra layer of security to your account</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle2FA"><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Session Management</h3>
+                <div class="session-list">
+                  <div class="session-item">
+                    <div class="session-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                    <div class="session-info">
+                      <span class="session-device">MacBook Pro - Chrome</span>
+                      <span class="session-location">New York, US • Current session</span>
+                    </div>
+                    <span class="badge badge-active">Active</span>
+                  </div>
+                  <div class="session-item">
+                    <div class="session-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+                    <div class="session-info">
+                      <span class="session-device">iPhone 14 - Safari</span>
+                      <span class="session-location">New York, US • 2 hours ago</span>
+                    </div>
+                    <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="revokeSession(this)">Revoke</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>API Access</h3>
+                <div class="settings-form">
+                  <div class="form-group">
+                    <label>API Key</label>
+                    <div class="api-key-display">
+                      <input type="password" value="forgeflow_api_key_placeholder" readonly id="apiKeyInput">
+                      <button class="btn-icon" onclick="toggleApiKey()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                      <button class="btn-icon" onclick="copyApiKey()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button class="btn-secondary" onclick="regenerateApiKey()">Regenerate Key</button>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn-primary" onclick="saveSettings('Security')">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Billing Settings -->
+            <div class="settings-panel" id="settings-billing">
+              <div class="settings-header">
+                <h2>Subscription & Billing</h2>
+                <p>Manage your plan and payment methods</p>
+              </div>
+              
+              <div class="settings-section">
+                <h3>Current Plan</h3>
+                <div class="plan-card current">
+                  <div class="plan-info">
+                    <span class="plan-name" id="currentPlanName">Free Trial</span>
+                    <span class="plan-price" id="currentPlanPrice">$0<span>/month</span></span>
+                  </div>
+                  <div class="plan-features">
+                    <ul>
+                      <li>Up to 100 products</li>
+                      <li>Basic inventory tracking</li>
+                      <li>5 user accounts</li>
+                      <li>Email support</li>
+                    </ul>
+                  </div>
+                  <button class="btn-primary" onclick="upgradePlan()">Upgrade Plan</button>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Usage This Month</h3>
+                <div class="usage-stats">
+                  <div class="usage-item">
+                    <span class="usage-label">Products</span>
+                    <div class="usage-bar"><div class="usage-fill" id="usageProductsFill" style="width:15%"></div></div>
+                    <span class="usage-value" id="usageProducts">15 / 100</span>
+                  </div>
+                  <div class="usage-item">
+                    <span class="usage-label">Active Users</span>
+                    <div class="usage-bar"><div class="usage-fill" id="usageUsersFill" style="width:60%"></div></div>
+                    <span class="usage-value" id="usageUsers">3 / 5</span>
+                  </div>
+                  <div class="usage-item">
+                    <span class="usage-label">Storage</span>
+                    <div class="usage-bar"><div class="usage-fill" id="usageStorageFill" style="width:8%"></div></div>
+                    <span class="usage-value" id="usageStorage">0.8 GB / 10 GB</span>
+                  </div>
+                  <div class="usage-item">
+                    <span class="usage-label">API Calls</span>
+                    <div class="usage-bar"><div class="usage-fill" id="usageAPIFill" style="width:2%"></div></div>
+                    <span class="usage-value" id="usageAPI">150 / 10,000</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section" id="subscriptionBillingSection">
+                <h3>Subscription Billing</h3>
+                <div class="billing-info-card" id="billingInfoCard">
+                  <div class="billing-status">
+                    <span class="billing-status-dot" id="billingStatusDot"></span>
+                    <span class="billing-status-text" id="billingStatusText">Free Trial</span>
+                  </div>
+                  <div class="billing-details" id="billingDetails" style="display: none;">
+                    <div class="billing-detail-item">
+                      <span class="billing-detail-label">Next Payment</span>
+                      <span class="billing-detail-value" id="nextPaymentDate">-</span>
+                    </div>
+                    <div class="billing-detail-item">
+                      <span class="billing-detail-label">Amount Due</span>
+                      <span class="billing-detail-value" id="amountDue">-</span>
+                    </div>
+                    <div class="billing-detail-item">
+                      <span class="billing-detail-label">Billing Cycle</span>
+                      <span class="billing-detail-value" id="billingCycle">Monthly</span>
+                    </div>
+                  </div>
+                  <div class="billing-trial-info" id="billingTrialInfo">
+                    <p>Your free trial ends in <strong id="trialDaysLeft">14 days</strong></p>
+                    <p class="billing-trial-desc">Upgrade now to continue using all features without interruption</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Payment Method</h3>
+                <div class="payment-card" id="paymentCardDisplay">
+                  <div class="payment-icon" id="paymentCardIcon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                  </div>
+                  <div class="payment-info">
+                    <span class="payment-type" id="paymentCardType">No payment method</span>
+                    <span class="payment-desc" id="paymentCardDesc">Add a payment method to upgrade</span>
+                  </div>
+                  <button class="btn-secondary" id="paymentCardBtn" onclick="openAddCardModal()">Add Card</button>
+                </div>
+                <div class="payment-actions" id="paymentActions" style="display: none;">
+                  <button class="btn-secondary btn-sm" onclick="openAddCardModal()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Update Card
+                  </button>
+                  <button class="btn-danger btn-sm" onclick="removePaymentMethod()">Remove</button>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Billing History</h3>
+                <table class="data-table billing-table">
+                  <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead>
+                  <tbody id="billingHistoryBody">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Appearance Settings -->
+            <div class="settings-panel" id="settings-appearance">
+              <div class="settings-header">
+                <h2>Appearance</h2>
+                <p>Customize the look and feel of your workspace</p>
+              </div>
+              
+              <div class="settings-section">
+                <h3>Theme</h3>
+                <div class="theme-options">
+                  <div class="theme-option" data-theme="light" onclick="selectTheme('light', event)">
+                    <div class="theme-preview light"></div>
+                    <span>Light</span>
+                  </div>
+                  <div class="theme-option" data-theme="dark" onclick="selectTheme('dark', event)">
+                    <div class="theme-preview dark"></div>
+                    <span>Dark</span>
+                  </div>
+                  <div class="theme-option active" data-theme="system" onclick="selectTheme('system', event)">
+                    <div class="theme-preview system"></div>
+                    <span>System</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Accent Color</h3>
+                <div class="color-options">
+                  <div class="color-option active" style="background:#FF6A00" onclick="selectColor(this, '#FF6A00')"></div>
+                  <div class="color-option" style="background:#3B82F6" onclick="selectColor(this, '#3B82F6')"></div>
+                  <div class="color-option" style="background:#10B981" onclick="selectColor(this, '#10B981')"></div>
+                  <div class="color-option" style="background:#8B5CF6" onclick="selectColor(this, '#8B5CF6')"></div>
+                  <div class="color-option" style="background:#EC4899" onclick="selectColor(this, '#EC4899')"></div>
+                  <div class="color-option" style="background:#F59E0B" onclick="selectColor(this, '#F59E0B')"></div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Layout</h3>
+                <div class="toggle-group">
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Compact Mode</span>
+                      <span class="toggle-desc">Reduce spacing for more content on screen</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-compact" onchange="applyCurrentAppearanceSettings()"><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Fixed Sidebar</span>
+                      <span class="toggle-desc">Keep sidebar always visible</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-fixed-sidebar" checked onchange="applyCurrentAppearanceSettings()"><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <div class="toggle-info">
+                      <span class="toggle-label">Show Icons Only</span>
+                      <span class="toggle-desc">Collapse sidebar to icons only</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-icons-only" onchange="applyCurrentAppearanceSettings()"><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button class="btn-primary" onclick="saveSettings('Appearance')">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Integrations Settings -->
+            <div class="settings-panel" id="settings-integrations">
+              <div class="settings-header">
+                <h2>Integrations</h2>
+                <p>Connect ForgeFlow with your favorite apps and services</p>
+              </div>
+              
+              <div class="integrations-section">
+                <div class="integration-section-title">Business Applications</div>
+                <div class="integrations-grid">
+                  
+                  <!-- Zoho -->
+                  <div class="integration-card" data-provider="zoho">
+                    <div class="integration-header">
+                      <div class="integration-logo">
+                        <svg viewBox="0 0 48 48" fill="none">
+                          <rect width="48" height="48" rx="12" fill="#E42527"/>
+                          <path d="M24 12L36 12V24C36 30 30 34 24 36C18 34 12 30 12 24V18L24 12Z" fill="white"/>
+                          <path d="M24 20L32 20L32 28L24 28L24 32L20 32L20 28L24 28Z" fill="#E42527"/>
+                        </svg>
+                      </div>
+                      <div class="integration-header-content">
+                        <div class="integration-header-top">
+                          <div class="integration-info">
+                            <h3>Zoho Suite</h3>
+                            <p>CRM, Books, Projects & Flow</p>
+                          </div>
+                          <span class="integration-status disconnected" id="settings-zoho-status">Not Connected</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="integration-desc">
+                      Sync contacts, invoices, projects and automate workflows between ForgeFlow and Zoho apps.
+                    </div>
+                    <div class="integration-features">
+                      <span class="feature-tag">CRM Sync</span>
+                      <span class="feature-tag">Invoices</span>
+                      <span class="feature-tag">Projects</span>
+                    </div>
+                    <div class="integration-actions">
+                      <button class="btn-primary" id="settings-zoho-connect" onclick="connectIntegration('zoho')">Connect</button>
+                    </div>
+                  </div>
+
+                  <!-- Shopify -->
+                  <div class="integration-card" data-provider="shopify">
+                    <div class="integration-header">
+                      <div class="integration-logo">
+                        <svg viewBox="0 0 48 48" fill="none">
+                          <rect width="48" height="48" rx="12" fill="#96BF48"/>
+                          <path d="M24 10C20 10 16 14 16 18L14 38H20L21 30H28L29 38H36L32 14C30 11 27 10 24 10Z" fill="white"/>
+                          <ellipse cx="24" cy="26" rx="8" ry="6" fill="#96BF48"/>
+                        </svg>
+                      </div>
+                      <div class="integration-header-content">
+                        <div class="integration-header-top">
+                          <div class="integration-info">
+                            <h3>Shopify</h3>
+                            <p>eCommerce Platform</p>
+                          </div>
+                          <span class="integration-status disconnected" id="settings-shopify-status">Not Connected</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="integration-desc">
+                      Sync orders, products and inventory with your Shopify store. Real-time stock updates.
+                    </div>
+                    <div class="integration-features">
+                      <span class="feature-tag">Orders</span>
+                      <span class="feature-tag">Products</span>
+                      <span class="feature-tag">Inventory</span>
+                    </div>
+                    <div class="integration-actions">
+                      <button class="btn-primary" id="settings-shopify-connect" onclick="connectIntegration('shopify')">Connect</button>
+                    </div>
+                  </div>
+
+                  <!-- QuickBooks -->
+                  <div class="integration-card" data-provider="quickbooks">
+                    <div class="integration-header">
+                      <div class="integration-logo">
+                        <svg viewBox="0 0 48 48" fill="none">
+                          <rect width="48" height="48" rx="12" fill="#2CA01C"/>
+                          <path d="M10 14C10 11.8 11.8 10 14 10H26C30 10 34 14 34 18C34 20.8 32.4 23.2 30 24.4V26C30 28.2 28.2 30 26 30H18V34H14C11.8 34 10 32.2 10 30V14Z" fill="white"/>
+                          <circle cx="34" cy="34" r="10" fill="white"/>
+                          <path d="M28 34L34 40L40 34" stroke="#2CA01C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                      <div class="integration-header-content">
+                        <div class="integration-header-top">
+                          <div class="integration-info">
+                            <h3>QuickBooks</h3>
+                            <p>Accounting Software</p>
+                          </div>
+                          <span class="integration-status disconnected" id="settings-quickbooks-status">Not Connected</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="integration-desc">
+                      Sync invoices, payments and expenses with QuickBooks for accurate financial tracking.
+                    </div>
+                    <div class="integration-features">
+                      <span class="feature-tag">Invoices</span>
+                      <span class="feature-tag">Expenses</span>
+                      <span class="feature-tag">Payments</span>
+                    </div>
+                    <div class="integration-actions">
+                      <button class="btn-primary" id="settings-quickbooks-connect" onclick="connectIntegration('quickbooks')">Connect</button>
+                    </div>
+                  </div>
+
+                  <!-- Google Sheets -->
+                  <div class="integration-card" data-provider="gsheets">
+                    <div class="integration-header">
+                      <div class="integration-logo">
+                        <svg viewBox="0 0 48 48" fill="none">
+                          <rect width="48" height="48" rx="12" fill="white"/>
+                          <rect x="6" y="6" width="36" height="36" rx="6" fill="#0F9D58"/>
+                          <rect x="10" y="12" width="12" height="24" rx="3" fill="white"/>
+                          <rect x="26" y="12" width="12" height="24" rx="3" fill="white"/>
+                          <rect x="12" y="16" width="8" height="3" rx="1.5" fill="#0F9D58"/>
+                          <rect x="12" y="21" width="6" height="3" rx="1.5" fill="#0F9D58"/>
+                          <rect x="12" y="26" width="8" height="3" rx="1.5" fill="#0F9D58"/>
+                          <rect x="28" y="16" width="8" height="3" rx="1.5" fill="#0F9D58"/>
+                          <rect x="28" y="21" width="6" height="3" rx="1.5" fill="#0F9D58"/>
+                          <rect x="28" y="26" width="8" height="3" rx="1.5" fill="#0F9D58"/>
+                        </svg>
+                      </div>
+                      <div class="integration-header-content">
+                        <div class="integration-header-top">
+                          <div class="integration-info">
+                            <h3>Google Sheets</h3>
+                            <p>Spreadsheets</p>
+                          </div>
+                          <span class="integration-status disconnected" id="settings-gsheets-status">Not Connected</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="integration-desc">
+                      Import and export data to Google Sheets. Create custom reports and dashboards.
+                    </div>
+                    <div class="integration-features">
+                      <span class="feature-tag">Import</span>
+                      <span class="feature-tag">Export</span>
+                      <span class="feature-tag">Reports</span>
+                    </div>
+                    <div class="integration-actions">
+                      <button class="btn-primary" id="settings-gsheets-connect" onclick="connectIntegration('gsheets')">Connect</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Data Management Settings -->
+            <div class="settings-panel" id="settings-data">
+              <div class="settings-header">
+                <h2>Data Management</h2>
+                <p>Export, import, and manage your data</p>
+              </div>
+              
+              <div class="settings-section">
+                <h3>Export Data</h3>
+                <p class="section-desc">Download your data in various formats</p>
+                <div class="export-options">
+                  <button class="export-btn" onclick="exportAllData()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Export All Data (CSV)
+                  </button>
+                  <button class="export-btn" onclick="exportCurrentModule()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Export Current Module
+                  </button>
+                  <button class="export-btn" onclick="showToast('PDF generation would require server-side processing', 'info')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    Generate Report (PDF)
+                  </button>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Import Data</h3>
+                <p class="section-desc">Upload data from external sources</p>
+                <div class="import-zone" onclick="importData()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <p>Click to upload files or <a href="#">browse</a></p>
+                  <span>Supports: JSON, CSV, Excel</span>
+                </div>
+              </div>
+
+              <div class="settings-section danger-zone">
+                <h3>Danger Zone</h3>
+                <p class="section-desc">Irreversible actions - proceed with caution</p>
+                <div class="danger-actions">
+                  <div class="danger-item">
+                    <div>
+                      <span class="danger-label">Clear All Data</span>
+                      <span class="danger-desc">Permanently delete all your data. This cannot be undone.</span>
+                    </div>
+                    <button class="btn-danger" onclick="confirmClearData()">Clear Data</button>
+                  </div>
+                  <div class="danger-item">
+                    <div>
+                      <span class="danger-label">Delete Account</span>
+                      <span class="danger-desc">Permanently delete your account and all associated data.</span>
+                    </div>
+                    <button class="btn-danger" onclick="confirmDeleteAccount()">Delete Account</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /app-content -->
+  </div><!-- /app-main -->
+</div><!-- /app-layout -->
+
+<!-- ============ SLIDING PANES ============ -->
+<div class="pane-backdrop" id="paneBackdrop" onclick="closePane()"></div>
+
+<!-- Manufacturing Pane -->
+<div class="pane" id="mfgPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="mfgPaneTitle">New Manufacturing Order</div><div class="pane-subtitle">Linked to Sales Order and BOM</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">Order Details</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">Manufacturing Order ID</label><input class="pane-input" id="mfg-id-input" placeholder="MFG-000" disabled></div>
+        <div><label class="pane-label">Sales Order Ref.</label><select class="pane-select" id="mfg-soRef"><option value="">Select SO...</option><option>SO-0125</option><option>SO-0124</option><option>SO-0122</option></select></div>
+        <div class="form-full"><label class="pane-label">Product Name</label><select class="pane-select" id="mfg-product"><option value="">Select Product...</option><option>Aluminium Frame Kit</option><option>Steel Bracket Assembly</option><option>Conveyor Belt Unit</option><option>Custom Enclosure Box</option></select></div>
+        <div><label class="pane-label">Quantity to Produce</label><input class="pane-input" type="number" id="mfg-qty" placeholder="0"></div>
+        <div><label class="pane-label">Target Completion</label><input class="pane-input" type="date" id="mfg-targetDate"></div>
+        <div><label class="pane-label">Assigned Supervisor</label><select class="pane-select" id="mfg-supervisor"><option value="">Select Supervisor...</option><option>James Okonkwo</option><option>Maria Santos</option></select></div>
+        <div><label class="pane-label">Priority</label><select class="pane-select" id="mfg-priority"><option value="">Select Priority...</option><option>Normal</option><option>High</option><option>Urgent</option></select></div>
+        <div><label class="pane-label">Warehouse</label><select class="pane-select" id="mfg-warehouse"><option value="">Select Warehouse...</option><option>WH-A (Main)</option><option>WH-B (Secondary)</option></select></div>
+      </div>
+    </div>
+    <div class="pane-section">
+      <div class="pane-section-title" style="display:flex;justify-content:space-between;align-items:center">
+        <span>BOM — Required Materials</span>
+        <button type="button" class="btn-add-row" onclick="addMfgMaterialRow()">＋ Add Material</button>
+      </div>
+      <table class="sub-table" id="mfg-materials-table">
+        <thead><tr><th>Material</th><th>UOM</th><th>Qty Req.</th><th>Wastage</th><th>In Stock</th><th style="width:40px"></th></tr></thead>
+        <tbody id="mfg-materials-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pane-section">
+      <div class="pane-section-title" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Production Stages</span>
+        <button type="button" class="btn-add-row" onclick="addMfgStageRow()">＋ Add Stage</button>
+      </div>
+      <table class="sub-table" id="mfg-stages-table">
+        <thead><tr><th>#</th><th>Stage</th><th>Role</th><th>Est. Time</th><th>Labour Cost</th><th style="width:40px"></th></tr></thead>
+        <tbody id="mfg-stages-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pane-section">
+      <div class="pane-section-title">Notes</div>
+      <textarea class="pane-textarea" id="mfg-notes" placeholder="Production notes or special instructions..."></textarea>
+    </div>
+    <div class="info-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      Saving this order will automatically deduct the listed materials from inventory upon approval.
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('Manufacturing Order')">Save & Create Order</button>
+  </div>
+</div>
+
+<!-- Inventory Pane -->
+<div class="pane" id="invPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="invPaneTitle">Add Inventory Item</div><div class="pane-subtitle">Stock and bin location details</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">Item Information</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">Item Code</label><input class="pane-input" id="inv-id-input" placeholder="RM-1005" disabled></div>
+        <div><label class="pane-label">Category</label><select class="pane-select" id="inv-category"><option>Raw Material</option><option>Finished Good</option><option>Packaging</option><option>Chemical</option></select></div>
+        <div class="form-full"><label class="pane-label">Description</label><input class="pane-input" id="inv-desc" placeholder="Full item description"></div>
+        <div><label class="pane-label">Unit of Measurement</label><select class="pane-select" id="inv-uom"><option>SHT</option><option>KG</option><option>M</option><option>L</option><option>PCS</option></select></div>
+        <div><label class="pane-label">Unit Cost ($)</label><input class="pane-input" type="number" id="inv-cost" placeholder="0.00"></div>
+        <div><label class="pane-label">Warehouse</label><select class="pane-select" id="inv-warehouse"><option>WH-A (Main)</option><option>WH-B (Secondary)</option></select></div>
+        <div><label class="pane-label">Bin / Location</label><input class="pane-input" id="inv-bin" placeholder="Rack B3, Shelf 2..."></div>
+        <div><label class="pane-label">Opening Stock</label><input class="pane-input" type="number" id="inv-stock" placeholder="0"></div>
+        <div><label class="pane-label">Min. Stock Level</label><input class="pane-input" type="number" id="inv-minStock" placeholder="0"></div>
+        <div><label class="pane-label">Reorder Quantity</label><input class="pane-input" type="number" id="inv-reorderQty" placeholder="0"></div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('Inventory Item')">Save Item</button>
+  </div>
+</div>
+
+<!-- Sales Pane -->
+<div class="pane" id="salesPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="salesPaneTitle">New Sales Order</div><div class="pane-subtitle">Quote-to-order workflow</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">Order Details</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">SO Number</label><input class="pane-input" id="sales-id-input" placeholder="SO-0000" disabled></div>
+        <div><label class="pane-label">Order Date</label><input class="pane-input" type="date" id="sales-date" value="2026-03-13"></div>
+        <div class="form-full"><label class="pane-label">Customer Name</label><input class="pane-input" id="sales-customer" placeholder="Customer company name"></div>
+        <div class="form-full"><label class="pane-label">Product</label><select class="pane-select" id="sales-product"><option>Aluminium Frame Kit</option><option>Steel Bracket Assembly</option><option>Conveyor Belt Unit</option></select></div>
+        <div><label class="pane-label">Quantity</label><input class="pane-input" type="number" id="sales-qty" placeholder="0"></div>
+        <div><label class="pane-label">Unit Price ($)</label><input class="pane-input" type="number" id="sales-price" placeholder="0.00"></div>
+        <div><label class="pane-label">Delivery Date</label><input class="pane-input" type="date" id="sales-deliveryDate"></div>
+        <div><label class="pane-label">Payment Terms</label><select class="pane-select" id="sales-paymentTerms"><option>Net 30</option><option>Net 60</option><option>Immediate</option></select></div>
+        <div class="form-full"><label class="pane-label">Shipping Address</label><textarea class="pane-textarea" id="sales-address" placeholder="Full delivery address..." style="min-height:60px"></textarea></div>
+      </div>
+    </div>
+    <div class="info-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      Confirming this order will check inventory levels and auto-trigger a Manufacturing Order if stock is insufficient.
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('Sales Order')">Save Sales Order</button>
+  </div>
+</div>
+
+<!-- Purchase Request Pane -->
+<div class="pane" id="prPane">
+  <div class="pane-header">
+    <div><div class="pane-title">New Purchase Request</div><div class="pane-subtitle">Material procurement from suppliers</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">Request Details</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">PR Number</label><input class="pane-input" id="pr-id-input" placeholder="PR-0000" disabled></div>
+        <div><label class="pane-label">Request Date</label><input class="pane-input" type="date" id="pr-reqDate" value="2026-03-13"></div>
+        <div class="form-full"><label class="pane-label">Material / Item</label><select class="pane-select" id="pr-material"><option>Aluminium Sheet 2mm</option><option>Steel Rod 10mm</option><option>Packaging Box (Large)</option><option>Solvent Chemical A</option></select></div>
+        <div><label class="pane-label">Supplier</label><select class="pane-select" id="pr-supplier"><option>MetalWorks Supply Co</option><option>PackRight Ltd</option><option>ChemSupply Direct</option></select></div>
+        <div><label class="pane-label">UOM</label><select class="pane-select" id="pr-uom"><option>SHT</option><option>KG</option><option>M</option><option>L</option><option>PCS</option></select></div>
+        <div><label class="pane-label">Qty Requested</label><input class="pane-input" type="number" id="pr-qty" placeholder="0"></div>
+        <div><label class="pane-label">Unit Cost ($)</label><input class="pane-input" type="number" id="pr-cost" placeholder="0.00"></div>
+        <div><label class="pane-label">Required By Date</label><input class="pane-input" type="date" id="pr-requiredDate"></div>
+        <div class="form-full"><label class="pane-label">Justification / Notes</label><textarea class="pane-textarea" id="pr-notes" placeholder="Reason for this purchase request..."></textarea></div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('Purchase Request')">Submit Request</button>
+  </div>
+</div>
+
+<!-- BOM Pane -->
+<div class="pane" id="bomPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="bomPaneTitle">New Bill of Materials</div><div class="pane-subtitle">Material list, sub-assemblies, and wastage factors</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">BOM Header</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">BOM ID</label><input class="pane-input" id="bom-id-input" placeholder="BOM-000" disabled></div>
+        <div><label class="pane-label">Version</label><input class="pane-input" id="bom-version" placeholder="v1.0"></div>
+        <div class="form-full"><label class="pane-label">Product Name</label><input class="pane-input" id="bom-product" placeholder="Enter product name"></div>
+        <div><label class="pane-label">Overall Wastage %</label><input class="pane-input" type="number" id="bom-wastage" placeholder="0"></div>
+        <div><label class="pane-label">Output UOM</label><select class="pane-select" id="bom-outputUom"><option value="">Select UOM...</option><option>KIT</option><option>PCS</option><option>UNIT</option></select></div>
+      </div>
+    </div>
+    <div class="pane-section">
+      <div class="pane-section-title" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Raw Materials</span>
+        <button type="button" class="btn-add-row" onclick="addBomMaterialRow()">＋ Add Material</button>
+      </div>
+      <table class="sub-table" id="bom-materials-table">
+        <thead><tr><th>Material</th><th>UOM</th><th>Qty/Unit</th><th>Wastage %</th><th>Notes</th><th style="width:40px"></th></tr></thead>
+        <tbody id="bom-materials-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('BOM')">Save BOM</button>
+  </div>
+</div>
+
+<!-- Supplier Pane -->
+<div class="pane" id="supplierPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="supplierPaneTitle">Supplier Details</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">Company Information</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">Supplier ID</label><input class="pane-input" id="supplier-id-input" placeholder="SUP-001" disabled></div>
+        <div class="form-full"><label class="pane-label">Company Name</label><input class="pane-input" id="supplier-company" placeholder="Company name"></div>
+        <div class="form-full"><label class="pane-label">Display Name / Trade Name</label><input class="pane-input" id="supplier-displayName" placeholder="Shortened display name"></div>
+        <div><label class="pane-label">Primary Contact</label><input class="pane-input" id="supplier-contact" placeholder="Full name"></div>
+        <div><label class="pane-label">Phone</label><input class="pane-input" id="supplier-phone" placeholder="+1 555-0000"></div>
+        <div class="form-full"><label class="pane-label">Email</label><input class="pane-input" type="email" id="supplier-email" placeholder="contact@supplier.com"></div>
+        <div class="form-full"><label class="pane-label">Shipping Address</label><textarea class="pane-textarea" id="supplier-address" placeholder="Full address..." style="min-height:60px"></textarea></div>
+        <div class="form-full"><label class="pane-label">Materials / Services</label><input class="pane-input" id="supplier-materials" placeholder="e.g. Aluminium, Steel, Packaging..."></div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('Supplier')">Save Supplier</button>
+  </div>
+</div>
+
+<!-- Staff Pane -->
+<div class="pane" id="staffPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="staffPaneTitle">Staff Member</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">Personal Details</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">Staff ID</label><input class="pane-input" id="staff-id-input" placeholder="STF-001" disabled></div>
+        <div><label class="pane-label">First Name</label><input class="pane-input" id="staff-firstName" placeholder="First name"></div>
+        <div><label class="pane-label">Last Name</label><input class="pane-input" id="staff-lastName" placeholder="Last name"></div>
+        <div class="form-full"><label class="pane-label">Email</label><input class="pane-input" type="email" id="staff-email" placeholder="employee@company.com"></div>
+        <div><label class="pane-label">Role / Position</label><input class="pane-input" id="staff-role" placeholder="e.g. CNC Operator"></div>
+        <div><label class="pane-label">Department</label><select class="pane-select" id="staff-dept"><option>Manufacturing</option><option>Inventory</option><option>Sales</option><option>QA</option><option>Maintenance</option></select></div>
+        <div><label class="pane-label">Hourly Rate ($)</label><input class="pane-input" type="number" id="staff-rate" placeholder="0.00"></div>
+        <div class="form-full"><label class="pane-label">System Access Level</label><select class="pane-select" id="staff-access"><option>Operator — Manufacturing floor access only</option><option>Warehouse — Inventory access only</option><option>Sales — Orders and customers only</option><option>Manager — All modules, no admin</option><option>Admin — Full system access</option></select></div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('Staff Member')">Save Staff Member</button>
+  </div>
+</div>
+
+<!-- Maintenance Pane -->
+<div class="pane" id="maintPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="maintPaneTitle">New Maintenance Request</div><div class="pane-subtitle">Machine service and repair tracking</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">Maintenance Details</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">Maintenance ID</label><input class="pane-input" id="maint-id-input" placeholder="MNT-000" disabled></div>
+        <div><label class="pane-label">Date Reported</label><input class="pane-input" type="date" id="maint-reportedDate" value="2026-03-13"></div>
+        <div class="form-full"><label class="pane-label">Machine Name</label><input class="pane-input" id="maint-machine" placeholder="e.g. CNC Router #2, Laser Cutter A..."></div>
+        <div class="form-full"><label class="pane-label">Issue Description</label><textarea class="pane-textarea" id="maint-issue" placeholder="Describe the fault or maintenance required..."></textarea></div>
+        <div><label class="pane-label">Severity</label><select class="pane-select" id="maint-severity"><option>Critical</option><option>High</option><option>Medium</option><option>Low — Scheduled</option></select></div>
+        <div><label class="pane-label">Est. End Date</label><input class="pane-input" type="date" id="maint-estEndDate"></div>
+        <div><label class="pane-label">Reported By</label><select class="pane-select" id="maint-reportedBy"><option>James Okonkwo</option><option>Maria Santos</option><option>Tom Bradley</option><option>Kevin Huang</option></select></div>
+        <div><label class="pane-label">Assigned Technician</label><select class="pane-select" id="maint-technician"><option>External Technician</option><option>James Okonkwo</option><option>Kevin Huang</option></select></div>
+        <div class="form-full"><label class="pane-label">Observations / Notes</label><textarea class="pane-textarea" id="maint-notes" placeholder="Additional observations, sounds, or symptoms..."></textarea></div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('Maintenance Request')">Submit Request</button>
+  </div>
+</div>
+
+<!-- Work Operations Pane -->
+<div class="pane" id="workopsPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="workopsPaneTitle">Operation Details</div><div class="pane-subtitle">Workfloor operation tracking</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">Operation Overview</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">Operation ID</label><input class="pane-input" id="workops-id-input" placeholder="OP-0000" disabled></div>
+        <div><label class="pane-label">Manufacturing Order</label><select class="pane-select" id="workops-mfgRef"><option>MFG-0031</option><option>MFG-0030</option><option>MFG-0029</option></select></div>
+        <div><label class="pane-label">Product Name</label><select class="pane-select" id="workops-product"><option>Aluminium Frame Kit</option><option>Steel Bracket Assembly</option><option>Conveyor Belt Unit</option></select></div>
+        <div><label class="pane-label">Batch Quantity</label><input class="pane-input" type="number" id="workops-qty" placeholder="0"></div>
+        <div><label class="pane-label">Operation Stage</label><select class="pane-select" id="workops-stage"><option>Cutting</option><option>Forming</option><option>Assembly</option><option>Welding</option><option>QA Inspection</option><option>Packaging</option></select></div>
+        <div><label class="pane-label">Assigned Staff</label><select class="pane-select" id="workops-staff"><option>James Okonkwo</option><option>Maria Santos</option><option>Kevin Huang</option></select></div>
+        <div><label class="pane-label">Assigned Machine</label><select class="pane-select" id="workops-machine"><option>CNC Router #2</option><option>Laser Cutter A</option><option>Hydraulic Press #1</option><option>Assembly Belt 3</option><option>Weld Station #2</option><option>QA Station</option></select></div>
+        <div><label class="pane-label">Scheduled Start</label><input class="pane-input" type="datetime-local" id="workops-startTime"></div>
+        <div><label class="pane-label">Est. Duration</label><input class="pane-input" id="workops-estTime" placeholder="e.g. 45 min"></div>
+        <div><label class="pane-label">Priority</label><select class="pane-select" id="workops-priority"><option>Normal</option><option>High</option><option>Urgent</option></select></div>
+      </div>
+    </div>
+    <div class="pane-section">
+      <div class="pane-section-title">Material Allocation</div>
+      <table class="sub-table">
+        <thead><tr><th>Material</th><th>Required</th><th>Allocated</th><th>Available</th><th>Status</th></tr></thead>
+        <tbody id="workops-materials-tbody">
+          <tr><td>Aluminium Sheet 2mm</td><td>2 SHT</td><td>2 SHT</td><td style="color:var(--danger)">12 SHT</td><td><span class="badge badge-pending" style="background:var(--warn-bg);color:#B45309">Low Stock</span></td></tr>
+          <tr><td>Steel Rod 10mm</td><td>0.5 M</td><td>0.5 M</td><td style="color:var(--success)">340 M</td><td><span class="badge badge-active">OK</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pane-section">
+      <div class="pane-section-title">Work Instructions</div>
+      <textarea class="pane-textarea" id="workops-instructions" placeholder="Enter step-by-step work instructions, machine setup guidelines, quality control requirements, and safety instructions..."></textarea>
+    </div>
+    <div class="pane-section">
+      <div class="pane-section-title">Operation Controls</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-primary" onclick="showToast('Operation started', 'success')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Operation
+        </button>
+        <button class="btn-secondary" onclick="showToast('Operation paused', 'warn')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          Pause
+        </button>
+        <button class="btn-secondary" onclick="showToast('Operation resumed', 'info')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Resume
+        </button>
+        <button class="btn-primary" onclick="showToast('Operation completed', 'success')" style="background:var(--success)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="20 6 9 17 4 12"/></svg>
+          Complete Operation
+        </button>
+      </div>
+    </div>
+    <div class="info-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      Completing this operation will automatically update the manufacturing order progress and deduct materials from inventory.
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('Operation')">Save Operation</button>
+  </div>
+</div>
+
+<!-- UOM Pane -->
+<div class="pane" id="uomPane">
+  <div class="pane-header">
+    <div><div class="pane-title" id="uomPaneTitle">Unit of Measurement</div></div>
+    <button class="pane-close" onclick="closePane()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="pane-body">
+    <div class="pane-section">
+      <div class="pane-section-title">UOM Configuration</div>
+      <div class="form-grid-2">
+        <div><label class="pane-label">UOM Code (ID)</label><input class="pane-input" id="uom-id-input" placeholder="e.g. KG, PCS, M" disabled></div>
+        <div><label class="pane-label">Full Name</label><input class="pane-input" id="uom-name" placeholder="e.g. Kilogram"></div>
+        <div><label class="pane-label">Category</label><select class="pane-select" id="uom-category"><option>Weight</option><option>Volume</option><option>Length</option><option>Count</option><option>Area</option></select></div>
+        <div><label class="pane-label">Is Base Unit?</label><select class="pane-select" id="uom-isBase"><option>Yes</option><option>No</option></select></div>
+        <div><label class="pane-label">Base UOM</label><select class="pane-select" id="uom-base"><option>— (this is the base)</option><option>KG</option><option>L</option><option>M</option><option>PCS</option><option>SHT</option></select></div>
+        <div><label class="pane-label">Conversion Factor</label><input class="pane-input" type="number" id="uom-factor" placeholder="1.0" step="any"></div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-footer">
+    <button class="btn-pane-cancel" onclick="closePane()">Cancel</button>
+    <button class="btn-pane-save" onclick="saveRecord('UOM')">Save UOM</button>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+// ============ TABLE SORTING ============
+let currentSort = { table: null, column: null, direction: 'asc' };
+
+function sortTable(tableIndex, columnIndex, tableEl) {
+  const tables = document.querySelectorAll('.data-table');
+  const table = tables[tableIndex];
+  if (!table) return;
+  
+  const tbody = table.querySelector('tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  
+  const isAsc = currentSort.table === tableIndex && currentSort.column === columnIndex && currentSort.direction === 'asc';
+  const direction = isAsc ? 'desc' : 'asc';
+  
+  currentSort = { table: tableIndex, column: columnIndex, direction };
+  
+  rows.sort((a, b) => {
+    let aVal = a.cells[columnIndex]?.textContent?.trim() || '';
+    let bVal = b.cells[columnIndex]?.textContent?.trim() || '';
+    
+    // Try to parse as number
+    const aNum = parseFloat(aVal.replace(/[^0-9.-]/g, ''));
+    const bNum = parseFloat(bVal.replace(/[^0-9.-]/g, ''));
+    
+    if (!isNaN(aNum) && !isNaN(bNum)) {
+      return direction === 'asc' ? aNum - bNum : bNum - aNum;
+    }
+    
+    return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+  });
+  
+  rows.forEach(row => tbody.appendChild(row));
+  
+  // Update header indicators
+  table.querySelectorAll('th').forEach((th, i) => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (i === columnIndex) {
+      th.classList.add(direction === 'asc' ? 'sort-asc' : 'sort-desc');
+    }
+  });
+}
+
+function initTableSorting() {
+  const tables = document.querySelectorAll('.data-table');
+  tables.forEach((table, tableIndex) => {
+    const headers = table.querySelectorAll('th');
+    headers.forEach((th, colIndex) => {
+      if (th.querySelector('th') || th.classList.contains('sort-none')) return;
+      th.style.cursor = 'pointer';
+      th.style.userSelect = 'none';
+      th.innerHTML = th.textContent + ' <span class="sort-icon">⇅</span>';
+      th.addEventListener('click', () => sortTable(tableIndex, colIndex, th));
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initTableSorting, 500);
+});
+</script>
+
+<style>
+.sort-icon { font-size: 10px; opacity: 0.4; }
+th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; }
+th.sort-asc .sort-icon { content: '↑'; }
+th.sort-desc .sort-icon { content: '↓'; }
+th.sort-asc, th.sort-desc { background: rgba(255,106,0,0.1); }
+</style>
+
+<!-- Add Card Modal -->
+<div id="addCardModal" class="modal-overlay">
+  <div class="modal-container add-card-modal">
+    <button class="modal-close" onclick="closeAddCardModal()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    <div class="modal-header">
+      <div class="modal-icon card-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+          <line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+      </div>
+      <h2 class="modal-title">Add Payment Method</h2>
+      <p class="modal-subtitle">Enter your card details to securely add a payment method.</p>
+    </div>
+    
+    <form id="addCardForm" onsubmit="handleAddCard(event)">
+      <div class="form-group">
+        <label class="form-label">Card Number</label>
+        <input type="text" class="form-input" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)">
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <input type="text" class="form-input" id="cardExpiry" placeholder="MM / YY" maxlength="5" oninput="formatCardExpiry(this)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">CVV</label>
+          <input type="text" class="form-input" id="cardCvv" placeholder="123" maxlength="4">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Cardholder Name</label>
+        <input type="text" class="form-input" id="cardName" placeholder="John Smith">
+      </div>
+      
+      <div class="modal-error" id="cardError"></div>
+      
+      <button type="submit" class="btn-primary btn-full" id="addCardBtn">
+        Add Payment Method
+      </button>
+      
+      <div class="card-security-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>Secured by Paystack. Your card details are encrypted.</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

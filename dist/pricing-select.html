@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Your Plan — ForgeFlow</title>
+  <link rel="icon" type="image/png" href="./assets/forge_flow_icon-removebg-preview-BiUyx8AG.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" crossorigin href="./assets/landing-wzpLF6l1.css">
+  <link rel="stylesheet" crossorigin href="./assets/shared-DUSsljj7.css">
+</head>
+<body class="pricing-select-page">
+
+  <div class="pricing-select-container">
+    <div class="pricing-select-header">
+      <a href="#" id="backLink" class="pricing-back" onclick="handleBackLink(event)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span id="backLinkText">Back to home</span>
+      </a>
+      
+      <div class="pricing-select-brand"><img src="./assets/forge_flow_logo-removebg-preview-B7wxy1uv.png" alt="Forge Flow" class="ff-logo ff-logo--pricing"></div>
+      
+      <h1 class="pricing-select-title" id="pageTitle">Choose Your Plan</h1>
+      <p class="pricing-select-subtitle" id="pageSubtitle">Select the plan that fits your business needs best.</p>
+      
+      <div class="pricing-toggle-container">
+        <span class="pricing-toggle-label">Monthly</span>
+        <label class="pricing-toggle">
+          <input type="checkbox" id="pricingToggle" onchange="togglePricing()">
+          <span class="pricing-toggle-slider"></span>
+        </label>
+        <span class="pricing-toggle-label">Annual</span>
+        <span class="pricing-save-badge">Save 20%</span>
+      </div>
+    </div>
+    
+    <div class="pricing-cards-grid">
+      <!-- Free Trial -->
+      <div class="pricing-select-card" id="card-trial">
+        <div class="ps-card-header">
+          <div class="ps-card-icon free">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="ps-card-badge" id="badge-trial">Free</div>
+        </div>
+        <h2 class="ps-card-name">Free Trial</h2>
+        <div class="ps-card-price">
+          <span class="ps-price-amount">$0</span>
+          <span class="ps-price-period">/ 14 days</span>
+        </div>
+        <p class="ps-card-desc">Experience the full power of ForgeFlow. Perfect for evaluating if our platform fits your needs before committing.</p>
+        <ul class="ps-card-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Full platform access</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Up to 3 users</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>100MB storage</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Community support</li>
+        </ul>
+        <button class="ps-card-btn free" id="btn-trial" onclick="selectPlan('trial')">Start Free Trial</button>
+      </div>
+      
+      <!-- Starter -->
+      <div class="pricing-select-card" id="card-starter">
+        <div class="ps-card-header">
+          <div class="ps-card-icon starter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="ps-card-badge popular" id="badge-starter">Best Value</div>
+        </div>
+        <h2 class="ps-card-name">Starter</h2>
+        <div class="ps-card-price">
+          <span class="ps-price-amount" id="price-starter">$150</span>
+          <span class="ps-price-period" id="period-starter">/ month</span>
+        </div>
+        <p class="ps-card-desc">Everything you need to move from spreadsheets to a real system. Ideal for teams of 5-15 people getting organized.</p>
+        <ul class="ps-card-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Up to 15 users</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Basic inventory tracking</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Sales orders management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Purchase requests</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>BOM management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Email support</li>
+        </ul>
+        <button class="ps-card-btn starter" id="btn-starter" onclick="selectPlan('starter')">Get Started</button>
+      </div>
+      
+      <!-- Professional -->
+      <div class="pricing-select-card featured" id="card-professional">
+        <div class="ps-card-header">
+          <div class="ps-card-icon professional">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="ps-card-badge pro" id="badge-professional">Recommended</div>
+        </div>
+        <h2 class="ps-card-name">Professional</h2>
+        <div class="ps-card-price">
+          <span class="ps-price-amount" id="price-professional">$250</span>
+          <span class="ps-price-period" id="period-professional">/ month</span>
+        </div>
+        <p class="ps-card-desc">Scale your operations with advanced reporting, API access, and priority support. Built for teams ready to grow.</p>
+        <ul class="ps-card-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Up to 30 users</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Full inventory management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Sales orders management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Purchase requests</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>BOM management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Workfloor operations</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Advanced reporting</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>API access</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
+        </ul>
+        <button class="ps-card-btn professional" id="btn-professional" onclick="selectPlan('professional')">Get Started</button>
+      </div>
+      
+      <!-- Enterprise -->
+      <div class="pricing-select-card enterprise" id="card-enterprise">
+        <div class="ps-card-header">
+          <div class="ps-card-icon enterprise">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+        </div>
+        <h2 class="ps-card-name">Enterprise</h2>
+        <div class="ps-card-price">
+          <span class="ps-price-amount">Custom</span>
+        </div>
+        <p class="ps-card-desc">Custom solutions for complex manufacturing operations. Multi-warehouse, automation, and dedicated support included.</p>
+        <ul class="ps-card-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Unlimited users</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Full inventory management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Sales orders management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Purchase requests</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>BOM management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Workfloor operations</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Advanced reporting</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>API access</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Multi-warehouse</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Advanced automation</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Custom integrations</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Dedicated support</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>SLA guarantee</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>On-premise option</li>
+        </ul>
+        <button class="ps-card-btn enterprise" id="btn-enterprise" onclick="selectPlan('enterprise')">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isAnnual = false;
+    let isUpgradeMode = false;
+    let currentUserPlan = null;
+    
+    const prices = {
+      starter: { monthly: 150, annual: 120 },
+      professional: { monthly: 250, annual: 200 }
+    };
+
+    function togglePricing() {
+      isAnnual = !isAnnual;
+      document.getElementById('pricingToggle').checked = isAnnual;
+      
+      const toggle = document.querySelector('.pricing-toggle');
+      toggle.classList.toggle('active', isAnnual);
+      
+      const starterAmount = document.getElementById('price-starter');
+      const starterPeriod = document.getElementById('period-starter');
+      if (starterAmount) {
+        starterAmount.textContent = isAnnual ? '$120' : '$150';
+        starterPeriod.textContent = isAnnual ? '/ month, billed annually' : '/ month';
+      }
+      
+      const proAmount = document.getElementById('price-professional');
+      const proPeriod = document.getElementById('period-professional');
+      if (proAmount) {
+        proAmount.textContent = isAnnual ? '$200' : '$250';
+        proPeriod.textContent = isAnnual ? '/ month, billed annually' : '/ month';
+      }
+    }
+
+    function handleBackLink(e) {
+      e.preventDefault();
+      if (isUpgradeMode) {
+        window.location.href = 'app.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
+    function getUserCurrentPlan() {
+      const userData = JSON.parse(localStorage.getItem('forgeflow_user') || '{}');
+      if (!userData.planLabel) return null;
+      
+      const planLabelMap = {
+        'FREE TRIAL': 'trial',
+        'STARTER': 'starter',
+        'PRO': 'professional',
+        'PROFESSIONAL': 'professional',
+        'ENTERPRISE': 'enterprise'
+      };
+      
+      return planLabelMap[userData.planLabel] || null;
+    }
+
+    function highlightCurrentPlan(plan) {
+      const card = document.getElementById('card-' + plan);
+      const badge = document.getElementById('badge-' + plan);
+      const btn = document.getElementById('btn-' + plan);
+      
+      if (card) {
+        card.classList.add('current-plan');
+      }
+      
+      if (badge) {
+        badge.textContent = 'Current Plan';
+        badge.className = 'ps-card-badge current';
+      }
+      
+      if (btn) {
+        btn.textContent = 'Current Plan';
+        btn.className = 'ps-card-btn current';
+        btn.disabled = true;
+        btn.onclick = null;
+        btn.style.cursor = 'default';
+        btn.style.opacity = '0.7';
+      }
+    }
+
+    function updateButtonTexts() {
+      if (!isUpgradeMode) return;
+      
+      const plans = ['trial', 'starter', 'professional', 'enterprise'];
+      plans.forEach(plan => {
+        if (plan === currentUserPlan) return;
+        
+        const btn = document.getElementById('btn-' + plan);
+        if (btn) {
+          if (plan === 'trial') {
+            btn.textContent = 'Downgrade';
+            btn.className = 'ps-card-btn downgrade';
+          } else if (plan === 'enterprise') {
+            btn.textContent = 'Contact Sales';
+          } else {
+            btn.textContent = 'Upgrade';
+          }
+        }
+        
+        const badge = document.getElementById('badge-' + plan);
+        if (badge && plan !== 'enterprise') {
+          if (plan === 'starter') {
+            badge.textContent = 'Best Value';
+          } else if (plan === 'professional') {
+            badge.textContent = 'Recommended';
+          }
+        }
+      });
+    }
+
+    function initUpgradeMode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      isUpgradeMode = urlParams.get('upgrade') === 'true';
+      
+      if (isUpgradeMode) {
+        document.getElementById('backLinkText').textContent = 'Back to dashboard';
+        document.getElementById('pageTitle').textContent = 'Upgrade Your Plan';
+        document.getElementById('pageSubtitle').textContent = 'Choose a plan that better fits your growing business needs.';
+        
+        currentUserPlan = getUserCurrentPlan();
+        
+        if (currentUserPlan) {
+          highlightCurrentPlan(currentUserPlan);
+          updateButtonTexts();
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      initUpgradeMode();
+      
+      const signupData = sessionStorage.getItem('forgeflow_signup_data');
+      const userData = localStorage.getItem('forgeflow_user');
+      
+      if (!signupData && !userData && !isUpgradeMode) {
+        window.location.href = 'signup.html';
+      }
+    });
+
+    function selectPlan(plan) {
+      if (isUpgradeMode && plan === currentUserPlan) {
+        return;
+      }
+      
+      sessionStorage.setItem('forgeflow_selected_plan', plan);
+      
+      let signupData = JSON.parse(sessionStorage.getItem('forgeflow_signup_data') || '{}');
+      const userDataRaw = localStorage.getItem('forgeflow_user');
+      let userData = userDataRaw ? JSON.parse(userDataRaw) : null;
+      
+      if (!signupData.email && userData) {
+        signupData = userData;
+      }
+      
+      const firstName = signupData.first_name || signupData.firstName || '';
+      const lastName = signupData.last_name || signupData.lastName || '';
+      const initials = (firstName[0] || 'U').toUpperCase() + (lastName[0] || '').toUpperCase();
+      const email = signupData.email || '';
+      
+      let planName, planLabel;
+      switch(plan) {
+        case 'trial':
+          planName = 'Free Trial';
+          planLabel = 'FREE TRIAL';
+          break;
+        case 'starter':
+          planName = 'Starter';
+          planLabel = 'STARTER';
+          break;
+        case 'professional':
+          planName = 'Professional';
+          planLabel = 'PRO';
+          break;
+        case 'enterprise':
+          planName = 'Enterprise';
+          planLabel = 'ENTERPRISE';
+          break;
+        default:
+          planName = 'Free Trial';
+          planLabel = 'FREE TRIAL';
+      }
+      
+      const forgeflowUser = {
+        initials: initials,
+        email: email,
+        planName: planName,
+        planLabel: planLabel
+      };
+      localStorage.setItem('forgeflow_user', JSON.stringify(forgeflowUser));
+      
+      if (plan === 'trial') {
+        window.location.href = isUpgradeMode ? 'app.html' : 'app.html';
+      } else if (plan === 'starter' || plan === 'professional') {
+        window.location.href = 'payment.html' + (isAnnual ? '?annual=true' : '');
+      } else if (plan === 'enterprise') {
+        openContactSalesModal();
+      }
+    }
+
+    function openContactSalesModal() {
+      document.getElementById('contactSalesModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeContactSalesModal() {
+      document.getElementById('contactSalesModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function submitContactSalesForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('contactSalesForm');
+      const submitBtn = document.getElementById('contactSalesSubmit');
+      
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+      
+      const formData = {
+        firstName: document.getElementById('csFirstName').value,
+        lastName: document.getElementById('csLastName').value,
+        email: document.getElementById('csEmail').value,
+        phone: document.getElementById('csPhone').value,
+        companyName: document.getElementById('csCompanyName').value,
+        companySize: document.getElementById('csCompanySize').value,
+        industry: document.getElementById('csIndustry').value,
+        currentSystem: document.getElementById('csCurrentSystem').value,
+        message: document.getElementById('csMessage').value,
+        timestamp: new Date().toISOString()
+      };
+      
+      console.log('Contact Sales Form Submitted:', formData);
+      sessionStorage.setItem('forgeflow_lead', JSON.stringify(formData));
+      
+      setTimeout(() => {
+        closeContactSalesModal();
+        alert('Thank you for your interest in ForgeFlow Enterprise! Our sales team will contact you within 24 hours.');
+        sessionStorage.setItem('forgeflow_selected_plan', 'enterprise');
+        const forgeflowUser = {
+          initials: 'U',
+          email: formData.email,
+          planName: 'Enterprise',
+          planLabel: 'ENTERPRISE'
+        };
+        localStorage.setItem('forgeflow_user', JSON.stringify(forgeflowUser));
+        window.location.href = 'app.html';
+      }, 1500);
+    }
+
+    window.openContactSalesModal = openContactSalesModal;
+    window.closeContactSalesModal = closeContactSalesModal;
+    window.submitContactSalesForm = submitContactSalesForm;
+    window.selectPlan = selectPlan;
+
+    document.getElementById('contactSalesModal').addEventListener('click', function(e) {
+      if (e.target === this) closeContactSalesModal();
+    });
+  </script>
+
+  <div id="contactSalesModal" class="modal-overlay">
+    <div class="modal-container">
+      <button class="modal-close" onclick="closeContactSalesModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <h2 class="modal-title">Contact Sales</h2>
+        <p class="modal-subtitle">Talk to our enterprise team about your manufacturing needs</p>
+      </div>
+      
+      <form id="contactSalesForm" onsubmit="submitContactSalesForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="csFirstName">First Name *</label>
+            <input type="text" id="csFirstName" name="firstName" required placeholder="John">
+          </div>
+          <div class="form-group">
+            <label for="csLastName">Last Name *</label>
+            <input type="text" id="csLastName" name="lastName" required placeholder="Smith">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="csEmail">Work Email *</label>
+          <input type="email" id="csEmail" name="email" required placeholder="john@company.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="csPhone">Phone Number *</label>
+          <input type="tel" id="csPhone" name="phone" required placeholder="+1 (555) 123-4567">
+        </div>
+        
+        <div class="form-group">
+          <label for="csCompanyName">Company Name *</label>
+          <input type="text" id="csCompanyName" name="companyName" required placeholder="Acme Manufacturing Inc.">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="csCompanySize">Company Size *</label>
+            <select id="csCompanySize" name="companySize" required>
+              <option value="">Select size...</option>
+              <option value="1-50">1-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+              <option value="201-500">201-500 employees</option>
+              <option value="501-1000">501-1,000 employees</option>
+              <option value="1001-5000">1,001-5,000 employees</option>
+              <option value="5000+">5,000+ employees</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="csIndustry">Industry</label>
+            <select id="csIndustry" name="industry">
+              <option value="">Select industry...</option>
+              <option value="automotive">Automotive</option>
+              <option value="aerospace">Aerospace & Defense</option>
+              <option value="electronics">Electronics</option>
+              <option value="food">Food & Beverage</option>
+              <option value="pharmaceuticals">Pharmaceuticals</option>
+              <option value="chemicals">Chemicals</option>
+              <option value="machinery">Industrial Machinery</option>
+              <option value="textiles">Textiles & Apparel</option>
+              <option value="plastics">Plastics & Rubber</option>
+              <option value="metal">Metal Fabrication</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="csCurrentSystem">Current ERP / Manufacturing System</label>
+          <select id="csCurrentSystem" name="currentSystem">
+            <option value="">Select system...</option>
+            <option value="none">No current system</option>
+            <option value="sap">SAP</option>
+            <option value="oracle">Oracle</option>
+            <option value="microsoft">Microsoft Dynamics</option>
+            <option value="infor">Infor</option>
+            <option value="sage">Sage</option>
+            <option value="quickbooks">QuickBooks</option>
+            <option value="excel">Spreadsheets / Excel</option>
+            <option value="custom">Custom / Legacy System</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="csMessage">Additional Requirements</label>
+          <textarea id="csMessage" name="message" rows="4" placeholder="Tell us about your specific requirements, integration needs, or questions..."></textarea>
+        </div>
+        
+        <button type="submit" id="contactSalesSubmit" class="modal-submit-btn">
+          Send Request
+        </button>
+        
+        <p class="modal-disclaimer">By submitting this form, you agree to be contacted by our sales team. We respect your privacy and will never share your information.</p>
+      </form>
+    </div>
+  </div>
+  
+  <style>
+    .pricing-select-page {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+      padding: 40px 20px 80px;
+    }
+    
+    .pricing-select-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .pricing-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-500);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .pricing-back:hover { color: var(--gray-700); }
+    
+    .pricing-select-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    
+    .pricing-select-brand {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent-color);
+      margin-bottom: 16px;
+    }
+    
+    .pricing-select-title {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 12px;
+    }
+    
+    .pricing-select-subtitle {
+      font-size: 18px;
+      color: var(--gray-500);
+    }
+    
+    .pricing-toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    
+    .pricing-toggle-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--gray-500);
+      transition: color 0.2s;
+    }
+    
+    .pricing-toggle-label.active {
+      color: #111;
+    }
+    
+    .pricing-toggle {
+      position: relative;
+      width: 56px;
+      height: 30px;
+      display: inline-block;
+    }
+    
+    .pricing-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .pricing-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #E5E7EB;
+      border-radius: 30px;
+      transition: 0.3s;
+    }
+    
+    .pricing-toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 24px;
+      width: 24px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    
+    .pricing-toggle input:checked + .pricing-toggle-slider {
+      background: linear-gradient(135deg, #FF6A00 0%, #FF8C42 100%);
+    }
+    
+    .pricing-toggle input:checked + .pricing-toggle-slider::before {
+      transform: translateX(26px);
+    }
+    
+    .pricing-save-badge {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .pricing-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+    
+    .pricing-select-card {
+      background: white;
+      border-radius: 24px;
+      padding: 36px 32px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .pricing-select-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+    
+    .pricing-select-card.featured {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      transform: scale(1.05);
+      z-index: 1;
+    }
+    
+    .pricing-select-card.featured:hover {
+      transform: scale(1.05) translateY(-6px);
+    }
+    
+    .ps-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+    
+    .ps-card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ps-card-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+    .ps-card-icon.free {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+    }
+    .ps-card-icon.starter {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+    .ps-card-icon.professional {
+      background: rgba(255, 106, 0, 0.15);
+      color: #FF6A00;
+    }
+    .ps-card-icon.enterprise {
+      background: rgba(139, 92, 246, 0.1);
+      color: #8b5cf6;
+    }
+    
+    .ps-card-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: var(--gray-100);
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .ps-card-badge.popular {
+      background: #10b981;
+      color: white;
+    }
+    .ps-card-badge.pro {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+    .ps-card-badge.current {
+      background: #10b981;
+      color: white;
+    }
+
+    .pricing-select-card.current-plan {
+      border: 3px solid #10b981;
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.03) 0%, rgba(16, 185, 129, 0.08) 100%);
+    }
+
+    .ps-card-btn.current {
+      background: var(--gray-200);
+      color: var(--gray-500);
+      cursor: default;
+    }
+
+    .ps-card-btn.downgrade {
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border: 2px solid var(--gray-200);
+    }
+    .ps-card-btn.downgrade:hover {
+      background: var(--gray-200);
+    }
+    
+    .ps-card-name {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #111;
+    }
+    .pricing-select-card.featured .ps-card-name {
+      color: white;
+    }
+    
+    .ps-card-price {
+      margin-bottom: 16px;
+    }
+    .ps-price-amount {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--gray-900);
+    }
+    .pricing-select-card.featured .ps-price-amount {
+      color: white;
+    }
+    .ps-price-period {
+      font-size: 15px;
+      color: var(--gray-500);
+    }
+    .pricing-select-card.featured .ps-price-period {
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .ps-card-desc {
+      font-size: 14px;
+      color: var(--gray-500);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .pricing-select-card.featured .ps-card-desc {
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .ps-card-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 32px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex-grow: 1;
+    }
+    .ps-card-features li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--gray-700);
+    }
+    .pricing-select-card.featured .ps-card-features li {
+      color: rgba(255,255,255,0.9);
+    }
+    .ps-card-features svg {
+      width: 18px;
+      height: 18px;
+      color: #22c55e;
+      flex-shrink: 0;
+    }
+    .pricing-select-card.featured .ps-card-features svg {
+      color: #FF6A00;
+    }
+    
+    .ps-card-btn {
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      margin-top: auto;
+    }
+    .ps-card-btn.free {
+      background: #3b82f6;
+      color: white;
+    }
+    .ps-card-btn.free:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+    .ps-card-btn.starter {
+      background: #10b981;
+      color: white;
+    }
+    .ps-card-btn.starter:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+    .ps-card-btn.professional {
+      background: #FF6A00;
+      color: white;
+    }
+    .ps-card-btn.professional:hover {
+      background: #e55d00;
+      transform: translateY(-2px);
+    }
+    .ps-card-btn.enterprise {
+      background: #8b5cf6;
+      color: white;
+    }
+    .ps-card-btn.enterprise:hover {
+      background: #7c3aed;
+      transform: translateY(-2px);
+    }
+
+    .ps-card-btn.starter:not(.current):not(.downgrade):hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .ps-card-btn.professional:not(.current):not(.downgrade):hover {
+      background: #e55d00;
+      transform: translateY(-2px);
+    }
+    
+    @media (max-width: 1024px) {
+      .pricing-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .pricing-select-card.featured {
+        transform: none;
+        grid-column: span 2;
+      }
+      .pricing-select-card.featured:hover {
+        transform: translateY(-6px);
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .pricing-cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .pricing-select-card.featured {
+        grid-column: span 1;
+      }
+      .pricing-select-title {
+        font-size: 28px;
+      }
+      .pricing-select-brand {
+        font-size: 26px;
+      }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-overlay.open .modal-container {
+      transform: scale(1) translateY(0);
+    }
+    
+    .modal-container {
+      background: white;
+      border-radius: 24px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 48px;
+      position: relative;
+      transform: scale(0.95) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #f3f4f6;
+      color: #6b7280;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    
+    .modal-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: white;
+    }
+    
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    
+    .modal-subtitle {
+      font-size: 15px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: var(--font-body);
+      color: #111;
+      background: #fafafa;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+    }
+    
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #9ca3af;
+    }
+    
+    .form-group select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 44px;
+    }
+    
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .modal-submit-btn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .modal-submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+    }
+    .modal-submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .modal-disclaimer {
+      font-size: 12px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    
+    @media (max-width: 640px) {
+      .modal-container {
+        padding: 32px 24px;
+        max-height: 95vh;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .modal-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</body>
+</html>

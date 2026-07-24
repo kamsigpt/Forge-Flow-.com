@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About ForgeFlow — Manufacturing Operations Platform</title>
+  <link rel="icon" type="image/png" href="./assets/forge_flow_icon-removebg-preview-BiUyx8AG.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
+  <style>
+    /* ===== ABOUT PAGE OVERRIDES ===== */
+    body { background: #FAFAFA; }
+
+    .about-hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 60px 60px;
+      overflow: hidden;
+      background: var(--ff-bg);
+    }
+
+    .about-hero-mesh {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 30%, rgba(255, 106, 0, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 70%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .about-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--ff-container);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .about-hero-text { max-width: 580px; }
+
+    .about-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 106, 0, 0.08);
+      border: 1px solid rgba(255, 106, 0, 0.15);
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ff-primary);
+      margin-bottom: 28px;
+    }
+
+    .about-hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--ff-primary);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .about-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 5vw, 62px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      color: var(--ff-text);
+      margin-bottom: 24px;
+    }
+
+    .about-hero-title .highlight {
+      background: var(--ff-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .about-hero-desc {
+      font-size: 19px;
+      line-height: 1.7;
+      color: var(--ff-text-secondary);
+      margin-bottom: 36px;
+    }
+
+    .about-hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .about-hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-top: 40px;
+    }
+
+    .about-hero-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--ff-text-secondary);
+    }
+
+    .about-hero-trust-item .check {
+      color: #10B981;
+      font-weight: 700;
+    }
+
+    /* Dashboard illustration */
+    .about-hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 500px;
+    }
+
+    .about-dash-float {
+      position: absolute;
+      background: white;
+      border-radius: var(--ff-radius-md);
+      box-shadow: var(--ff-shadow-lg);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2;
+      animation: float-card 6s ease-in-out infinite;
+    }
+
+    .about-dash-float:nth-child(1) { top: 60px; left: 0; animation-delay: 0s; }
+    .about-dash-float:nth-child(2) { top: 120px; right: 0; animation-delay: -2s; }
+    .about-dash-float:nth-child(3) { bottom: 80px; left: 10px; animation-delay: -4s; }
+
+    @keyframes float-card {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .about-dash-float-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .about-dash-float-label {
+      font-size: 11px;
+      color: var(--ff-text-secondary);
+    }
+
+    .about-dash-float-val {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ff-text);
+      line-height: 1;
+    }
+
+    .about-dash-float-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: #10B981;
+    }
+
+    .about-dash-main {
+      position: relative;
+      z-index: 1;
+      width: 440px;
+      background: white;
+      border-radius: var(--ff-radius-xl);
+      box-shadow: var(--ff-shadow-xl);
+      overflow: hidden;
+      border: 1px solid var(--ff-border);
+    }
+
+    .about-dash-topbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px;
+      background: var(--ff-bg-alt);
+      border-bottom: 1px solid var(--ff-border);
+    }
+
+    .about-dash-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .about-dash-dot.r { background: #FF5F57; }
+    .about-dash-dot.y { background: #FFBD2E; }
+    .about-dash-dot.g { background: #28CA41; }
+
+    .about-dash-addr {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--ff-text-secondary);
+      background: white;
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--ff-border);
+    }
+
+    .about-dash-body { padding: 20px; }
+
+    .about-dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .about-dash-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ff-text);
+    }
+
+    .about-dash-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #10B981;
+      font-weight: 500;
+    }
+
+    .about-dash-status-dot {
+      width: 6px;
+      height: 6px;
+      background: #10B981;
+      border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .about-dash-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .about-dash-kpi {
+      background: var(--ff-bg-alt);
+      border-radius: var(--ff-radius-sm);
+      padding: 10px 12px;
+      text-align: center;
+    }
+
+    .about-dash-kpi-label {
+      font-size: 9px;
+      color: var(--ff-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .about-dash-kpi-val {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ff-text);
+    }
+
+    .about-dash-kpi-val.green { color: #10B981; }
+
+    .about-dash-chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 11px;
+      color: var(--ff-text-secondary);
+      font-weight: 500;
+    }
+
+    .about-dash-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 80px;
+    }
+
+    .about-dash-bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .about-dash-bar {
+      width: 100%;
+      border-radius: 3px 3px 0 0;
+      background: var(--ff-gradient);
+      transition: height 1.5s var(--ff-ease);
+    }
+
+    .about-dash-bar-target {
+      width: 100%;
+      border-radius: 3px 3px 0 0;
+      background: var(--ff-border);
+    }
+
+    .about-dash-glow {
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 106, 0, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===== ABOUT SECTION SHARED ===== */
+    .about-section {
+      padding: 120px 60px;
+      position: relative;
+    }
+
+    .about-section-inner {
+      max-width: var(--ff-container);
+      margin: 0 auto;
+    }
+
+    .about-section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .about-section-header .section-title { margin-bottom: 16px; }
+
+    .about-section-header .section-desc {
+      margin: 0 auto;
+    }
+
+    /* ===== STATS COUNTER ===== */
+    .about-stats {
+      background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+      border-radius: var(--ff-radius-2xl);
+      padding: 80px 60px;
+      margin: 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-stats::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 106, 0, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .about-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .about-stat-val {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 5vw, 60px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      color: var(--ff-primary);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .about-stat-label {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.4;
+      max-width: 180px;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .about-workflow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+
+    .about-workflow-steps::before {
+      content: '';
+      position: absolute;
+      top: 44px;
+      left: 12.5%;
+      right: 12.5%;
+      height: 2px;
+      background: var(--ff-border);
+      z-index: 0;
+    }
+
+    .about-workflow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      padding: 0 16px;
+    }
+
+    .about-step-bubble {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--ff-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      transition: all 0.4s var(--ff-ease);
+      box-shadow: var(--ff-shadow-sm);
+    }
+
+    .about-workflow-step:hover .about-step-bubble {
+      border-color: var(--ff-primary);
+      box-shadow: 0 0 0 6px rgba(255, 106, 0, 0.1), var(--ff-shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .about-step-num {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--ff-primary);
+    }
+
+    .about-step-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ff-text);
+      margin-bottom: 12px;
+    }
+
+    .about-step-desc {
+      font-size: 14px;
+      color: var(--ff-text-secondary);
+      line-height: 1.7;
+      max-width: 240px;
+    }
+
+    /* ===== WHY FORGEFLOW (Comparison) ===== */
+    .about-compare-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .about-compare-card {
+      background: white;
+      border: 1.5px solid var(--ff-border);
+      border-radius: var(--ff-radius-xl);
+      padding: 40px 32px;
+      text-align: center;
+      transition: all 0.4s var(--ff-ease-out);
+      position: relative;
+    }
+
+    .about-compare-card.featured {
+      background: linear-gradient(160deg, #1A1A1A 0%, #2A2A2A 100%);
+      border: none;
+      transform: scale(1.05);
+      box-shadow: 0 0 0 1px rgba(255, 106, 0, 0.3), 0 20px 50px rgba(0, 0, 0, 0.3);
+      color: white;
+    }
+
+    .about-compare-card:not(.featured):hover {
+      box-shadow: var(--ff-shadow-lg);
+      transform: translateY(-6px);
+    }
+
+    .about-compare-card.featured:hover {
+      transform: scale(1.05) translateY(-6px);
+    }
+
+    .about-compare-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ff-gradient);
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(255, 106, 0, 0.45);
+    }
+
+    .about-compare-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--ff-radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      background: rgba(255, 106, 0, 0.08);
+    }
+
+    .about-compare-card.featured .about-compare-icon {
+      background: rgba(255, 106, 0, 0.2);
+    }
+
+    .about-compare-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .about-compare-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .about-compare-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ff-text-secondary);
+    }
+
+    .about-compare-card.featured .about-compare-list li {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .about-compare-list .chk {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF6A00 0%, #FFB066 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .about-compare-card.featured .about-compare-list .chk {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .about-compare-list .chk svg {
+      width: 10px;
+      height: 10px;
+      color: white;
+    }
+
+    .about-compare-list .crs {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #F3F4F6;
+      color: #D1D5DB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ===== FEATURES DEEP DIVE ===== */
+    .about-features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+
+    .about-feature-card {
+      background: white;
+      border: 1.5px solid var(--ff-border);
+      border-radius: var(--ff-radius-xl);
+      padding: 40px 36px;
+      display: flex;
+      gap: 24px;
+      transition: all 0.4s var(--ff-ease-out);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-feature-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--ff-gradient);
+      transform: scaleX(0);
+      transition: transform 0.4s var(--ff-ease);
+      transform-origin: left;
+    }
+
+    .about-feature-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .about-feature-card:hover {
+      box-shadow: var(--ff-shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .about-feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--ff-radius-md);
+      background: linear-gradient(135deg, rgba(255, 106, 0, 0.1) 0%, rgba(255, 140, 66, 0.05) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .about-feature-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--ff-primary);
+    }
+
+    .about-feature-content { flex: 1; }
+
+    .about-feature-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ff-text);
+      margin-bottom: 10px;
+    }
+
+    .about-feature-desc {
+      font-size: 14px;
+      color: var(--ff-text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ===== INDUSTRIES ===== */
+    .about-industries-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .about-industry-card {
+      background: white;
+      border: 1.5px solid var(--ff-border);
+      border-radius: var(--ff-radius-lg);
+      padding: 32px 28px;
+      transition: all 0.3s var(--ff-ease-out);
+    }
+
+    .about-industry-card:hover {
+      border-color: rgba(255, 106, 0, 0.3);
+      box-shadow: var(--ff-shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .about-industry-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--ff-radius-md);
+      background: rgba(255, 106, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 24px;
+    }
+
+    .about-industry-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ff-text);
+      margin-bottom: 8px;
+    }
+
+    .about-industry-desc {
+      font-size: 14px;
+      color: var(--ff-text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ===== CTA ===== */
+    .about-cta {
+      margin: 0 60px 100px;
+      border-radius: var(--ff-radius-2xl);
+      background: linear-gradient(135deg, #2D2D2D 0%, #3A3A3A 50%, #444444 100%);
+      padding: 100px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--ff-shadow-xl);
+    }
+
+    .about-cta-glow {
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 106, 0, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .about-cta-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .about-cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .about-cta-desc {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 560px;
+      line-height: 1.6;
+      margin: 0 auto 36px;
+    }
+
+    .about-cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .btn-about-cta-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 40px;
+      border-radius: 4px;
+      background: var(--ff-gradient);
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(255, 106, 0, 0.45);
+      transition: all 0.3s var(--ff-ease-spring);
+      text-decoration: none;
+    }
+
+    .btn-about-cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(255, 106, 0, 0.6);
+    }
+
+    .btn-about-cta-secondary {
+      padding: 16px 34px;
+      border-radius: 4px;
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s var(--ff-ease-out);
+      text-decoration: none;
+    }
+
+    .btn-about-cta-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-2px);
+    }
+
+    /* ===== SECTION DIVIDERS ===== */
+    .about-divider {
+      width: 60px;
+      height: 3px;
+      background: var(--ff-gradient);
+      border-radius: 2px;
+      margin: 0 auto;
+    }
+
+    /* ===== SCROLL FADE ===== */
+    .scroll-fade {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s var(--ff-ease-out);
+    }
+
+    .scroll-fade.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-fade.visible:nth-child(2) { transition-delay: 0.1s; }
+    .scroll-fade.visible:nth-child(3) { transition-delay: 0.2s; }
+    .scroll-fade.visible:nth-child(4) { transition-delay: 0.3s; }
+    .scroll-fade.visible:nth-child(5) { transition-delay: 0.15s; }
+    .scroll-fade.visible:nth-child(6) { transition-delay: 0.25s; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .about-hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .about-hero-visual { height: 400px; }
+      .about-dash-main { width: 380px; }
+      .about-dash-float { display: none; }
+      .about-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .about-workflow-steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .about-workflow-steps::before { display: none; }
+      .about-compare-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+      .about-compare-card.featured { transform: none; }
+      .about-compare-card.featured:hover { transform: translateY(-6px); }
+      .about-features-grid { grid-template-columns: 1fr; }
+      .about-industries-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .about-hero { min-height: auto; padding: 120px 20px 60px; }
+      .about-hero-inner { gap: 32px; }
+      .about-hero-title { font-size: 36px; letter-spacing: -1.5px; }
+      .about-hero-desc { font-size: 16px; }
+      .about-hero-ctas { flex-direction: column; }
+      .about-hero-ctas .btn-primary, .about-hero-ctas .btn-ghost { width: 100%; justify-content: center; }
+      .about-hero-trust { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .about-hero-visual { height: 320px; }
+      .about-dash-main { width: 300px; }
+      .about-dash-kpis { grid-template-columns: repeat(2, 1fr); }
+      .about-section { padding: 80px 20px; }
+      .about-stats { margin: 0 20px; padding: 48px 24px; }
+      .about-stats-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .about-stat-val { font-size: 36px; }
+      .about-workflow-steps { grid-template-columns: 1fr; gap: 40px; }
+      .about-industries-grid { grid-template-columns: 1fr; }
+      .about-cta { margin: 0 20px 60px; padding: 48px 28px; }
+      .about-cta-actions { flex-direction: column; }
+      .nav { padding: 0 20px; }
+      .footer { padding: 40px 20px 20px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .footer-brand { grid-column: span 2; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .footer-bottom a { margin: 0 12px; }
+    }
+  </style>
+  <link rel="stylesheet" crossorigin href="./assets/landing-wzpLF6l1.css">
+  <link rel="stylesheet" crossorigin href="./assets/shared-DUSsljj7.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="./assets/forge_flow_logo-removebg-preview-B7wxy1uv.png" alt="ForgeFlow" class="ff-logo ff-logo--nav">
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#features">Solutions</a></li>
+        <li><a href="index.html#workflow">How It Works</a></li>
+        <li><a href="index.html#compare">Why ForgeFlow</a></li>
+        <li><a href="pricing-select.html">Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-nav-ghost" onclick="location.href='login.html'">Sign In</button>
+        <button class="btn-nav-primary" onclick="location.href='signup.html'">Get Free Trial</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="about-hero" id="hero">
+    <div class="about-hero-mesh"></div>
+    <div class="about-hero-inner">
+      <div class="about-hero-text">
+        <h1 class="about-hero-title scroll-fade">
+          Welcome to<br>
+          <span class="highlight">ForgeFlow</span>
+        </h1>
+        <p class="about-hero-desc scroll-fade">The all-in-one manufacturing operations platform that connects your production floor to your business strategy. Built for modern manufacturers who refuse to settle for outdated software.</p>
+        <div class="about-hero-ctas scroll-fade">
+          <button class="btn-primary btn-lg" onclick="location.href='signup.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Get Free Trial
+          </button>
+          <button class="btn-ghost btn-lg" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">
+            See How It Works
+          </button>
+        </div>
+        <div class="about-hero-trust scroll-fade">
+          <div class="about-hero-trust-item">
+            <span class="check">✓</span>
+            <span>Setup in under 2 weeks</span>
+          </div>
+          <div class="about-hero-trust-item">
+            <span class="check">✓</span>
+            <span>No credit card required</span>
+          </div>
+          <div class="about-hero-trust-item">
+            <span class="check">✓</span>
+            <span>Cancel anytime</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-hero-visual scroll-fade">
+        <div class="about-dash-float">
+          <div class="about-dash-float-icon" style="background:rgba(16,185,129,0.1)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <div class="about-dash-float-label">On-Time Delivery</div>
+            <div class="about-dash-float-val" style="color:#10B981">98.7%</div>
+          </div>
+        </div>
+        <div class="about-dash-float">
+          <div class="about-dash-float-icon" style="background:rgba(255,106,0,0.1)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div>
+            <div class="about-dash-float-label">Production Output</div>
+            <div class="about-dash-float-val">94%</div>
+          </div>
+        </div>
+        <div class="about-dash-float">
+          <div class="about-dash-float-icon" style="background:rgba(59,130,246,0.1)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div>
+            <div class="about-dash-float-label">Cost Savings</div>
+            <div class="about-dash-float-val" style="color:#FF6A00">$1.2M</div>
+          </div>
+        </div>
+
+        <div class="about-dash-main">
+          <div class="about-dash-topbar">
+            <span class="about-dash-dot r"></span>
+            <span class="about-dash-dot y"></span>
+            <span class="about-dash-dot g"></span>
+            <span class="about-dash-addr">forgeflow.io/dashboard</span>
+          </div>
+          <div class="about-dash-body">
+            <div class="about-dash-header">
+              <div class="about-dash-title">Production Overview</div>
+              <div class="about-dash-status">
+                <span class="about-dash-status-dot"></span>
+                All systems operational
+              </div>
+            </div>
+            <div class="about-dash-kpis">
+              <div class="about-dash-kpi">
+                <div class="about-dash-kpi-label">Orders</div>
+                <div class="about-dash-kpi-val count-up" data-target="147">0</div>
+              </div>
+              <div class="about-dash-kpi">
+                <div class="about-dash-kpi-label">Machines</div>
+                <div class="about-dash-kpi-val count-up" data-target="64">0</div>
+              </div>
+              <div class="about-dash-kpi">
+                <div class="about-dash-kpi-label">OEE</div>
+                <div class="about-dash-kpi-val count-up" data-target="92">0</div>
+              </div>
+              <div class="about-dash-kpi">
+                <div class="about-dash-kpi-label">Quality</div>
+                <div class="about-dash-kpi-val green count-up" data-target="99.2">0</div>
+              </div>
+            </div>
+            <div class="about-dash-chart-header">
+              <span>Production Output (Last 12 Months)</span>
+            </div>
+            <div class="about-dash-bars">
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:40%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:55%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:50%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:70%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:62%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:78%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:76%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:88%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:82%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:90%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:88%"></div></div>
+              <div class="about-dash-bar-group"><div class="about-dash-bar" style="height:96%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="about-dash-glow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS COUNTER -->
+  <section class="about-stats scroll-fade" id="stats">
+    <div class="about-stats-grid">
+      <div class="about-stat-item">
+        <div class="about-stat-val count-up" data-target="40" data-suffix="%">0%</div>
+        <div class="about-stat-label">Reduction in inventory carrying costs through demand forecasting</div>
+      </div>
+      <div class="about-stat-item">
+        <div class="about-stat-val count-up" data-target="60" data-suffix="%">0%</div>
+        <div class="about-stat-label">Faster production planning with automated MRP scheduling</div>
+      </div>
+      <div class="about-stat-item">
+        <div class="about-stat-val count-up" data-target="95" data-suffix="%">0%</div>
+        <div class="about-stat-label">On-time delivery rate across all customer orders</div>
+      </div>
+      <div class="about-stat-item">
+        <div class="about-stat-val count-up" data-target="3" data-suffix="x">0x</div>
+        <div class="about-stat-label">Faster issue resolution with real-time alerts and analytics</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="about-section" id="how-it-works">
+    <div class="about-section-inner">
+      <div class="about-section-header scroll-fade">
+        <div class="about-divider"></div>
+        <h2 class="section-title">From raw material to delivery<br>in one seamless flow</h2>
+        <p class="section-desc">ForgeFlow connects every step of your manufacturing process — eliminating data silos, reducing manual work, and giving you complete visibility from order capture to final shipment.</p>
+      </div>
+      <div class="about-workflow-steps">
+        <div class="about-workflow-step scroll-fade">
+          <div class="about-step-bubble">
+            <span class="about-step-num">01</span>
+          </div>
+          <div class="about-step-title">Capture Demand</div>
+          <div class="about-step-desc">Sales orders, forecasts, and custom requests are captured automatically from any channel — web, EDI, API, or manual entry. Nothing falls through the cracks.</div>
+        </div>
+        <div class="about-workflow-step scroll-fade">
+          <div class="about-step-bubble">
+            <span class="about-step-num">02</span>
+          </div>
+          <div class="about-step-title">Intelligent Planning</div>
+          <div class="about-step-desc">The MRP engine generates production schedules, material requirements, and resource allocation in seconds — considering capacity, materials, and deadlines simultaneously.</div>
+        </div>
+        <div class="about-workflow-step scroll-fade">
+          <div class="about-step-bubble">
+            <span class="about-step-num">03</span>
+          </div>
+          <div class="about-step-title">Execute & Track</div>
+          <div class="about-step-desc">Monitor every work operation live on the shop floor. Real-time IoT data from machines, quality checkpoints, and labor tracking — all in one dashboard.</div>
+        </div>
+        <div class="about-workflow-step scroll-fade">
+          <div class="about-step-bubble">
+            <span class="about-step-num">04</span>
+          </div>
+          <div class="about-step-title">Deliver & Optimize</div>
+          <div class="about-step-desc">Fulfill orders on time with optimized scheduling, then feed performance data back into planning for continuous improvement across every production cycle.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY FORGEFLOW -->
+  <section class="about-section" style="background:var(--ff-bg-alt);" id="why">
+    <div class="about-section-inner">
+      <div class="about-section-header scroll-fade">
+        <div class="about-divider"></div>
+        <h2 class="section-title">Why manufacturers choose ForgeFlow</h2>
+        <p class="section-desc">See how we compare to legacy ERP systems, spreadsheets, and point solutions</p>
+      </div>
+      <div class="about-compare-grid">
+        <div class="about-compare-card scroll-fade">
+          <div class="about-compare-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="about-compare-title" style="color:var(--ff-text-secondary)">Spreadsheets</div>
+          <ul class="about-compare-list">
+            <li><span class="crs">✗</span>No real-time visibility</li>
+            <li><span class="crs">✗</span>Manual data entry errors</li>
+            <li><span class="crs">✗</span>No production scheduling</li>
+            <li><span class="crs">✗</span>Cannot track inventory live</li>
+            <li><span class="crs">✗</span>No quality control workflows</li>
+          </ul>
+        </div>
+        <div class="about-compare-card scroll-fade">
+          <div class="about-compare-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <div class="about-compare-title" style="color:var(--ff-text-secondary)">Legacy ERP</div>
+          <ul class="about-compare-list">
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Production tracking</li>
+            <li><span class="crs">✗</span>Months-long implementation</li>
+            <li><span class="crs">✗</span>Expensive consultants required</li>
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Basic inventory management</li>
+            <li><span class="crs">✗</span>No predictive analytics</li>
+          </ul>
+        </div>
+        <div class="about-compare-card featured scroll-fade">
+          <div class="about-compare-badge">Best Choice</div>
+          <div class="about-compare-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="about-compare-title" style="color:white">ForgeFlow</div>
+          <ul class="about-compare-list">
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Real-time production monitoring</li>
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Setup in weeks, not months</li>
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Predictive maintenance & analytics</li>
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>IoT machine connectivity</li>
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Quality defect detection</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES DEEP DIVE -->
+  <section class="about-section" id="features">
+    <div class="about-section-inner">
+      <div class="about-section-header scroll-fade">
+        <div class="about-divider"></div>
+        <h2 class="section-title">Everything you need to run<br>your manufacturing operations</h2>
+        <p class="section-desc">From raw material procurement to finished goods delivery — track every detail with precision and confidence.</p>
+      </div>
+      <div class="about-features-grid">
+        <div class="about-feature-card scroll-fade">
+          <div class="about-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="about-feature-content">
+            <div class="about-feature-title">Predictive Maintenance</div>
+            <div class="about-feature-desc">Proactive maintenance scheduling identifies equipment wear patterns and alerts you before failures happen. Analyzes vibration, temperature, and cycle data to reduce unplanned downtime by up to 40%.</div>
+          </div>
+        </div>
+        <div class="about-feature-card scroll-fade">
+          <div class="about-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="about-feature-content">
+            <div class="about-feature-title">Production Optimization</div>
+            <div class="about-feature-desc">Real-time production scheduling optimizes machine utilization, labor allocation, and material flow across all workcenters. Drag-and-drop planning with capacity-aware constraint solving.</div>
+          </div>
+        </div>
+        <div class="about-feature-card scroll-fade">
+          <div class="about-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="about-feature-content">
+            <div class="about-feature-title">Inventory Intelligence</div>
+            <div class="about-feature-desc">Multi-warehouse tracking with demand forecasting, automated reorder points, and smart inventory optimization. Barcode and RFID scanning with lot and serial number tracking.</div>
+          </div>
+        </div>
+        <div class="about-feature-card scroll-fade">
+          <div class="about-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="about-feature-content">
+            <div class="about-feature-title">Quality Control</div>
+            <div class="about-feature-desc">Advanced defect detection with real-time quality monitoring, statistical process control, and automated inspection workflows. Catch issues before they become costly recalls.</div>
+          </div>
+        </div>
+        <div class="about-feature-card scroll-fade">
+          <div class="about-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="about-feature-content">
+            <div class="about-feature-title">Machine Monitoring</div>
+            <div class="about-feature-desc">Real-time equipment monitoring with IoT integration, vibration analysis, and automated alerts for abnormal operating conditions. OPC-UA and MQTT protocol support out of the box.</div>
+          </div>
+        </div>
+        <div class="about-feature-card scroll-fade">
+          <div class="about-feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="about-feature-content">
+            <div class="about-feature-title">Smart Scheduling</div>
+            <div class="about-feature-desc">Intelligent production scheduling that considers machine capacity, material availability, and delivery deadlines simultaneously. Automatically proposes alternatives when conflicts arise.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section class="about-section" style="background:var(--ff-bg-alt);" id="industries">
+    <div class="about-section-inner">
+      <div class="about-section-header scroll-fade">
+        <div class="about-divider"></div>
+        <h2 class="section-title">Built for every manufacturing sector</h2>
+        <p class="section-desc">Whether you build aircraft components or batch-process food, ForgeFlow adapts to your operation</p>
+      </div>
+      <div class="about-industries-grid">
+        <div class="about-industry-card scroll-fade">
+          <div class="about-industry-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="about-industry-title">Automotive</div>
+          <div class="about-industry-desc">High-volume discrete manufacturing with complex BOMs, APQP compliance, and JIT delivery requirements.</div>
+        </div>
+        <div class="about-industry-card scroll-fade">
+          <div class="about-industry-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="about-industry-title">Aerospace & Defense</div>
+          <div class="about-industry-desc">Full traceability, AS9100 compliance, and serial number tracking for mission-critical components.</div>
+        </div>
+        <div class="about-industry-card scroll-fade">
+          <div class="about-industry-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="about-industry-title">Electronics</div>
+          <div class="about-industry-desc">PCB assembly, box build, testing, and fulfillment with component-level tracking and ESD monitoring.</div>
+        </div>
+        <div class="about-industry-card scroll-fade">
+          <div class="about-industry-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="about-industry-title">Food & Beverage</div>
+          <div class="about-industry-desc">Batch processing, expiration tracking, allergen management, and FDA/FSMA compliance built in.</div>
+        </div>
+        <div class="about-industry-card scroll-fade">
+          <div class="about-industry-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="about-industry-title">Pharmaceuticals</div>
+          <div class="about-industry-desc">GMP compliance, batch records, 21 CFR Part 11 electronic signatures, and full audit trails.</div>
+        </div>
+        <div class="about-industry-card scroll-fade">
+          <div class="about-industry-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="about-industry-title">Contract Manufacturing</div>
+          <div class="about-industry-desc">Multi-customer scheduling, complex routing, and flexible capacity planning for CMs of all sizes.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="about-cta scroll-fade">
+    <div class="about-cta-glow"></div>
+    <div class="about-cta-content">
+      <h2 class="about-cta-title">Ready to transform your manufacturing operations?</h2>
+      <p class="about-cta-desc">Join thousands of manufacturers who've upgraded to modern operations. Start your free trial today — no credit card required.</p>
+      <div class="about-cta-actions">
+        <a href="signup.html" class="btn-about-cta-primary">
+          Get Free Trial
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="contact.html" class="btn-about-cta-secondary">Talk to Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER (matching landing page) -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="./assets/forge_flow_logo-removebg-preview-B7wxy1uv.png" alt="ForgeFlow" class="ff-logo ff-logo--footer">
+        <p>Modern manufacturing operations platform built for industry leaders. Built for teams who want to move fast and eliminate downtime.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="index.html#features">Production Management</a></li>
+          <li><a href="index.html#features">Inventory Control</a></li>
+          <li><a href="index.html#features">Quality Assurance</a></li>
+          <li><a href="index.html#features">Maintenance Scheduling</a></li>
+          <li><a href="index.html#features">Supply Chain Tracking</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="documentation.html">Documentation</a></li>
+          <li><a href="api-reference.html">API Reference</a></li>
+          <li><a href="help.html">Help Center</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Hyle Studios. All rights reserved.</span>
+      <span>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="cookies.html">Cookies</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    // ============ SCROLL FADE ANIMATIONS ============
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+
+          if (entry.target.classList.contains('about-stats')) {
+            setTimeout(animateCountUp, 400);
+          }
+
+          scrollObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.scroll-fade').forEach(el => {
+      scrollObserver.observe(el);
+    });
+
+    // ============ COUNT-UP ANIMATION ============
+    function animateCountUp() {
+      document.querySelectorAll('.count-up').forEach(el => {
+        const target = parseFloat(el.getAttribute('data-target'));
+        if (!target || el.classList.contains('counted')) return;
+        el.classList.add('counted');
+
+        const suffix = el.getAttribute('data-suffix') || '';
+        const duration = 2000;
+        const start = performance.now();
+        const isDecimal = target % 1 !== 0;
+
+        function update(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = eased * target;
+          el.textContent = (isDecimal ? current.toFixed(1) : Math.floor(current).toLocaleString()) + suffix;
+          if (progress < 1) requestAnimationFrame(update);
+          else el.textContent = (isDecimal ? target.toFixed(1) : target.toLocaleString()) + suffix;
+        }
+        requestAnimationFrame(update);
+      });
+    }
+
+    // ============ NAV SCROLL ============
+    window.addEventListener('scroll', () => {
+      document.querySelector('.nav').classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    // ============ DASHBOARD BAR ANIMATION ============
+    window.addEventListener('load', () => {
+      const bars = document.querySelectorAll('.about-dash-bar');
+      bars.forEach((bar, i) => {
+        const h = bar.style.height;
+        bar.style.height = '0%';
+        setTimeout(() => { bar.style.height = h; }, 300 + i * 80);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -101,8 +101,10 @@ async function updateUserUI() {
 }
 
 // ============ AUTH STATE LISTENER ============
+let isSigningOut = false;
+
 supabase.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_OUT') {
+  if (event === 'SIGNED_OUT' && !isSigningOut) {
     redirectToLogin();
   }
 })
@@ -1901,7 +1903,39 @@ function closePane() {
 
 async function doLogout() {
   if (!confirm('Sign out of ForgeFlow?')) return;
+  isSigningOut = true;
   await signOut();
+  
+  const keysToPreserve = [
+    'forgeflow_integration_states',
+    'forgeflow_search_history',
+    'forgeflow_general',
+    'forgeflow_company',
+    'forgeflow_appearance',
+    'forgeflow_notifications',
+    'forgeflow_subscription',
+    'forgeflow_payment_method',
+    'forgeflow_roles',
+    'forgeflow_invited_users',
+    'forgeflow_security'
+  ];
+  
+  const preserved = {};
+  keysToPreserve.forEach(key => {
+    const val = localStorage.getItem(key);
+    if (val !== null) preserved[key] = val;
+  });
+  
+  Object.keys(localStorage).forEach(key => {
+    if (key.startsWith('forgeflow_')) {
+      localStorage.removeItem(key);
+    }
+  });
+  
+  Object.entries(preserved).forEach(([key, val]) => {
+    localStorage.setItem(key, val);
+  });
+  
   localStorage.removeItem('forgeflow_user');
   localStorage.removeItem('forgeflow_trial_start');
   sessionStorage.removeItem('forgeflow_trial_start');
@@ -1926,24 +1960,16 @@ async function connectIntegration(provider) {
         showToast('Redirecting to ' + provider + '...', 'info');
         return;
       }
-      
-      if (result.requiresConfig) {
-        showToast('Please configure ' + provider + ' settings', 'info');
-        openIntegrationConfigModal(provider);
-        return;
-      }
     }
     
     const statusMap = {
       zoho: 'Zoho Suite',
       shopify: 'Shopify',
       quickbooks: 'QuickBooks',
-      xero: 'Xero',
-      gsheets: 'Google Sheets',
-      webhooks: 'Webhooks'
+      gsheets: 'Google Sheets'
     };
     
-    updateIntegrationStatus(provider, true);
+    updateIntegrationStatus(provider, true, { connectedVia: 'manual' });
     showToast('Connected to ' + (statusMap[provider] || provider) + ' successfully!', 'success');
   } catch (error) {
     console.error('Failed to connect integration:', error);
@@ -1956,110 +1982,28 @@ async function connectIntegration(provider) {
   }
 }
 
-function configureIntegration(provider) {
-  console.log('configureIntegration called:', provider);
-  openIntegrationConfigModal(provider);
-}
-
-function openIntegrationConfigModal(provider) {
-  const configs = {
-    webhooks: {
-      title: 'Configure Webhook',
-      fields: [
-        { id: 'webhookUrl', label: 'Webhook URL', type: 'url', placeholder: 'https://your-webhook-endpoint.com/hook' },
-        { id: 'webhookSecret', label: 'Secret Key', type: 'text', placeholder: 'Enter secret key' },
-        { id: 'webhookEvents', label: 'Events', type: 'multiselect', options: ['order.created', 'order.updated', 'inventory.low', 'mfg.completed'] }
-      ]
-    }
-  };
-  
-  const config = configs[provider];
-  if (!config) {
-    showToast('Configuration not available for ' + provider, 'info');
-    return;
-  }
-  
-  const modal = document.createElement('div');
-  modal.className = 'modal-overlay';
-  modal.id = 'integrationConfigModal';
-  modal.innerHTML = `
-    <div class="modal-container" style="max-width: 500px;">
-      <div class="modal-header">
-        <h2>${config.title}</h2>
-        <button class="modal-close" onclick="closeIntegrationConfigModal()">×</button>
-      </div>
-      <div class="modal-body">
-        ${config.fields.map(field => `
-          <div class="form-group">
-            <label>${field.label}</label>
-            ${field.type === 'multiselect' 
-              ? `<div class="checkbox-group">
-                  ${field.options.map(opt => `
-                    <label class="checkbox-label">
-                      <input type="checkbox" value="${opt}" checked> ${opt}
-                    </label>
-                  `).join('')}
-                </div>`
-              : `<input type="${field.type}" id="${field.id}" class="form-input" placeholder="${field.placeholder || ''}">`
-            }
-          </div>
-        `).join('')}
-      </div>
-      <div class="modal-footer">
-        <button class="btn-secondary" onclick="closeIntegrationConfigModal()">Cancel</button>
-        <button class="btn-primary" onclick="saveIntegrationConfig('${provider}')">Save Configuration</button>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(modal);
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeIntegrationConfigModal() {
-  const modal = document.getElementById('integrationConfigModal');
-  if (modal) {
-    modal.classList.remove('open');
-    setTimeout(() => modal.remove(), 300);
-  }
-  document.body.style.overflow = '';
-}
-
-async function saveIntegrationConfig(provider) {
-  if (provider === 'webhooks') {
-    const url = document.getElementById('webhookUrl')?.value;
-    const secret = document.getElementById('webhookSecret')?.value;
-    const events = [];
-    document.querySelectorAll('#integrationConfigModal input[type="checkbox"]:checked').forEach(cb => {
-      events.push(cb.value);
-    });
-    
-    if (!url) {
-      showToast('Please enter a webhook URL', 'warn');
-      return;
-    }
-    
-    try {
-      if (window.IntegrationService) {
-        await window.IntegrationService.saveWebhookConfig(url, secret, events);
-      }
-      
-      const settings = JSON.parse(localStorage.getItem('forgeflow_integration_settings') || '{}');
-      settings[provider] = { url, secret, events };
-      localStorage.setItem('forgeflow_integration_settings', JSON.stringify(settings));
-      
-      closeIntegrationConfigModal();
-      updateIntegrationStatus(provider, true);
-      showToast('Webhook configuration saved!', 'success');
-    } catch (error) {
-      console.error('Failed to save webhook config:', error);
-      showToast('Failed to save configuration', 'error');
-    }
+function getIntegrationStates() {
+  try {
+    const saved = localStorage.getItem('forgeflow_integration_states');
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
   }
 }
 
-function updateIntegrationStatus(provider, connected) {
+function setIntegrationState(provider, state) {
+  const states = getIntegrationStates();
+  states[provider] = { ...state, updatedAt: new Date().toISOString() };
+  localStorage.setItem('forgeflow_integration_states', JSON.stringify(states));
+}
+
+function removeIntegrationState(provider) {
+  const states = getIntegrationStates();
+  delete states[provider];
+  localStorage.setItem('forgeflow_integration_states', JSON.stringify(states));
+}
+
+function updateIntegrationStatus(provider, connected, meta = {}) {
   const statusEl = document.getElementById(provider + '-status') || document.getElementById('settings-' + provider + '-status');
   const connectBtn = document.getElementById(provider + '-connect') || document.getElementById('settings-' + provider + '-connect');
   const configBtn = document.getElementById(provider + '-config') || document.getElementById('settings-' + provider + '-config');
@@ -2085,6 +2029,21 @@ function updateIntegrationStatus(provider, connected) {
       configBtn.style.display = 'none';
     }
   }
+
+  if (connected) {
+    setIntegrationState(provider, { connected: true, ...meta });
+  } else {
+    removeIntegrationState(provider);
+  }
+}
+
+function restoreAllIntegrationStates() {
+  const states = getIntegrationStates();
+  Object.entries(states).forEach(([provider, state]) => {
+    if (state.connected) {
+      updateIntegrationStatus(provider, true, state);
+    }
+  });
 }
 
 async function disconnectIntegration(provider) {
@@ -2096,6 +2055,7 @@ async function disconnectIntegration(provider) {
     }
     
     updateIntegrationStatus(provider, false);
+    removeIntegrationState(provider);
     showToast('Disconnected from ' + provider, 'success');
   } catch (error) {
     console.error('Failed to disconnect:', error);
@@ -4258,8 +4218,7 @@ window.renderRoles = renderRoles;
 window.renderTeamMembers = renderTeamMembers;
 window.applyUserRolePermissions = applyUserRolePermissions;
 window.connectIntegration = connectIntegration;
-window.configureIntegration = configureIntegration;
-window.closeIntegrationModal = closeIntegrationModal;
+window.disconnectIntegration = disconnectIntegration;
 window.switchTeamsTab = switchTeamsTab;
 window.uploadCompanyLogo = uploadCompanyLogo;
 window.removeCompanyLogo = removeCompanyLogo;
@@ -4286,7 +4245,6 @@ window.exportCurrentModule = exportCurrentModule;
 window.switchSettingsTab = switchSettingsTab;
 window.doLogout = doLogout;
 window.connectIntegration = connectIntegration;
-window.configureIntegration = configureIntegration;
 window.closeIntegrationModal = closeIntegrationModal;
 window.saveRecord = saveRecord;
 window.importData = importData;
@@ -4331,6 +4289,8 @@ async function initializeApplication() {
     initNotifications();
     bindRecordActionButtons();
     bindStorageSyncListener();
+    restoreAllIntegrationStates();
+    initGlobalSearch();
 
     setTimeout(() => {
       initFilters();
@@ -4358,6 +4318,181 @@ function initTableWrappers() {
       wrapper.className = 'table-wrapper';
       table.parentNode.insertBefore(wrapper, table);
       wrapper.appendChild(table);
+    }
+  });
+}
+
+// ============ GLOBAL SEARCH ============
+function getSearchHistory() {
+  try {
+    const saved = localStorage.getItem('forgeflow_search_history');
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveSearchHistory(history) {
+  localStorage.setItem('forgeflow_search_history', JSON.stringify(history));
+}
+
+function addSearchToHistory(query) {
+  if (!query || query.trim().length < 2) return;
+  const history = getSearchHistory().filter(h => h.query !== query.trim());
+  history.unshift({ query: query.trim(), timestamp: new Date().toISOString() });
+  if (history.length > 10) history.pop();
+  saveSearchHistory(history);
+}
+
+function searchAllModules(query) {
+  if (!query || query.trim().length < 2) return [];
+  const q = query.toLowerCase().trim();
+  const results = [];
+  const overrides = getRecordOverrides();
+  const searchSources = {
+    mfg: { data: { ...(mockData.mfg || {}), ...((overrides.mfg) || {}) }, label: 'Manufacturing', icon: 'factory', module: 'manufacturing' },
+    inventory: { data: { ...(mockData.inventory || {}), ...((overrides.inventory) || {}) }, label: 'Inventory', icon: 'box', module: 'inventory' },
+    sales: { data: { ...(mockData.sales || {}), ...((overrides.sales) || {}) }, label: 'Sales Orders', icon: 'file', module: 'sales' },
+    pr: { data: { ...(mockData.pr || {}), ...((overrides.pr) || {}) }, label: 'Purchase Requests', icon: 'cart', module: 'purchase' },
+    bom: { data: { ...(mockData.bom || {}), ...((overrides.bom) || {}) }, label: 'BOM', icon: 'list', module: 'bom' },
+    suppliers: { data: { ...(mockData.suppliers || {}), ...((overrides.suppliers) || {}) }, label: 'Suppliers', icon: 'truck', module: 'suppliers' },
+    staff: { data: { ...(mockData.staff || {}), ...((overrides.staff) || {}) }, label: 'Staff', icon: 'users', module: 'staff' },
+    maintenance: { data: { ...(mockData.maintenance || {}), ...((overrides.maintenance) || {}) }, label: 'Maintenance', icon: 'wrench', module: 'maintenance' },
+    operations: { data: { ...(mockData.operations || {}), ...((overrides.operations) || {}) }, label: 'Operations', icon: 'clipboard', module: 'workops' },
+    uom: { data: { ...(mockData.uom || {}), ...((overrides.uom) || {}) }, label: 'UOM', icon: 'ruler', module: 'uom' }
+  };
+
+  Object.entries(searchSources).forEach(([dataKey, source]) => {
+    Object.entries(source.data).forEach(([id, record]) => {
+      const searchableText = Object.values(record).filter(v => typeof v === 'string').join(' ').toLowerCase();
+      if (searchableText.includes(q) || id.toLowerCase().includes(q)) {
+        const displayField = record.product || record.desc || record.material || record.company || record.name || record.machine || record.code || id;
+        results.push({
+          id: id,
+          title: displayField,
+          subtitle: source.label,
+          module: source.module,
+          dataKey: dataKey,
+          icon: source.icon
+        });
+      }
+    });
+  });
+
+  return results.slice(0, 12);
+}
+
+function renderSearchResults(results, history) {
+  let container = document.getElementById('searchResultsDropdown');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'searchResultsDropdown';
+    container.className = 'search-results-dropdown';
+    const searchInput = document.getElementById('topbarSearchInput');
+    if (searchInput && searchInput.parentElement) {
+      searchInput.parentElement.style.position = 'relative';
+      searchInput.parentElement.appendChild(container);
+    }
+  }
+
+  let html = '';
+  if (results && results.length > 0) {
+    html += '<div class="search-results-section"><div class="search-results-label">Results</div>';
+    results.forEach(r => {
+      html += `<div class="search-result-item" data-module="${r.module}" data-id="${r.id}">
+        <div class="search-result-icon">${r.icon}</div>
+        <div class="search-result-info">
+          <div class="search-result-title">${r.id} - ${r.title}</div>
+          <div class="search-result-subtitle">${r.subtitle}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  } else if (history && history.length > 0) {
+    html += '<div class="search-results-section"><div class="search-results-label">Recent Searches</div>';
+    history.slice(0, 5).forEach(h => {
+      html += `<div class="search-result-item search-history-item" data-query="${h.query}">
+        <div class="search-result-icon">clock</div>
+        <div class="search-result-info">
+          <div class="search-result-title">${h.query}</div>
+          <div class="search-result-subtitle">Recent search</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+  container.classList.toggle('open', html.length > 0);
+
+  container.querySelectorAll('.search-result-item:not(.search-history-item)').forEach(item => {
+    item.addEventListener('click', () => {
+      const module = item.dataset.module;
+      container.classList.remove('open');
+      const searchInput = document.getElementById('topbarSearchInput');
+      if (searchInput) searchInput.value = '';
+      showModule(module);
+    });
+  });
+
+  container.querySelectorAll('.search-history-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const searchInput = document.getElementById('topbarSearchInput');
+      if (searchInput) {
+        searchInput.value = item.dataset.query;
+        searchInput.dispatchEvent(new Event('input'));
+      }
+    });
+  });
+}
+
+function initGlobalSearch() {
+  const searchInput = document.getElementById('topbarSearchInput');
+  if (!searchInput || searchInput.dataset.searchBound) return;
+  searchInput.dataset.searchBound = 'true';
+
+  let debounceTimer = null;
+  const history = getSearchHistory();
+
+  searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      const query = this.value.trim();
+      if (query.length >= 2) {
+        const results = searchAllModules(query);
+        renderSearchResults(results, history);
+      } else {
+        const container = document.getElementById('searchResultsDropdown');
+        if (container) container.classList.remove('open');
+      }
+    }, 200);
+  });
+
+  searchInput.addEventListener('focus', function() {
+    const query = this.value.trim();
+    if (query.length >= 2) {
+      const results = searchAllModules(query);
+      renderSearchResults(results, history);
+    } else if (getSearchHistory().length > 0) {
+      renderSearchResults([], getSearchHistory());
+    }
+  });
+
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim().length >= 2) {
+      addSearchToHistory(this.value.trim());
+    }
+    if (e.key === 'Escape') {
+      const container = document.getElementById('searchResultsDropdown');
+      if (container) container.classList.remove('open');
+      this.blur();
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.topbar-search') && !e.target.closest('#searchResultsDropdown')) {
+      const container = document.getElementById('searchResultsDropdown');
+      if (container) container.classList.remove('open');
     }
   });
 }

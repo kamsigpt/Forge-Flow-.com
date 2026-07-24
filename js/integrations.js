@@ -53,10 +53,6 @@ export const IntegrationService = {
     const config = this.providers[provider]
     if (!config) throw new Error(`Unknown provider: ${provider}`)
 
-    if (provider === 'webhooks') {
-      return { requiresConfig: true }
-    }
-
     try {
       const authUrl = await this.getAuthUrl(provider)
       
@@ -143,47 +139,6 @@ export const IntegrationService = {
     }
   },
 
-  async saveWebhookConfig(url, secret, events) {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      const { data: userProfile } = await supabase
-        .from('users')
-        .select('company_id')
-        .eq('auth_id', user.id)
-        .single()
-
-      if (!userProfile?.company_id) throw new Error('No company found')
-
-      const { error } = await supabase
-        .from('webhook_configs')
-        .upsert({
-          company_id: userProfile.company_id,
-          webhook_url: url,
-          webhook_secret: secret,
-          events: events,
-          is_active: true,
-        }, { onConflict: 'company_id' })
-
-      if (error) throw error
-      return { success: true }
-    } catch (error) {
-      console.error('Failed to save webhook config:', error)
-      throw error
-    }
-  },
-
-  async triggerWebhook(event, data) {
-    try {
-      const result = await this.sendWebhook(event, data)
-      return result
-    } catch (error) {
-      console.warn('Webhook trigger failed:', error.message)
-      return { success: false, error: error.message }
-    }
-  },
-
   async sync(provider, action, data = {}) {
     try {
       let result
@@ -194,9 +149,6 @@ export const IntegrationService = {
           break
         case 'gsheets':
           result = await this.syncGoogleSheets(action, data)
-          break
-        case 'webhooks':
-          result = await this.sendWebhook(action, data)
           break
         default:
           throw new Error(`Sync not supported for ${provider}`)
@@ -222,15 +174,6 @@ export const IntegrationService = {
   async syncGoogleSheets(action, data = {}) {
     const { data: result, error } = await supabase.functions.invoke('integrations/gsheets-sync', {
       body: { action, data },
-    })
-
-    if (error) throw error
-    return result
-  },
-
-  async sendWebhook(event, data = {}) {
-    const { data: result, error } = await supabase.functions.invoke('integrations/webhook-sender', {
-      body: { event, data },
     })
 
     if (error) throw error
