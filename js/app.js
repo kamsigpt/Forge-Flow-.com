@@ -302,6 +302,7 @@ function showModule(id, clickedItem) {
   
   setTimeout(() => {
     initFilters();
+    initTableSearch();
     initTableWrappers();
   }, 50);
 }
@@ -4009,6 +4010,56 @@ function initFilters() {
   filtersInitialized = true;
 }
 
+// ============ TABLE SEARCH ============
+function initTableSearch() {
+  document.querySelectorAll('.table-search input').forEach(input => {
+    if (input.dataset.searchBound) return;
+    input.dataset.searchBound = 'true';
+
+    input.addEventListener('input', function () {
+      const query = this.value.trim().toLowerCase();
+      const tableSearch = this.closest('.table-search');
+      if (!tableSearch) return;
+      const tableCard = tableSearch.closest('.table-card');
+      if (!tableCard) return;
+      const tbody = tableCard.querySelector('table tbody');
+      if (!tbody) return;
+      const rows = tbody.querySelectorAll('tr');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        if (row.classList.contains('empty-row')) return;
+        const text = row.textContent.toLowerCase();
+        const match = !query || text.includes(query);
+        row.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      let noResults = tableCard.querySelector('.table-search-no-results');
+      if (visibleCount === 0 && rows.length > 0 && query) {
+        if (!noResults) {
+          noResults = document.createElement('div');
+          noResults.className = 'table-search-no-results';
+          noResults.style.cssText = 'text-align:center;padding:32px;color:var(--gray-400);font-size:14px;';
+          tableCard.appendChild(noResults);
+        }
+        noResults.textContent = 'No results found for "' + this.value.trim() + '"';
+        noResults.style.display = '';
+      } else if (noResults) {
+        noResults.style.display = 'none';
+      }
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        this.value = '';
+        this.dispatchEvent(new Event('input'));
+        this.blur();
+      }
+    });
+  });
+}
+
 // ============ CHARTS ============
 let chartsInited = false;
 let lineChart = null;
@@ -4286,6 +4337,7 @@ async function initializeApplication() {
     initFilters();
     initCharts();
     initTableWrappers();
+    initTableSearch();
     initNotifications();
     bindRecordActionButtons();
     bindStorageSyncListener();
@@ -4294,6 +4346,7 @@ async function initializeApplication() {
 
     setTimeout(() => {
       initFilters();
+      initTableSearch();
       lineChart?.resize();
       pieChart?.resize();
     }, 300);
