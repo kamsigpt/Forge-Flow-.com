@@ -841,11 +841,8 @@ async function clearDemoData() {
     tbody.innerHTML = '';
   });
 
-  // 4. Reset KPI values
-  document.querySelectorAll('.kpi-value').forEach(kpi => {
-    const text = kpi.textContent;
-    if (!isNaN(text) && parseFloat(text) > 0) kpi.textContent = '0';
-  });
+  // 4. Reset KPI values (e.g. Total Sales Revenue, Inventory Value, Purchase Cost MTD)
+  resetDashboardKpis();
 
   // 5. Clear notifications
   localStorage.removeItem('forgeflow_notifications_list');
@@ -874,8 +871,15 @@ async function clearDemoData() {
 
   // 8. Flag so a page reload keeps everything cleared
   localStorage.setItem('forgeflow_data_cleared', 'true');
+  void persistSettingsToBackend();
 
   showToast('All data has been cleared successfully', 'success');
+}
+
+function resetDashboardKpis() {
+  document.querySelectorAll('.kpi-value').forEach(kpi => {
+    kpi.textContent = '0';
+  });
 }
 
 function applyClearedDataState() {
@@ -885,10 +889,7 @@ function applyClearedDataState() {
     tbody.innerHTML = '';
   });
 
-  document.querySelectorAll('.kpi-value').forEach(kpi => {
-    const text = kpi.textContent;
-    if (!isNaN(text) && parseFloat(text) > 0) kpi.textContent = '0';
-  });
+  resetDashboardKpis();
 
   Object.keys(mockData).forEach(key => { mockData[key] = {}; });
   Object.keys(serverRecordCache).forEach(key => delete serverRecordCache[key]);
@@ -1253,6 +1254,7 @@ function getSettingsBundleFromStorage() {
       catch (e) { bundle[key.replace('forgeflow_', '')] = raw; }
     }
   });
+  bundle['data_cleared'] = localStorage.getItem('forgeflow_data_cleared') === 'true';
   return bundle;
 }
 
@@ -1299,6 +1301,11 @@ async function hydrateSettingsFromBackend() {
       if (value === undefined || value === null) return;
       localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
     });
+
+    if (data.data.data_cleared === true) {
+      localStorage.setItem('forgeflow_data_cleared', 'true');
+      applyClearedDataState();
+    }
 
     if (localStorage.getItem('forgeflow_team_login') === 'true') {
       const user = getForgeflowUser();
@@ -3246,7 +3253,9 @@ function confirmClearData() {
     } catch (e) {
       console.warn('Backend clear failed:', e);
     }
-    
+
+    void persistSettingsToBackend();
+
     showToast('All data has been cleared successfully', 'success');
     
     setTimeout(() => {
