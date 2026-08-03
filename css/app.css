@@ -722,6 +722,19 @@ body {
     display: block;
 }
 
+.user-dropdown-plan {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ff-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: none;
+}
+
+.user-dropdown.active .user-dropdown-plan {
+    display: block;
+}
+
 .user-dropdown-divider {
     height: 1px;
     background: var(--gray-100);
@@ -3553,6 +3566,20 @@ body {
 .modal-submit-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(255, 106, 0, 0.4);
+}
+
+.upgrade-modal .modal-submit-btn {
+    background: linear-gradient(135deg, var(--ff-primary) 0%, var(--ff-primary-dark) 100%);
+    color: white;
+    border: 2px solid var(--ff-primary);
+}
+
+.upgrade-modal .modal-submit-btn:hover {
+    background: white;
+    color: var(--ff-primary);
+    border-color: var(--ff-primary);
+    box-shadow: none;
+    transform: translateY(-2px);
 }
 
 .modal-disclaimer {

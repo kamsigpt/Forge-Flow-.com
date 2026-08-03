@@ -287,6 +287,23 @@ async function handleAuth(e) {
         console.error('Login error:', error);
         throw error;
       }
+      if (data.user) {
+        const firstName = data.user.user_metadata?.first_name || '';
+        const lastName = data.user.user_metadata?.last_name || '';
+        const initials = (firstName[0] || email[0] || 'U').toUpperCase() + (lastName[0] || '').toUpperCase();
+        const existingUser = JSON.parse(localStorage.getItem('forgeflow_user') || '{}');
+        const planLabel = existingUser.planLabel || 'FREE TRIAL';
+        const planName = existingUser.planName || 'Free Trial';
+        localStorage.setItem('forgeflow_user', JSON.stringify({
+          id: data.user.id,
+          email: data.user.email,
+          first_name: firstName,
+          last_name: lastName,
+          initials: initials,
+          planLabel: planLabel,
+          planName: planName
+        }));
+      }
       console.log('Login success, redirecting to app');
       window.location.href = 'app.html';
     } else {
@@ -321,7 +338,13 @@ async function handleAuth(e) {
         alert('Account created! Please check your email to confirm your account, then sign in.');
         switchAuthTab('login');
       } else if (data.session) {
-        window.location.href = 'app.html';
+        sessionStorage.setItem('forgeflow_signup_data', JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          company_name: companyInput
+        }));
+        window.location.href = 'pricing-select.html';
       }
     }
   } catch (err) {

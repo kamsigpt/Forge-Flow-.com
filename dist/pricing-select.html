@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" crossorigin href="./assets/landing-wzpLF6l1.css">
-  <link rel="stylesheet" crossorigin href="./assets/shared-DUSsljj7.css">
+  <link rel="stylesheet" crossorigin href="./assets/shared-1ylEMC4v.css">
 </head>
 <body class="pricing-select-page">
 
@@ -337,7 +337,7 @@
       localStorage.setItem('forgeflow_user', JSON.stringify(forgeflowUser));
       
       if (plan === 'trial') {
-        window.location.href = isUpgradeMode ? 'app.html' : 'app.html';
+        window.location.href = 'app.html';
       } else if (plan === 'starter' || plan === 'professional') {
         window.location.href = 'payment.html' + (isAnnual ? '?annual=true' : '');
       } else if (plan === 'enterprise') {
@@ -518,7 +518,7 @@
     .pricing-select-page {
       min-height: 100vh;
       background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
-      padding: 40px 20px 80px;
+      padding: 32px 20px 60px;
     }
     
     .pricing-select-container {
@@ -533,14 +533,14 @@
       color: var(--gray-500);
       text-decoration: none;
       font-size: 14px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
       transition: color 0.2s;
     }
     .pricing-back:hover { color: var(--gray-700); }
     
     .pricing-select-header {
       text-align: center;
-      margin-bottom: 48px;
+      margin-bottom: 32px;
     }
     
     .pricing-select-brand {
@@ -548,19 +548,19 @@
       font-size: 32px;
       font-weight: 800;
       color: var(--accent-color);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     
     .pricing-select-title {
       font-family: var(--font-display);
-      font-size: 40px;
+      font-size: 36px;
       font-weight: 700;
       color: #111;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     
     .pricing-select-subtitle {
-      font-size: 18px;
+      font-size: 16px;
       color: var(--gray-500);
     }
     
@@ -569,7 +569,7 @@
       align-items: center;
       justify-content: center;
       gap: 16px;
-      margin-top: 32px;
+      margin-top: 24px;
     }
     
     .pricing-toggle-label {
@@ -640,14 +640,14 @@
     .pricing-cards-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
+      gap: 18px;
       align-items: stretch;
     }
     
     .pricing-select-card {
       background: white;
-      border-radius: 24px;
-      padding: 36px 32px;
+      border-radius: 18px;
+      padding: 24px 24px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.08);
       transition: all 0.3s ease;
       position: relative;
@@ -656,39 +656,39 @@
     }
     
     .pricing-select-card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-4px);
       box-shadow: 0 20px 50px rgba(0,0,0,0.15);
     }
     
     .pricing-select-card.featured {
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       color: white;
-      transform: scale(1.05);
+      transform: scale(1.02);
       z-index: 1;
     }
     
     .pricing-select-card.featured:hover {
-      transform: scale(1.05) translateY(-6px);
+      transform: scale(1.02) translateY(-4px);
     }
     
     .ps-card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 24px;
+      margin-bottom: 14px;
     }
     
     .ps-card-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .ps-card-icon svg {
-      width: 28px;
-      height: 28px;
+      width: 22px;
+      height: 22px;
     }
     .ps-card-icon.free {
       background: rgba(59, 130, 246, 0.1);
@@ -752,9 +752,9 @@
     
     .ps-card-name {
       font-family: var(--font-display);
-      font-size: 26px;
+      font-size: 21px;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
       color: #111;
     }
     .pricing-select-card.featured .ps-card-name {
@@ -762,10 +762,10 @@
     }
     
     .ps-card-price {
-      margin-bottom: 16px;
+      margin-bottom: 10px;
     }
     .ps-price-amount {
-      font-size: 42px;
+      font-size: 34px;
       font-weight: 800;
       color: var(--gray-900);
     }
@@ -773,7 +773,7 @@
       color: white;
     }
     .ps-price-period {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--gray-500);
     }
     .pricing-select-card.featured .ps-price-period {
@@ -781,10 +781,10 @@
     }
     
     .ps-card-desc {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--gray-500);
-      line-height: 1.6;
-      margin-bottom: 24px;
+      line-height: 1.5;
+      margin-bottom: 14px;
     }
     .pricing-select-card.featured .ps-card-desc {
       color: rgba(255,255,255,0.7);
@@ -793,25 +793,25 @@
     .ps-card-features {
       list-style: none;
       padding: 0;
-      margin: 0 0 32px 0;
+      margin: 0 0 18px 0;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 7px;
       flex-grow: 1;
     }
     .ps-card-features li {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 14px;
+      gap: 8px;
+      font-size: 13px;
       color: var(--gray-700);
     }
     .pricing-select-card.featured .ps-card-features li {
       color: rgba(255,255,255,0.9);
     }
     .ps-card-features svg {
-      width: 18px;
-      height: 18px;
+      width: 15px;
+      height: 15px;
       color: #22c55e;
       flex-shrink: 0;
     }
@@ -821,9 +821,9 @@
     
     .ps-card-btn {
       width: 100%;
-      padding: 16px 24px;
-      border-radius: 12px;
-      font-size: 15px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;

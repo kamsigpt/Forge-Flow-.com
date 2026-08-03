@@ -453,14 +453,20 @@
           const companyName = profile?.companies?.name || data.user.user_metadata?.company_name || '';
           const initials = (firstName[0] || email[0] || 'U').toUpperCase() + 
                           (lastName[0] || '').toUpperCase();
-          
+
+          const existingUser = JSON.parse(localStorage.getItem('forgeflow_user') || '{}');
+          const planLabel = existingUser.planLabel || 'FREE TRIAL';
+          const planName = existingUser.planName || 'Free Trial';
+
           localStorage.setItem('forgeflow_user', JSON.stringify({
             id: data.user.id,
             email: data.user.email,
             first_name: firstName,
             last_name: lastName,
             company_name: companyName,
-            initials: initials
+            initials: initials,
+            planLabel: planLabel,
+            planName: planName
           }));
         }
         

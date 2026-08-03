@@ -14,6 +14,9 @@
   --cobalt-shadow: rgba(255, 106, 0, 0.4);
   --cobalt-shadow-hover: rgba(255, 106, 0, 0.6);
   --accent-color:      #FF6A00;
+  --ff-primary:        #FF6A00;
+  --ff-primary-dark:   #E55D00;
+  --ff-primary-light:  #FF8C42;
 
   /* Sidebar - ForgeFlow Jet Black */
   --sidebar-bg:   #111111;

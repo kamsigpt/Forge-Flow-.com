@@ -76,8 +76,8 @@ async function updateUserUI() {
   const initials = (firstName[0] || user.email?.[0] || 'U').toUpperCase() +
     (lastName[0] || '').toUpperCase();
   const email = profile?.email || user.email || '';
-  const planLabel = existingUser.planLabel || 'PROFESSIONAL';
-  const planName = existingUser.planName || 'Professional';
+  const planLabel = existingUser.planLabel || 'FREE TRIAL';
+  const planName = existingUser.planName || 'Free Trial';
 
   const normalizedUser = {
     ...existingUser,
@@ -813,8 +813,8 @@ function applyUser(user) {
   const lastName = safeUser.lastName || safeUser.last_name || '';
   const fullName = safeUser.fullName || `${firstName} ${lastName}`.trim() || safeUser.email || `${safeUser.planName || 'User'} Account`;
   const initials = safeUser.initials || (firstName[0] || safeUser.email?.[0] || 'U').toUpperCase() + (lastName[0] || '').toUpperCase();
-  const planName = safeUser.planName || 'Professional';
-  const planLabel = safeUser.planLabel || 'PROFESSIONAL';
+  const planName = safeUser.planName || 'Free Trial';
+  const planLabel = safeUser.planLabel || 'FREE TRIAL';
 
   const avEl   = document.getElementById('sidebarAvatar');
   const nameEl = document.getElementById('sidebarName');
@@ -906,11 +906,12 @@ function getUserPlanLevel() {
 
 function getPlanName(planKey) {
   const names = {
+    'trial': 'Free Trial',
     'starter': 'Starter',
     'professional': 'Professional',
     'enterprise': 'Enterprise'
   };
-  return names[planKey] || 'Professional';
+  return names[planKey] || 'Free Trial';
 }
 
 function createUpgradeModal() {
@@ -1023,6 +1024,7 @@ window.goToUpgrade = goToUpgrade;
 window.showUpgradeModal = showUpgradeModal;
 window.showModule = showModule;
 window.doLogout = doLogout;
+window.showToast = showToast;
 
 // ============ PANE MANAGEMENT ============
 let currentPaneData = {};
