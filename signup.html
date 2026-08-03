@@ -448,6 +448,12 @@
 
                 if (data.user && data.session) {
                     await ensureUserWorkspace(data.user, firstName, lastName, companyName, email);
+                    sessionStorage.setItem('forgeflow_signup_data', JSON.stringify({
+                        first_name: firstName,
+                        last_name: lastName,
+                        email: email,
+                        company_name: companyName
+                    }));
                 }
 
                 if (data.user && !data.session) {
