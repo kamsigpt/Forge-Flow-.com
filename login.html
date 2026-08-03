@@ -390,6 +390,63 @@
       };
     }
 
+    async function findTeamMember(email) {
+      const lower = (email || '').toLowerCase().trim();
+
+      // 1. Local team list (same-browser demo)
+      try {
+        const invited = JSON.parse(localStorage.getItem('forgeflow_invited_users') || '[]');
+        const local = invited.find(u => u.email && u.email.toLowerCase() === lower);
+        if (local) {
+          const storedUser = JSON.parse(localStorage.getItem('forgeflow_user') || '{}');
+          return {
+            email: local.email,
+            name: local.name,
+            admin_email: local.adminEmail || storedUser.email || ''
+          };
+        }
+      } catch (e) {}
+
+      // 2. Backend team lookup (cross-browser; requires team_members migration)
+      try {
+        if (supabaseClient) {
+          const { data, error } = await supabaseClient.rpc('get_team_member_for_login', { p_email: lower });
+          if (!error && data && data.admin_email) return data;
+        }
+      } catch (e) {}
+
+      return null;
+    }
+
+    function completeTeamLogin(teamMember, email) {
+      const firstName = (teamMember.name || '').trim();
+      const nameParts = firstName.split(/\s+/);
+      const initials = ((nameParts[0]?.[0] || email[0] || 'U') + (nameParts[1]?.[0] || '')).toUpperCase() || 'U';
+      const existingUser = JSON.parse(localStorage.getItem('forgeflow_user') || '{}');
+
+      localStorage.setItem('forgeflow_team_login', 'true');
+      localStorage.setItem('forgeflow_team_identity', JSON.stringify({
+        email: email,
+        name: firstName || email.split('@')[0],
+        firstName: firstName,
+        initials: initials,
+        role: 'team'
+      }));
+
+      localStorage.setItem('forgeflow_user', JSON.stringify({
+        id: existingUser.id || '',
+        email: email,
+        first_name: firstName,
+        last_name: '',
+        fullName: firstName || email,
+        initials: initials,
+        role: 'team',
+        company_name: existingUser.company_name || '',
+        planLabel: existingUser.planLabel || 'FREE TRIAL',
+        planName: existingUser.planName || 'Free Trial'
+      }));
+    }
+
     async function handleLogin() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -432,6 +489,9 @@
         
         // Get user profile
         if (data.user) {
+          localStorage.removeItem('forgeflow_team_login');
+          localStorage.removeItem('forgeflow_team_identity');
+
           let { data: profile } = await supabaseClient
             .from('users')
             .select('first_name,last_name,email,company_id,companies(name)')
@@ -478,6 +538,31 @@
         
       } catch (err) {
         console.error('Login error:', err);
+
+        // Team member fallback: an invited team member signs in with their own
+        // email and the same password as the super admin. The password is
+        // validated against the real admin account (never stored in plaintext).
+        try {
+          const teamMember = await findTeamMember(email);
+          if (teamMember && teamMember.admin_email) {
+            const teamSignIn = await supabaseClient.auth.signInWithPassword({
+              email: teamMember.admin_email,
+              password
+            });
+            if (!teamSignIn.error && teamSignIn.data.user) {
+              completeTeamLogin(teamMember, email);
+              submitBtn.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 10px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Welcome back!</span>';
+              submitBtn.disabled = true;
+              setTimeout(() => {
+                window.location.href = 'app.html';
+              }, 500);
+              return;
+            }
+          }
+        } catch (teamErr) {
+          console.warn('Team login fallback failed:', teamErr);
+        }
+
         showAuthError(toFriendlyAuthError(err, 'Invalid email or password'));
         resetButton(submitBtn);
       }

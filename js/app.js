@@ -96,8 +96,34 @@ async function updateUserUI() {
     planName
   };
 
+  // Team member login: keep the invited member's identity instead of the
+  // admin session profile so role permissions apply to the right person.
+  applyTeamIdentity(normalizedUser);
+
   setForgeflowUser(normalizedUser);
   applyUser(normalizedUser);
+}
+
+function applyTeamIdentity(normalizedUser) {
+  if (localStorage.getItem('forgeflow_team_login') !== 'true') return;
+  const identity = JSON.parse(localStorage.getItem('forgeflow_team_identity') || 'null');
+  const invitedUsers = JSON.parse(localStorage.getItem('forgeflow_invited_users') || '[]');
+  const stillMember = identity && invitedUsers.some(u => u.email && u.email.toLowerCase() === identity.email.toLowerCase());
+  if (!stillMember) {
+    localStorage.removeItem('forgeflow_team_login');
+    localStorage.removeItem('forgeflow_team_identity');
+    return;
+  }
+  if (!identity.email) return;
+  const memberName = identity.name || identity.email.split('@')[0];
+  normalizedUser.email = identity.email;
+  normalizedUser.firstName = identity.firstName || memberName;
+  normalizedUser.lastName = identity.lastName || '';
+  normalizedUser.first_name = normalizedUser.firstName;
+  normalizedUser.last_name = normalizedUser.lastName;
+  normalizedUser.fullName = memberName;
+  normalizedUser.initials = identity.initials || memberName.slice(0, 2).toUpperCase();
+  normalizedUser.role = identity.role || 'team';
 }
 
 // ============ AUTH STATE LISTENER ============
@@ -783,28 +809,89 @@ function initTrialCountdown() {
   setInterval(updateCountdown, 60000);
 }
 
-function clearDemoData() {
-  if (!confirm('Are you sure you want to clear all demo data? This will remove all sample records from the application.')) {
+async function clearDemoData() {
+  if (!confirm('Are you sure you want to clear ALL data? This will remove every record across all modules (manufacturing, inventory, sales, purchase, BOM, suppliers, staff, maintenance, operations, UOM) and reset the dashboard. Your account, plan and settings will be kept.')) {
     return;
   }
-  
-  // Clear all table rows in each module
-  const tables = document.querySelectorAll('.data-table tbody');
-  tables.forEach(tbody => {
+
+  showToast('Clearing all data...', 'warn');
+
+  // 1. Wipe in-memory module stores so search/pane data is gone immediately
+  Object.keys(mockData).forEach(key => { mockData[key] = {}; });
+  Object.keys(serverRecordCache).forEach(key => delete serverRecordCache[key]);
+
+  // 2. Wipe backend records for this company (keep settings + team membership)
+  try {
+    const companyId = await ensureCompanyContext();
+    if (companyId) {
+      const { error } = await supabase
+        .from('module_records')
+        .delete()
+        .eq('company_id', companyId)
+        .neq('module_key', 'settings')
+        .neq('module_key', 'teams');
+      if (error) console.warn('Failed to clear backend records:', error.message);
+    }
+  } catch (e) {
+    console.warn('Backend clear failed:', e);
+  }
+
+  // 3. Clear all visible table rows
+  document.querySelectorAll('.data-table tbody').forEach(tbody => {
     tbody.innerHTML = '';
   });
-  
-  // Reset KPI values
-  const kpiValues = document.querySelectorAll('.kpi-value');
-  kpiValues.forEach(kpi => {
+
+  // 4. Reset KPI values
+  document.querySelectorAll('.kpi-value').forEach(kpi => {
     const text = kpi.textContent;
-    if (!isNaN(text) && parseInt(text) > 0) {
-      kpi.textContent = '0';
-    }
+    if (!isNaN(text) && parseFloat(text) > 0) kpi.textContent = '0';
   });
-  
-  // Show success message
-  showToast('All demo data has been cleared', 'success');
+
+  // 5. Clear notifications
+  localStorage.removeItem('forgeflow_notifications_list');
+  notifications = [];
+  const notifList = document.getElementById('notificationList');
+  if (notifList) notifList.innerHTML = '';
+  const notifDot = document.getElementById('notifDot');
+  if (notifDot) notifDot.style.display = 'none';
+
+  // 6. Clear search history and close the results dropdown
+  localStorage.removeItem('forgeflow_search_history');
+  const dropdown = document.getElementById('searchResultsDropdown');
+  if (dropdown) dropdown.classList.remove('open');
+
+  // 7. Reset dashboard charts to empty state
+  try {
+    if (lineChart) lineChart.destroy();
+    if (pieChart) pieChart.destroy();
+    lineChart = null;
+    pieChart = null;
+    chartsInited = false;
+    initCharts();
+  } catch (e) {
+    console.warn('Chart reset failed:', e);
+  }
+
+  // 8. Flag so a page reload keeps everything cleared
+  localStorage.setItem('forgeflow_data_cleared', 'true');
+
+  showToast('All data has been cleared successfully', 'success');
+}
+
+function applyClearedDataState() {
+  if (localStorage.getItem('forgeflow_data_cleared') !== 'true') return;
+
+  document.querySelectorAll('.data-table tbody').forEach(tbody => {
+    tbody.innerHTML = '';
+  });
+
+  document.querySelectorAll('.kpi-value').forEach(kpi => {
+    const text = kpi.textContent;
+    if (!isNaN(text) && parseFloat(text) > 0) kpi.textContent = '0';
+  });
+
+  Object.keys(mockData).forEach(key => { mockData[key] = {}; });
+  Object.keys(serverRecordCache).forEach(key => delete serverRecordCache[key]);
 }
 
 function applyUser(user) {
@@ -1133,6 +1220,96 @@ async function upsertModuleRecord(dataKey, recordId, data) {
     if (error) throw error;
   } catch (e) {
     console.warn(`Failed to persist module record ${dataKey}:${recordId}`, e);
+  }
+}
+
+// ============ SETTINGS PERSISTENCE (backend sync) ============
+const SETTINGS_STORAGE_KEYS = [
+  'forgeflow_appearance',
+  'forgeflow_general',
+  'forgeflow_company',
+  'forgeflow_notifications',
+  'forgeflow_security',
+  'forgeflow_integrations_settings',
+  'forgeflow_integration_states',
+  'forgeflow_subscription',
+  'forgeflow_payment_method',
+  'forgeflow_roles',
+  'forgeflow_invited_users'
+];
+
+// Subscription/payment data is excluded from hydration: it can be updated on
+// dedicated pages and a stale backend bundle must never roll it back.
+const SETTINGS_HYDRATE_KEYS = SETTINGS_STORAGE_KEYS.filter(key =>
+  key !== 'forgeflow_subscription' && key !== 'forgeflow_payment_method'
+);
+
+function getSettingsBundleFromStorage() {
+  const bundle = {};
+  SETTINGS_STORAGE_KEYS.forEach(key => {
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      try { bundle[key.replace('forgeflow_', '')] = JSON.parse(raw); }
+      catch (e) { bundle[key.replace('forgeflow_', '')] = raw; }
+    }
+  });
+  return bundle;
+}
+
+async function persistSettingsToBackend() {
+  const companyId = await ensureCompanyContext();
+  if (!companyId) return;
+
+  try {
+    const { error } = await supabase
+      .from('module_records')
+      .upsert({
+        company_id: companyId,
+        module_key: 'settings',
+        record_id: 'user_settings',
+        data: getSettingsBundleFromStorage(),
+        created_by: currentAuthUser?.id || null,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'company_id,module_key,record_id' });
+    if (error) throw error;
+  } catch (e) {
+    console.warn('Failed to persist settings to backend:', e);
+  }
+}
+
+async function hydrateSettingsFromBackend() {
+  const companyId = await ensureCompanyContext();
+  if (!companyId) return;
+
+  try {
+    const { data, error } = await supabase
+      .from('module_records')
+      .select('data')
+      .eq('company_id', companyId)
+      .eq('module_key', 'settings')
+      .eq('record_id', 'user_settings')
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data?.data) return;
+
+    SETTINGS_HYDRATE_KEYS.forEach(key => {
+      const bundleKey = key.replace('forgeflow_', '');
+      const value = data.data[bundleKey];
+      if (value === undefined || value === null) return;
+      localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+    });
+
+    if (localStorage.getItem('forgeflow_team_login') === 'true') {
+      const user = getForgeflowUser();
+      if (user) {
+        applyTeamIdentity(user);
+        setForgeflowUser(user);
+        applyUser(user);
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to hydrate settings from backend:', e);
   }
 }
 
@@ -1907,6 +2084,8 @@ function closePane() {
 async function doLogout() {
   if (!confirm('Sign out of ForgeFlow?')) return;
   isSigningOut = true;
+  localStorage.removeItem('forgeflow_team_login');
+  localStorage.removeItem('forgeflow_team_identity');
   await signOut();
   
   const keysToPreserve = [
@@ -1948,6 +2127,12 @@ async function doLogout() {
 // ============ INTEGRATION FUNCTIONS ============
 async function connectIntegration(provider) {
   console.log('connectIntegration called:', provider);
+
+  // Integrations require Professional plan or higher (aligned with sidebar gating)
+  if (getUserPlanLevel() < planHierarchy.professional) {
+    showUpgradeModal('Integrations', 'professional');
+    return;
+  }
   
   const btn = document.getElementById(provider + '-connect') || document.getElementById('settings-' + provider + '-connect');
   if (btn) {
@@ -1998,12 +2183,14 @@ function setIntegrationState(provider, state) {
   const states = getIntegrationStates();
   states[provider] = { ...state, updatedAt: new Date().toISOString() };
   localStorage.setItem('forgeflow_integration_states', JSON.stringify(states));
+  void persistSettingsToBackend();
 }
 
 function removeIntegrationState(provider) {
   const states = getIntegrationStates();
   delete states[provider];
   localStorage.setItem('forgeflow_integration_states', JSON.stringify(states));
+  void persistSettingsToBackend();
 }
 
 function updateIntegrationStatus(provider, connected, meta = {}) {
@@ -2836,9 +3023,11 @@ function saveAppearanceSettings() {
     iconsOnly: document.getElementById('toggle-icons-only')?.checked || false
   };
   localStorage.setItem('forgeflow_appearance', JSON.stringify(settings));
+  void persistSettingsToBackend();
 }
 
 function saveSettings(section) {
+  void persistSettingsToBackend();
   if (section === 'General') {
     const settings = {
       firstName: document.getElementById('settingsFirstName')?.value || '',
@@ -2918,7 +3107,7 @@ function saveSettings(section) {
   
   if (section === 'Integrations') {
     const settings = {
-      webhooksEnabled: document.querySelector('#settings-integrations input[type="checkbox"]')?.checked || false
+      webhooksEnabled: Object.keys(getIntegrationStates()).length > 0
     };
     localStorage.setItem('forgeflow_integrations_settings', JSON.stringify(settings));
     showToast('Integration settings saved successfully!', 'success');
@@ -3020,20 +3209,43 @@ function adjustColorBrightness(hex, percent) {
 
 // ============ DATA MANAGEMENT ============
 function confirmClearData() {
-  if (!confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+  if (!confirm('Are you sure you want to clear all manufacturing data? This will remove every record across all modules and reset the dashboard. Your account, plan and settings will be kept.')) {
     return;
   }
   
   showToast('Clearing all data...', 'warn');
   
-  setTimeout(() => {
-    const keysToKeep = ['forgeflow_subscription', 'forgeflow_user', 'forgeflow_trial_start', 'forgeflow_roles', 'forgeflow_invited_users'];
+  setTimeout(async () => {
+    const keysToKeep = [
+      'forgeflow_subscription', 'forgeflow_user', 'forgeflow_trial_start',
+      'forgeflow_roles', 'forgeflow_invited_users',
+      'forgeflow_appearance', 'forgeflow_general', 'forgeflow_company',
+      'forgeflow_security', 'forgeflow_integrations_settings',
+      'forgeflow_integration_states', 'forgeflow_notifications',
+      'forgeflow_payment_method'
+    ];
     
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('forgeflow_') && !keysToKeep.includes(key)) {
         localStorage.removeItem(key);
       }
     });
+    
+    localStorage.setItem('forgeflow_data_cleared', 'true');
+    
+    try {
+      const companyId = await ensureCompanyContext();
+      if (companyId) {
+        await supabase
+          .from('module_records')
+          .delete()
+          .eq('company_id', companyId)
+          .neq('module_key', 'settings')
+          .neq('module_key', 'teams');
+      }
+    } catch (e) {
+      console.warn('Backend clear failed:', e);
+    }
     
     showToast('All data has been cleared successfully', 'success');
     
@@ -3499,6 +3711,50 @@ function saveInvitedUsers(users) {
   localStorage.setItem('forgeflow_invited_users', JSON.stringify(users));
 }
 
+async function syncTeamMemberToBackend(user) {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !user?.email) return;
+  try {
+    const { error } = await supabase
+      .from('team_members')
+      .upsert({
+        company_id: companyId,
+        email: user.email,
+        name: user.name || '',
+        role_id: user.roleId || null,
+        role_name: user.roleName || 'Team Member',
+        status: user.status || 'Active'
+      }, { onConflict: 'company_id,email' });
+    if (error) {
+      console.warn('team_members sync failed (table may not be applied yet):', error.message);
+    }
+  } catch (e) {
+    console.warn('team_members sync unavailable:', e);
+  }
+}
+
+async function syncAllTeamMembersToBackend() {
+  const users = getInvitedUsers();
+  for (const user of users) {
+    await syncTeamMemberToBackend(user);
+  }
+}
+
+async function deleteTeamMemberFromBackend(email) {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !email) return;
+  try {
+    const { error } = await supabase
+      .from('team_members')
+      .delete()
+      .eq('company_id', companyId)
+      .eq('email', email);
+    if (error) console.warn('team_members delete failed:', error.message);
+  } catch (e) {
+    console.warn('team_members delete unavailable:', e);
+  }
+}
+
 function switchTeamsTab(tabName) {
   document.querySelectorAll('.teams-tab').forEach(t => t.classList.remove('active'));
   document.querySelector(`.teams-tab[data-tab="${tabName}"]`).classList.add('active');
@@ -3665,6 +3921,7 @@ function saveNewRole() {
   renderRoles();
   renderTeamMembers();
   closeRoleModal();
+  void persistSettingsToBackend();
 }
 
 function renderRoles() {
@@ -3798,15 +4055,17 @@ function sendInvite() {
     return;
   }
   
+  const currentUser = getForgeflowUser() || {};
   const newUser = {
     id: 'user_' + Date.now(),
     name: name,
     email: email,
     roleId: roleId,
     roleName: role.name,
-    status: 'Pending',
+    status: 'Active',
     invitedAt: new Date().toISOString(),
-    lastActive: null
+    lastActive: null,
+    adminEmail: currentUser.email || ''
   };
   
   users.push(newUser);
@@ -3814,7 +4073,9 @@ function sendInvite() {
   
   closeInviteModal();
   renderTeamMembers();
-  showToast('Invitation sent successfully!', 'success');
+  void syncTeamMemberToBackend(newUser);
+  void persistSettingsToBackend();
+  showToast(name + ' added to your team. They can sign in with ' + email + ' using your password.', 'success');
 }
 
 function editUserRole(userId) {
@@ -3837,6 +4098,8 @@ function editUserRole(userId) {
   saveInvitedUsers(users);
   renderRoles();
   renderTeamMembers();
+  void syncTeamMemberToBackend(user);
+  void persistSettingsToBackend();
   showToast('User role updated', 'success');
 }
 
@@ -3847,10 +4110,13 @@ function removeUser(userId) {
   const userIndex = users.findIndex(u => u.id === userId);
   if (userIndex === -1) return;
   
+  const removed = users[userIndex];
   users.splice(userIndex, 1);
   saveInvitedUsers(users);
   renderRoles();
   renderTeamMembers();
+  void deleteTeamMemberFromBackend(removed.email);
+  void persistSettingsToBackend();
   showToast('User removed successfully', 'success');
 }
 
@@ -3876,6 +4142,7 @@ function deleteRole(roleId) {
   roles.splice(roleIndex, 1);
   saveRoles(roles);
   renderRoles();
+  void persistSettingsToBackend();
   showToast('Role deleted successfully', 'success');
 }
 
@@ -4195,6 +4462,8 @@ function initCharts() {
     const pCtx2d = pCtx.getContext('2d');
     lCtx2d.clearRect(0, 0, lCtx.width, lCtx.height);
     pCtx2d.clearRect(0, 0, pCtx.width, pCtx.height);
+
+    const dataCleared = localStorage.getItem('forgeflow_data_cleared') === 'true';
     
     lineChart = new Chart(lCtx, {
       type: 'line',
@@ -4203,7 +4472,7 @@ function initCharts() {
         datasets: [
           {
             label: 'Sales ($k)',
-            data: [42, 48, 51, 58, 63, 55, 69, 72, 78, 75, 82, 84],
+            data: dataCleared ? [] : [42, 48, 51, 58, 63, 55, 69, 72, 78, 75, 82, 84],
             borderColor: '#F97316',
             backgroundColor: 'rgba(249,115,22,0.06)',
             tension: 0.4,
@@ -4214,7 +4483,7 @@ function initCharts() {
           },
           {
             label: 'Production (units)',
-            data: [180, 210, 195, 240, 260, 228, 290, 310, 330, 305, 350, 360],
+            data: dataCleared ? [] : [180, 210, 195, 240, 260, 228, 290, 310, 330, 305, 350, 360],
             borderColor: '#0EA5A4',
             backgroundColor: 'rgba(14,165,164,0.04)',
             tension: 0.4,
@@ -4247,7 +4516,7 @@ function initCharts() {
       data: {
         labels: ['In Production', 'Completed', 'Pending', 'Shipped', 'Delivered'],
         datasets: [{
-          data: [35, 22, 18, 12, 13],
+          data: dataCleared ? [] : [35, 22, 18, 12, 13],
           backgroundColor: ['#F97316', '#0EA5A4', '#F59E0B', '#22D3EE', '#14B8A6'],
           borderColor: '#F9FAFB',
           borderWidth: 2,
@@ -4389,17 +4658,20 @@ async function initializeApplication() {
   try {
     await updateUserUI();
     await hydrateModuleRecords();
+    applyClearedDataState();
 
     initTrialCountdown();
     initPlanAccessControl();
     initSubscription();
     checkAndProcessRenewal();
+    await hydrateSettingsFromBackend();
     loadAppearanceSettings();
     await loadAllSettings();
     loadNotificationSettings();
     renderRoles();
     renderTeamMembers();
     applyUserRolePermissions();
+    void syncAllTeamMembersToBackend();
 
     initFilters();
     initCharts();
@@ -4418,6 +4690,8 @@ async function initializeApplication() {
       lineChart?.resize();
       pieChart?.resize();
     }, 300);
+
+    void persistSettingsToBackend();
 
     appInitializationComplete = true;
     console.log('App initialized successfully');
@@ -4571,6 +4845,23 @@ function initGlobalSearch() {
   const searchInput = document.getElementById('topbarSearchInput');
   if (!searchInput || searchInput.dataset.searchBound) return;
   searchInput.dataset.searchBound = 'true';
+
+  // Clear any value injected by browser autofill (e.g. the logged-in email)
+  // so the topbar search never displays the user's email on app load.
+  searchInput.value = '';
+  searchInput.setAttribute('autocomplete', 'off');
+  searchInput.setAttribute('autocorrect', 'off');
+  searchInput.setAttribute('spellcheck', 'false');
+  // Chrome ignores `autocomplete="off"` for credential autofill on the first
+  // text input. Keeping the field readonly until focus prevents autofill from
+  // ever injecting the saved email into the search box.
+  searchInput.setAttribute('readonly', '');
+  searchInput.addEventListener('focus', function() {
+    this.removeAttribute('readonly');
+  });
+  searchInput.addEventListener('blur', function() {
+    if (!this.value) this.setAttribute('readonly', '');
+  });
 
   let debounceTimer = null;
   const history = getSearchHistory();
