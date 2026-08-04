@@ -1496,38 +1496,21 @@ async function fetchRecordFromServer(dataKey, recordId) {
 
 function inferPaneMode(triggerButton, title, hasData, recordId, isCreateAction) {
   if (triggerButton?.classList.contains('act-btn-edit')) return 'edit';
-  if (triggerButton?.classList.contains('act-btn-view')) return 'view';
+  if (triggerButton?.classList.contains('act-btn-view')) return 'edit';
   if (isCreateAction) return 'create';
   if (hasData || recordId) return 'edit';
   return 'create';
 }
 
 function applyPaneMode(pane, mode, recordType) {
-  const isViewMode = mode === 'view';
   pane.dataset.mode = mode;
-  
-  pane.querySelectorAll('input, select, textarea, button').forEach(control => {
-    if (control.dataset.baseDisabled === undefined) {
-      control.dataset.baseDisabled = control.disabled ? 'true' : 'false';
-    }
-  });
-  
-  pane.querySelectorAll('input, select, textarea').forEach(field => {
-    const baseDisabled = field.dataset.baseDisabled === 'true';
-    field.disabled = isViewMode ? true : baseDisabled;
-  });
-  
-  pane.querySelectorAll('.pane-body button').forEach(btn => {
-    const baseDisabled = btn.dataset.baseDisabled === 'true';
-    btn.disabled = isViewMode ? true : baseDisabled;
-  });
   
   const saveBtn = pane.querySelector('.btn-pane-save');
   if (saveBtn) {
-    saveBtn.style.display = isViewMode ? 'none' : '';
-    saveBtn.textContent = mode === 'edit'
-      ? 'Update ' + recordType
-      : 'Save ' + recordType;
+    saveBtn.style.display = '';
+    saveBtn.textContent = mode === 'create'
+      ? 'Save ' + recordType
+      : 'Update ' + recordType;
   }
 }
 
@@ -2469,11 +2452,6 @@ function closeIntegrationModal() {
 function saveRecord(type, id) {
   console.log('saveRecord called:', type, id);
   
-  if (currentPaneData.mode === 'view') {
-    showToast('Use Edit to update this entry', 'warn');
-    return;
-  }
-  
   const paneId = getPaneId(type);
   const paneConfig = paneDataMap[paneId] || {};
   const recordData = collectPaneData(type);
@@ -2637,7 +2615,7 @@ async function viewRecord(type, id) {
     getPaneTitle(type, { id, ...record }),
     getPaneStatus(record),
     { id, ...record },
-    'view'
+    'edit'
   );
 }
 
