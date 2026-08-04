@@ -170,6 +170,12 @@ function loadAppearanceSettings() {
 
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
+  const logo = document.querySelector('.ff-logo--sidebar');
+  if (logo) {
+    logo.src = theme === 'light'
+      ? 'assets/forge_flow_logo-removebg-preview.png'
+      : 'assets/forge flow white logo wirh icon.png';
+  }
 }
 
 function checkModuleAccess(moduleId) {
@@ -2195,37 +2201,37 @@ function updateStatus(btn, newStatus) {
 }
 
 const statusSelectStyles = {
-  'Approved': ['#ECFDF5', '#047857', '#10B981'],
-  'Active': ['#ECFDF5', '#047857', '#10B981'],
-  'Resolved': ['#ECFDF5', '#047857', '#10B981'],
-  'Available': ['#ECFDF5', '#047857', '#10B981'],
-  'OK': ['#ECFDF5', '#047857', '#10B981'],
-  'Delivered': ['#ECFDF5', '#047857', '#10B981'],
-  'Received': ['#ECFDF5', '#047857', '#10B981'],
-  'Completed': ['#EFF6FF', '#1E40AF', '#3B82F6'],
-  'Packed': ['#EFF6FF', '#1E40AF', '#3B82F6'],
-  'In Progress': ['#DBEAFE', '#1D4ED8', '#3B82F6'],
-  'In Production': ['#DBEAFE', '#1D4ED8', '#3B82F6'],
-  'Ready': ['#DBEAFE', '#1D4ED8', '#3B82F6'],
-  'Shipped': ['#EDE9FE', '#6D28D9', '#8B5CF6'],
-  'Rejected': ['#FEF2F2', '#B91C1C', '#EF4444'],
-  'Cancelled': ['#FEF2F2', '#B91C1C', '#EF4444'],
-  'Critical': ['#FEF2F2', '#B91C1C', '#EF4444'],
-  'Pending': ['#FEF3C7', '#B45309', '#F59E0B'],
-  'Pending MFG': ['#FEF3C7', '#B45309', '#F59E0B'],
-  'Paused': ['#FEF3C7', '#B45309', '#F59E0B'],
-  'Scheduled': ['#FEF3C7', '#B45309', '#F59E0B'],
-  'On Leave': ['#FEF3C7', '#B45309', '#F59E0B'],
-  'Low Stock': ['#FEF3C7', '#B45309', '#F59E0B'],
-  'Quote': ['#E2E8F0', '#475569', '#94A3B8'],
-  'Draft': ['#E2E8F0', '#475569', '#94A3B8'],
-  'Retired': ['#E2E8F0', '#475569', '#94A3B8'],
-  'Inactive': ['#E2E8F0', '#475569', '#94A3B8']
+  'Approved': ['var(--success-bg)', 'var(--success-ink)', 'var(--success)'],
+  'Active': ['var(--success-bg)', 'var(--success-ink)', 'var(--success)'],
+  'Resolved': ['var(--success-bg)', 'var(--success-ink)', 'var(--success)'],
+  'Available': ['var(--success-bg)', 'var(--success-ink)', 'var(--success)'],
+  'OK': ['var(--success-bg)', 'var(--success-ink)', 'var(--success)'],
+  'Delivered': ['var(--success-bg)', 'var(--success-ink)', 'var(--success)'],
+  'Received': ['var(--success-bg)', 'var(--success-ink)', 'var(--success)'],
+  'Completed': ['var(--blue-bg)', 'var(--blue-ink)', 'var(--blue)'],
+  'Packed': ['var(--blue-bg)', 'var(--blue-ink)', 'var(--blue)'],
+  'In Progress': ['var(--blue-bg)', 'var(--blue-ink)', 'var(--blue)'],
+  'In Production': ['var(--blue-bg)', 'var(--blue-ink)', 'var(--blue)'],
+  'Ready': ['var(--blue-bg)', 'var(--blue-ink)', 'var(--blue)'],
+  'Shipped': ['var(--purple-bg)', 'var(--purple-ink)', 'var(--purple)'],
+  'Rejected': ['var(--danger-bg)', 'var(--danger-ink)', 'var(--danger)'],
+  'Cancelled': ['var(--danger-bg)', 'var(--danger-ink)', 'var(--danger)'],
+  'Critical': ['var(--danger-bg)', 'var(--danger-ink)', 'var(--danger)'],
+  'Pending': ['var(--warn-bg)', 'var(--warn-ink)', 'var(--warn)'],
+  'Pending MFG': ['var(--warn-bg)', 'var(--warn-ink)', 'var(--warn)'],
+  'Paused': ['var(--warn-bg)', 'var(--warn-ink)', 'var(--warn)'],
+  'Scheduled': ['var(--warn-bg)', 'var(--warn-ink)', 'var(--warn)'],
+  'On Leave': ['var(--warn-bg)', 'var(--warn-ink)', 'var(--warn)'],
+  'Low Stock': ['var(--warn-bg)', 'var(--warn-ink)', 'var(--warn)'],
+  'Quote': ['var(--neutral-bg)', 'var(--neutral-ink)', 'var(--neutral)'],
+  'Draft': ['var(--neutral-bg)', 'var(--neutral-ink)', 'var(--neutral)'],
+  'Retired': ['var(--neutral-bg)', 'var(--neutral-ink)', 'var(--neutral)'],
+  'Inactive': ['var(--neutral-bg)', 'var(--neutral-ink)', 'var(--neutral)']
 };
 
 function applyStatusSelectStyle(select) {
   const status = select.value || select.dataset.status || '';
-  const style = statusSelectStyles[status] || ['#F1F5F9', '#475569', '#94A3B8'];
+  const style = statusSelectStyles[status] || ['var(--neutral-bg)', 'var(--neutral-ink)', 'var(--neutral)'];
   select.style.backgroundColor = style[0];
   select.style.color = style[1];
   select.style.borderColor = style[2];
