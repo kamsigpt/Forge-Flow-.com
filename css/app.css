@@ -1310,6 +1310,36 @@ body {
     gap: 6px;
 }
 
+.status-select {
+    padding: 6px 24px 6px 10px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    border: 1.5px solid #94A3B8;
+    cursor: pointer;
+    background-color: var(--gray-50);
+    color: var(--gray-600);
+    outline: none;
+    min-width: 120px;
+    transition: all 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+    background-size: 12px;
+}
+
+.status-select:hover {
+    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.18);
+}
+
+.status-select:focus {
+    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.25);
+}
+
 .act-btn {
     padding: 6px 14px;
     border-radius: var(--radius-md);

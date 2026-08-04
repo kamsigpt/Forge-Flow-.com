@@ -2057,6 +2057,64 @@ function updateStatus(btn, newStatus) {
   showToast('Status updated to ' + newStatus, 'success');
 }
 
+const statusSelectStyles = {
+  'Approved': ['#ECFDF5', '#047857', '#10B981'],
+  'Active': ['#ECFDF5', '#047857', '#10B981'],
+  'Resolved': ['#ECFDF5', '#047857', '#10B981'],
+  'Available': ['#ECFDF5', '#047857', '#10B981'],
+  'OK': ['#ECFDF5', '#047857', '#10B981'],
+  'Delivered': ['#ECFDF5', '#047857', '#10B981'],
+  'Received': ['#ECFDF5', '#047857', '#10B981'],
+  'Completed': ['#EFF6FF', '#1E40AF', '#3B82F6'],
+  'Packed': ['#EFF6FF', '#1E40AF', '#3B82F6'],
+  'In Progress': ['#DBEAFE', '#1D4ED8', '#3B82F6'],
+  'In Production': ['#DBEAFE', '#1D4ED8', '#3B82F6'],
+  'Ready': ['#DBEAFE', '#1D4ED8', '#3B82F6'],
+  'Shipped': ['#EDE9FE', '#6D28D9', '#8B5CF6'],
+  'Rejected': ['#FEF2F2', '#B91C1C', '#EF4444'],
+  'Cancelled': ['#FEF2F2', '#B91C1C', '#EF4444'],
+  'Critical': ['#FEF2F2', '#B91C1C', '#EF4444'],
+  'Pending': ['#FEF3C7', '#B45309', '#F59E0B'],
+  'Pending MFG': ['#FEF3C7', '#B45309', '#F59E0B'],
+  'Paused': ['#FEF3C7', '#B45309', '#F59E0B'],
+  'Scheduled': ['#FEF3C7', '#B45309', '#F59E0B'],
+  'On Leave': ['#FEF3C7', '#B45309', '#F59E0B'],
+  'Low Stock': ['#FEF3C7', '#B45309', '#F59E0B'],
+  'Quote': ['#E2E8F0', '#475569', '#94A3B8'],
+  'Draft': ['#E2E8F0', '#475569', '#94A3B8'],
+  'Retired': ['#E2E8F0', '#475569', '#94A3B8'],
+  'Inactive': ['#E2E8F0', '#475569', '#94A3B8']
+};
+
+function applyStatusSelectStyle(select) {
+  const status = select.value || select.dataset.status || '';
+  const style = statusSelectStyles[status] || ['#F1F5F9', '#475569', '#94A3B8'];
+  select.style.backgroundColor = style[0];
+  select.style.color = style[1];
+  select.style.borderColor = style[2];
+}
+
+function changeStatus(select) {
+  const newStatus = select.value;
+  if (!newStatus) return;
+  updateStatus(select, newStatus);
+  applyStatusSelectStyle(select);
+}
+
+function initStatusDropdowns() {
+  document.querySelectorAll('select.status-select').forEach(select => {
+    const status = select.dataset.status || select.value;
+    if (status && !Array.from(select.options).some(o => o.value === status)) {
+      const opt = document.createElement('option');
+      opt.value = status;
+      opt.textContent = status;
+      select.appendChild(opt);
+    }
+    if (status) select.value = status;
+    applyStatusSelectStyle(select);
+  });
+}
+
 function triggerMRP(soRef) {
   console.log('triggerMRP called:', soRef);
   showToast('MRP triggered for ' + soRef, 'success');
@@ -4563,6 +4621,7 @@ function updateCharts() {
 window.showModule = showModule;
 window.doLogout = doLogout;
 window.updateStatus = updateStatus;
+window.changeStatus = changeStatus;
 window.openPane = openPane;
 window.closePane = closePane;
 window.openHelpPage = openHelpPage;
@@ -4686,6 +4745,7 @@ async function initializeApplication() {
     initCharts();
     initTableWrappers();
     initTableSearch();
+    initStatusDropdowns();
     initNotifications();
     bindRecordActionButtons();
     bindStorageSyncListener();
