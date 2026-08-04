@@ -6,7 +6,7 @@
 <title>ForgeFlow — Dashboard</title>
 <link rel="icon" type="image/png" href="./assets/forge_flow_icon-removebg-preview-BiUyx8AG.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-  <script type="module" crossorigin src="./assets/app-hJXhuXVX.js"></script>
+  <script type="module" crossorigin src="./assets/app-ylhz_aLy.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/dist-CuPr2paP.js">
   <link rel="stylesheet" crossorigin href="./assets/app-DKR1AjLB.css">
   <link rel="stylesheet" crossorigin href="./assets/shared-1ylEMC4v.css">
@@ -223,13 +223,10 @@
         <div class="module-header">
           <div>
             <div class="module-title">Dashboard Overview</div>
-            <div class="module-subtitle">Your manufacturing operations at a glance — March 2026</div>
+            <div class="module-subtitle" id="dashboardSubtitle">Your manufacturing operations at a glance</div>
           </div>
           <div class="module-actions">
-            <button class="btn-secondary">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              This Month
-            </button>
+            <select id="dashboardRangeSelect" class="status-select" style="min-width:180px" onchange="onDashboardRangeChange(this)"></select>
             <button class="btn-primary" onclick="exportAllData()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Export Report
@@ -346,7 +343,7 @@
           <div class="table-card" style="border-left:3px solid var(--danger)">
             <div style="padding:16px">
               <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">MRP Material Shortages</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;flex-direction:column;gap:8px" id="mrpShortagesList">
                 <div style="display:flex;justify-content:space-between;align-items:center">
                   <span style="font-size:13px;color:var(--gray-700)">Aluminium Sheet 2mm</span>
                   <span style="font-size:12px;font-weight:600;color:var(--danger)">-38 SHT</span>
@@ -366,7 +363,7 @@
           <div class="table-card" style="border-left:3px solid var(--cobalt)">
             <div style="padding:16px">
               <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Demand Pipeline</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;flex-direction:column;gap:8px" id="demandPipelineList">
                 <div style="display:flex;justify-content:space-between;align-items:center">
                   <span style="font-size:13px;color:var(--gray-700)">Pending Orders</span>
                   <span style="font-size:12px;font-weight:600;color:var(--gray-800)">3</span>
@@ -386,7 +383,7 @@
           <div class="table-card" style="border-left:3px solid var(--warn)">
             <div style="padding:16px">
               <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Production Capacity</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;flex-direction:column;gap:8px" id="productionCapacityList">
                 <div style="display:flex;justify-content:space-between;align-items:center">
                   <span style="font-size:13px;color:var(--gray-700)">Active Operations</span>
                   <span style="font-size:12px;font-weight:600;color:var(--gray-800)">8</span>
@@ -415,7 +412,7 @@
               <button class="btn-primary" style="font-size:12px;padding:6px 14px" onclick="showModule('purchase',null)">Create PR</button>
             </div>
             <div style="padding:14px">
-              <div class="alerts-list">
+              <div class="alerts-list" id="lowStockAlertsList">
                 <div class="alert-row danger">
                   <span class="alert-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>

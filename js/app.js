@@ -748,6 +748,14 @@ async function loadAllSettings() {
   }
 }
 
+function getTrialEndDate() {
+  const subscription = getSubscription();
+  const start = subscription?.startDate ? new Date(subscription.startDate) : new Date();
+  const endDate = new Date(start);
+  endDate.setDate(endDate.getDate() + 14);
+  return endDate;
+}
+
 function initTrialCountdown() {
   const badgeEl = document.getElementById('planBadge');
   const countdownEl = badgeEl?.querySelector('.plan-badge-countdown');
@@ -767,17 +775,9 @@ function initTrialCountdown() {
     return;
   }
   
-  // Only show countdown for free trial
-  let trialStart = sessionStorage.getItem('forgeflow_trial_start');
-  if (!trialStart) {
-    trialStart = new Date().toISOString();
-    sessionStorage.setItem('forgeflow_trial_start', trialStart);
-  }
-  
-  const startDate = new Date(trialStart);
-  const trialDays = 14; // 14 day trial
-  const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + trialDays);
+  // Trial runs 14 days from the persistent subscription start so the countdown
+  // is identical on every device instead of resetting each browser session.
+  const endDate = getTrialEndDate();
   
   countdownEl.style.display = 'inline';
   
@@ -807,6 +807,108 @@ function initTrialCountdown() {
   // Run immediately and then set interval
   updateCountdown();
   setInterval(updateCountdown, 60000);
+}
+
+// ============ DASHBOARD RANGE SELECT ============
+function startOfMonth(d) {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
+function shiftMonths(d, n) {
+  const c = new Date(d);
+  c.setMonth(c.getMonth() + n);
+  return c;
+}
+
+function monthsBetween(a, b) {
+  return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+}
+
+function dashboardMonthLabel(d) {
+  return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+function dashboardShortMonthLabel(d) {
+  return d.toLocaleDateString('en-US', { month: 'short' });
+}
+
+async function getAccountCreatedAt() {
+  const companyId = await ensureCompanyContext();
+  if (companyId) {
+    try {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('created_at')
+        .eq('id', companyId)
+        .maybeSingle();
+      if (!error && data?.created_at) return new Date(data.created_at);
+    } catch (e) {
+      console.warn('Failed to load account creation date:', e);
+    }
+  }
+  const subscription = getSubscription();
+  if (subscription?.startDate) return new Date(subscription.startDate);
+  return null;
+}
+
+function updateDashboardSubtitle(subtitle, value, now, startMonth) {
+  if (!subtitle) return;
+  let rangeText = 'This Month';
+  if (value === 'last-month') {
+    rangeText = 'Last Month';
+  } else if (value.startsWith('last-')) {
+    rangeText = `Last ${value.replace('last-', '')} Months`;
+  } else if (value === 'all') {
+    rangeText = startMonth ? `All Months (since ${dashboardMonthLabel(startMonth)})` : 'All Months';
+  }
+  subtitle.textContent = `Your manufacturing operations at a glance — ${rangeText}`;
+}
+
+async function initDashboardRange() {
+  const select = document.getElementById('dashboardRangeSelect');
+  const subtitle = document.getElementById('dashboardSubtitle');
+  if (!select) return;
+
+  const now = startOfMonth(new Date());
+  const created = await getAccountCreatedAt();
+  const startMonth = created ? startOfMonth(created) : null;
+
+  const options = [];
+  const add = (value, label) => options.push({ value, label });
+
+  add('this-month', `This Month (${dashboardMonthLabel(now)})`);
+  add('last-month', `Last Month (${dashboardMonthLabel(shiftMonths(now, -1))})`);
+
+  [2, 3, 6, 12].forEach(n => {
+    const start = startMonth && monthsBetween(startMonth, now) < n
+      ? startMonth
+      : shiftMonths(now, -(n - 1));
+    add(`last-${n}`, `Last ${n} Months (${dashboardShortMonthLabel(start)} – ${dashboardShortMonthLabel(now)})`);
+  });
+
+  if (startMonth) {
+    add('all', `All Months (${dashboardShortMonthLabel(startMonth)} ${startMonth.getFullYear()} – Present)`);
+  } else {
+    add('all', 'All Months');
+  }
+
+  select.innerHTML = '';
+  options.forEach(opt => {
+    const option = document.createElement('option');
+    option.value = opt.value;
+    option.textContent = opt.label;
+    select.appendChild(option);
+  });
+  select.value = 'this-month';
+  updateDashboardSubtitle(subtitle, 'this-month', now, startMonth);
+}
+
+async function onDashboardRangeChange(select) {
+  const subtitle = document.getElementById('dashboardSubtitle');
+  const now = startOfMonth(new Date());
+  const created = await getAccountCreatedAt();
+  const startMonth = created ? startOfMonth(created) : null;
+  updateDashboardSubtitle(subtitle, select.value, now, startMonth);
 }
 
 async function clearDemoData() {
@@ -844,7 +946,11 @@ async function clearDemoData() {
   // 4. Reset KPI values (e.g. Total Sales Revenue, Inventory Value, Purchase Cost MTD)
   resetDashboardKpis();
 
-  // 5. Clear notifications
+  // 5. Wipe dashboard summary widgets (MRP shortages, demand pipeline,
+  //    production capacity, low stock alerts) so nothing remains on screen
+  clearDashboardSummaryWidgets();
+
+  // 6. Clear notifications
   localStorage.removeItem('forgeflow_notifications_list');
   notifications = [];
   const notifList = document.getElementById('notificationList');
@@ -852,12 +958,12 @@ async function clearDemoData() {
   const notifDot = document.getElementById('notifDot');
   if (notifDot) notifDot.style.display = 'none';
 
-  // 6. Clear search history and close the results dropdown
+  // 7. Clear search history and close the results dropdown
   localStorage.removeItem('forgeflow_search_history');
   const dropdown = document.getElementById('searchResultsDropdown');
   if (dropdown) dropdown.classList.remove('open');
 
-  // 7. Reset dashboard charts to empty state
+  // 8. Reset dashboard charts to empty state
   try {
     if (lineChart) lineChart.destroy();
     if (pieChart) pieChart.destroy();
@@ -869,7 +975,7 @@ async function clearDemoData() {
     console.warn('Chart reset failed:', e);
   }
 
-  // 8. Flag so a page reload keeps everything cleared
+  // 9. Flag so a page reload keeps everything cleared
   localStorage.setItem('forgeflow_data_cleared', 'true');
   void persistSettingsToBackend();
 
@@ -879,6 +985,19 @@ async function clearDemoData() {
 function resetDashboardKpis() {
   document.querySelectorAll('.kpi-value').forEach(kpi => {
     kpi.textContent = '0';
+  });
+  document.querySelectorAll('.kpi-trend').forEach(trend => {
+    trend.textContent = '';
+  });
+  document.querySelectorAll('.kpi-bar-fill').forEach(fill => {
+    fill.style.width = '0%';
+  });
+}
+
+function clearDashboardSummaryWidgets() {
+  ['mrpShortagesList', 'demandPipelineList', 'productionCapacityList', 'lowStockAlertsList'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
   });
 }
 
@@ -890,6 +1009,7 @@ function applyClearedDataState() {
   });
 
   resetDashboardKpis();
+  clearDashboardSummaryWidgets();
 
   Object.keys(mockData).forEach(key => { mockData[key] = {}; });
   Object.keys(serverRecordCache).forEach(key => delete serverRecordCache[key]);
@@ -952,15 +1072,7 @@ function updateTrialCountdown() {
   const countdownEl = badgeEl?.querySelector('.plan-badge-countdown');
   if (!countdownEl) return;
   
-  let trialStart = sessionStorage.getItem('forgeflow_trial_start');
-  if (!trialStart) {
-    trialStart = new Date().toISOString();
-    sessionStorage.setItem('forgeflow_trial_start', trialStart);
-  }
-  
-  const startDate = new Date(trialStart);
-  const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + 14);
+  const endDate = getTrialEndDate();
   
   const now = new Date();
   const diff = endDate - now;
@@ -1255,6 +1367,7 @@ function getSettingsBundleFromStorage() {
     }
   });
   bundle['data_cleared'] = localStorage.getItem('forgeflow_data_cleared') === 'true';
+  bundle['user'] = getForgeflowUser();
   return bundle;
 }
 
@@ -1301,6 +1414,30 @@ async function hydrateSettingsFromBackend() {
       if (value === undefined || value === null) return;
       localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
     });
+
+    // Device-exclusive keys are only bootstrapped on a brand-new device so a
+    // stale cloud bundle can never roll back a newer local subscription or
+    // payment method change.
+    ['forgeflow_subscription', 'forgeflow_payment_method'].forEach(key => {
+      const bundleKey = key.replace('forgeflow_', '');
+      const value = data.data[bundleKey];
+      if (value === undefined || value === null) return;
+      if (localStorage.getItem(key) === null) {
+        localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+      }
+    });
+
+    // Restore the plan label on a fresh device so plan gating and the trial
+    // countdown match the account that owns this company.
+    if (data.data.user?.planLabel) {
+      const user = getForgeflowUser() || {};
+      if (!user.planLabel) {
+        user.planLabel = data.data.user.planLabel;
+        user.planName = data.data.user.planName || user.planName;
+        setForgeflowUser(user);
+        applyUser(user);
+      }
+    }
 
     if (data.data.data_cleared === true) {
       localStorage.setItem('forgeflow_data_cleared', 'true');
@@ -2184,8 +2321,6 @@ async function doLogout() {
   });
   
   localStorage.removeItem('forgeflow_user');
-  localStorage.removeItem('forgeflow_trial_start');
-  sessionStorage.removeItem('forgeflow_trial_start');
   window.location.href = 'index.html';
 }
 
@@ -3282,7 +3417,7 @@ function confirmClearData() {
   
   setTimeout(async () => {
     const keysToKeep = [
-      'forgeflow_subscription', 'forgeflow_user', 'forgeflow_trial_start',
+      'forgeflow_subscription', 'forgeflow_user',
       'forgeflow_roles', 'forgeflow_invited_users',
       'forgeflow_appearance', 'forgeflow_general', 'forgeflow_company',
       'forgeflow_security', 'forgeflow_integrations_settings',
@@ -4622,6 +4757,7 @@ window.showModule = showModule;
 window.doLogout = doLogout;
 window.updateStatus = updateStatus;
 window.changeStatus = changeStatus;
+window.onDashboardRangeChange = onDashboardRangeChange;
 window.openPane = openPane;
 window.closePane = closePane;
 window.openHelpPage = openHelpPage;
@@ -4727,12 +4863,13 @@ async function initializeApplication() {
     await updateUserUI();
     await hydrateModuleRecords();
     applyClearedDataState();
+    await hydrateSettingsFromBackend();
 
-    initTrialCountdown();
-    initPlanAccessControl();
     initSubscription();
     checkAndProcessRenewal();
-    await hydrateSettingsFromBackend();
+    initTrialCountdown();
+    initPlanAccessControl();
+    initDashboardRange();
     loadAppearanceSettings();
     await loadAllSettings();
     loadNotificationSettings();
