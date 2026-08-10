@@ -35,6 +35,7 @@ jobs:
         run: npm run build
         env:
           VITE_PAYSTACK_PUBLIC_KEY: pk_test_e6633f20b4fe1f77357b0dee95622fbf6817b6cb
+          VITE_SUPABASE_URL: https://secaghvmfkujeciiapav.supabase.co
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
