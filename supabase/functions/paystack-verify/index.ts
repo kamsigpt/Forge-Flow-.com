@@ -27,7 +27,7 @@ serve(async (req) => {
     const body = await req.json()
     const reference = body?.reference
     const expectedAmount = Number(body?.expectedAmount)
-    const expectedCurrency = body?.currency || 'USD'
+    const expectedCurrency = body?.currency || 'NGN'
     const plan = body?.plan
     const billing = body?.billing || 'monthly'
 

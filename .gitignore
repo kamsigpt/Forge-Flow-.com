@@ -16,3 +16,4 @@ Thumbs.db
 npm-debug.log*
 
 .cache/
+supabase/.temp/

@@ -2807,7 +2807,7 @@ function processImportedData(data) {
 const planDetails = {
   trial: {
     name: 'Free Trial',
-    price: '$0',
+    price: '₦0',
     period: '/14 days',
     features: ['Full platform access', 'Up to 3 users', '100MB storage', 'Community support'],
     limits: {
@@ -2819,7 +2819,7 @@ const planDetails = {
   },
   starter: {
     name: 'Starter',
-    price: '$150',
+    price: '₦150',
     period: '/month',
     priceCents: 15000,
     features: ['Up to 15 users', 'Basic inventory tracking', 'Sales orders management', 'Purchase requests', 'BOM management', 'Email support'],
@@ -2832,7 +2832,7 @@ const planDetails = {
   },
   professional: {
     name: 'Professional',
-    price: '$250',
+    price: '₦250',
     period: '/month',
     priceCents: 25000,
     features: ['Up to 30 users', 'Full inventory management', 'Sales orders management', 'Purchase requests', 'BOM management', 'Workfloor operations', 'Advanced reporting', 'API access', 'Priority support'],
@@ -2980,7 +2980,7 @@ function formatDate(dateString) {
 }
 
 function formatCurrency(cents) {
-  return '$' + (cents / 100).toFixed(2);
+  return '₦' + (cents / 100).toFixed(2);
 }
 
 function getTrialDaysRemaining() {

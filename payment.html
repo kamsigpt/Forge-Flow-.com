@@ -475,16 +475,16 @@
         </div>
         <div class="order-price">
           <span class="order-price-label">Monthly subscription</span>
-          <span class="order-price-value" id="monthlyPrice">$150</span>
+          <span class="order-price-value" id="monthlyPrice">₦150</span>
         </div>
         <div class="order-price" id="annualDiscountRow" style="display: none;">
           <span class="order-price-label">Annual discount (20%)</span>
-          <span class="order-price-value" style="color: #10B981;" id="discountAmount">-$30</span>
+          <span class="order-price-value" style="color: #10B981;" id="discountAmount">-₦30</span>
         </div>
         <div class="order-total">
           <span class="order-total-label">Total today</span>
           <span>
-            <span class="order-total-value" id="totalPrice">$150</span>
+            <span class="order-total-value" id="totalPrice">₦150</span>
             <span class="order-total-period">/ month</span>
           </span>
         </div>
@@ -661,14 +661,14 @@
 
       document.getElementById('planName').textContent = plan.name;
       document.getElementById('planBadge').textContent = plan.label;
-      document.getElementById('monthlyPrice').textContent = '$' + (price / 100);
-      document.getElementById('totalPrice').textContent = '$' + (price / 100);
+      document.getElementById('monthlyPrice').textContent = '₦' + (price / 100);
+      document.getElementById('totalPrice').textContent = '₦' + (price / 100);
 
       if (isAnnual) {
         document.getElementById('annualDiscountRow').style.display = 'flex';
         const monthlyPrice = plan.monthly;
         const discount = (monthlyPrice - plan.annual) / 100;
-        document.getElementById('discountAmount').textContent = '-$' + discount;
+        document.getElementById('discountAmount').textContent = '-₦' + discount;
         document.querySelector('.order-total-period').textContent = '/ month, billed annually';
       }
 
@@ -720,7 +720,7 @@
         key: paystackPublicKey,
         email: email,
         amount: amount,
-        currency: 'USD',
+        currency: 'NGN',
         ref: 'ff_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
         metadata: {
           plan: currentPlan,
@@ -770,8 +770,14 @@
       };
 
       if (typeof PaystackPop !== 'undefined') {
-        const handler = PaystackPop.setup(paymentData);
-        handler.openIframe();
+        try {
+          const handler = PaystackPop.setup(paymentData);
+          handler.openIframe();
+        } catch (err) {
+          console.error('Paystack setup error:', err);
+          showError('Payment could not be started. Please try again.');
+          resetButton();
+        }
       } else {
         showError('Payment gateway could not be loaded. Please try again.');
         resetButton();
@@ -787,7 +793,7 @@
         body: JSON.stringify({
           reference: reference,
           expectedAmount: expectedAmount,
-          currency: 'USD',
+          currency: 'NGN',
           plan: currentPlan,
           billing: isAnnual ? 'annual' : 'monthly'
         })
