@@ -47,7 +47,7 @@
         </div>
         <h2 class="ps-card-name">Free Trial</h2>
         <div class="ps-card-price">
-          <span class="ps-price-amount">₦0</span>
+          <span class="ps-price-amount">$0</span>
           <span class="ps-price-period">/ 14 days</span>
         </div>
         <p class="ps-card-desc">Experience the full power of ForgeFlow. Perfect for evaluating if our platform fits your needs before committing.</p>
@@ -70,7 +70,7 @@
         </div>
         <h2 class="ps-card-name">Starter</h2>
         <div class="ps-card-price">
-          <span class="ps-price-amount" id="price-starter">₦150</span>
+          <span class="ps-price-amount" id="price-starter">$150</span>
           <span class="ps-price-period" id="period-starter">/ month</span>
         </div>
         <p class="ps-card-desc">Everything you need to move from spreadsheets to a real system. Ideal for teams of 5-15 people getting organized.</p>
@@ -95,7 +95,7 @@
         </div>
         <h2 class="ps-card-name">Professional</h2>
         <div class="ps-card-price">
-          <span class="ps-price-amount" id="price-professional">₦250</span>
+          <span class="ps-price-amount" id="price-professional">$250</span>
           <span class="ps-price-period" id="period-professional">/ month</span>
         </div>
         <p class="ps-card-desc">Scale your operations with advanced reporting, API access, and priority support. Built for teams ready to grow.</p>
@@ -166,14 +166,14 @@
       const starterAmount = document.getElementById('price-starter');
       const starterPeriod = document.getElementById('period-starter');
       if (starterAmount) {
-        starterAmount.textContent = isAnnual ? '₦120' : '₦150';
+        starterAmount.textContent = isAnnual ? '$120' : '$150';
         starterPeriod.textContent = isAnnual ? '/ month, billed annually' : '/ month';
       }
       
       const proAmount = document.getElementById('price-professional');
       const proPeriod = document.getElementById('period-professional');
       if (proAmount) {
-        proAmount.textContent = isAnnual ? '₦200' : '₦250';
+        proAmount.textContent = isAnnual ? '$200' : '$250';
         proPeriod.textContent = isAnnual ? '/ month, billed annually' : '/ month';
       }
     }

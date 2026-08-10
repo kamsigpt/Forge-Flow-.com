@@ -7,10 +7,31 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-// List of supported payment plans. Keep in sync with payment.html.
+// List of supported payment plans in USD cents. Keep in sync with payment.html.
 const PLAN_AMOUNTS: Record<string, Record<string, number>> = {
   starter: { monthly: 15000, annual: 12000 },
   professional: { monthly: 25000, annual: 20000 },
+}
+
+const FALLBACK_RATE = 1361
+const RATE_TOLERANCE = 0.03 // allow 3% drift between client fetch and server verify
+
+async function fetchUsdToNgnRate(): Promise<number> {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD')
+    if (!res.ok) return FALLBACK_RATE
+    const data = await res.json()
+    const rate = Number(data?.rates?.NGN)
+    if (rate > 0) return rate
+    return FALLBACK_RATE
+  } catch (error) {
+    console.error('rate fetch failed:', error)
+    return FALLBACK_RATE
+  }
+}
+
+function usdToNgnKobo(usdCents: number, rate: number): number {
+  return Math.round((usdCents / 100) * rate) * 100
 }
 
 serve(async (req) => {
@@ -26,7 +47,6 @@ serve(async (req) => {
 
     const body = await req.json()
     const reference = body?.reference
-    const expectedAmount = Number(body?.expectedAmount)
     const expectedCurrency = body?.currency || 'NGN'
     const plan = body?.plan
     const billing = body?.billing || 'monthly'
@@ -37,9 +57,13 @@ serve(async (req) => {
     if (!plan || !PLAN_AMOUNTS[plan]) {
       return json({ success: false, error: 'Invalid plan' }, 400, corsHeaders)
     }
-    if (Number(PLAN_AMOUNTS[plan][billing] ?? 0) !== expectedAmount) {
-      return json({ success: false, error: 'Amount/plan mismatch' }, 400, corsHeaders)
+    if (!PLAN_AMOUNTS[plan][billing]) {
+      return json({ success: false, error: 'Invalid billing' }, 400, corsHeaders)
     }
+
+    const rate = await fetchUsdToNgnRate()
+    const usdCents = PLAN_AMOUNTS[plan][billing]
+    const expectedKobo = usdToNgnKobo(usdCents, rate)
 
     const paystackRes = await fetch(
       `https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`,
@@ -64,9 +88,10 @@ serve(async (req) => {
     const tx = paystack.data
     const paidAmount = Number(tx.amount)
     const paidCurrency = (tx.currency || 'USD').toUpperCase()
+    const amountWithinTolerance = Math.abs(paidAmount - expectedKobo) / expectedKobo <= RATE_TOLERANCE
     const verified =
       tx.status === 'success' &&
-      paidAmount === expectedAmount &&
+      amountWithinTolerance &&
       paidCurrency === expectedCurrency.toUpperCase()
 
     const customerEmail = tx.customer?.email || body?.email || ''
@@ -78,8 +103,8 @@ serve(async (req) => {
         auth: { autoRefreshToken: false, persistSession: false },
       })
 
-      await upsertPayment(supabase, tx, customerEmail, plan, billing)
-      await upsertSubscription(supabase, customerEmail, plan, billing, tx)
+      await upsertPayment(supabase, tx, customerEmail, plan, billing, usdCents)
+      await upsertSubscription(supabase, customerEmail, plan, billing, tx, usdCents)
 
       return json({
         success: true,
@@ -91,6 +116,8 @@ serve(async (req) => {
           currency: paidCurrency,
           plan,
           billing,
+          rate,
+          usdCents,
         },
       }, 200, corsHeaders)
     }
@@ -102,7 +129,7 @@ serve(async (req) => {
       data: {
         status: tx.status,
         amount: paidAmount,
-        expectedAmount,
+        expectedAmount: expectedKobo,
         currency: paidCurrency,
         expectedCurrency,
       },
@@ -119,6 +146,7 @@ async function upsertPayment(
   email: string,
   plan: string,
   billing: string,
+  usdCents: number,
 ) {
   const now = new Date().toISOString()
   const { error } = await supabase.from('payments').upsert({
@@ -127,6 +155,7 @@ async function upsertPayment(
     plan,
     billing,
     amount: Number(tx.amount),
+    usd_amount: usdCents,
     currency: (tx.currency || 'USD').toUpperCase(),
     status: 'success',
     channel: tx.channel || null,
@@ -145,6 +174,7 @@ async function upsertSubscription(
   plan: string,
   billing: string,
   tx: Record<string, unknown>,
+  usdCents: number,
 ) {
   const now = new Date()
   const periodEnd = new Date(now)
@@ -161,6 +191,7 @@ async function upsertSubscription(
     plan,
     billing_cycle: billing,
     amount: Number(tx.amount),
+    usd_amount: usdCents,
     currency: (tx.currency || 'USD').toUpperCase(),
     status: 'active',
     current_period_start: now.toISOString(),

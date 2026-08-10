@@ -475,16 +475,20 @@
         </div>
         <div class="order-price">
           <span class="order-price-label">Monthly subscription</span>
-          <span class="order-price-value" id="monthlyPrice">₦150</span>
+          <span class="order-price-value" id="monthlyPrice">$150</span>
         </div>
         <div class="order-price" id="annualDiscountRow" style="display: none;">
           <span class="order-price-label">Annual discount (20%)</span>
-          <span class="order-price-value" style="color: #10B981;" id="discountAmount">-₦30</span>
+          <span class="order-price-value" style="color: #10B981;" id="discountAmount">-$30</span>
+        </div>
+        <div class="order-price" id="ngnEstimateRow" style="display: none;">
+          <span class="order-price-label">You'll be charged today</span>
+          <span class="order-price-value" id="ngnEstimate">-</span>
         </div>
         <div class="order-total">
           <span class="order-total-label">Total today</span>
           <span>
-            <span class="order-total-value" id="totalPrice">₦150</span>
+            <span class="order-total-value" id="totalPrice">$150</span>
             <span class="order-total-period">/ month</span>
           </span>
         </div>
@@ -661,14 +665,14 @@
 
       document.getElementById('planName').textContent = plan.name;
       document.getElementById('planBadge').textContent = plan.label;
-      document.getElementById('monthlyPrice').textContent = '₦' + (price / 100);
-      document.getElementById('totalPrice').textContent = '₦' + (price / 100);
+      document.getElementById('monthlyPrice').textContent = '$' + (price / 100);
+      document.getElementById('totalPrice').textContent = '$' + (price / 100);
 
       if (isAnnual) {
         document.getElementById('annualDiscountRow').style.display = 'flex';
         const monthlyPrice = plan.monthly;
         const discount = (monthlyPrice - plan.annual) / 100;
-        document.getElementById('discountAmount').textContent = '-₦' + discount;
+        document.getElementById('discountAmount').textContent = '-$' + discount;
         document.querySelector('.order-total-period').textContent = '/ month, billed annually';
       }
 
@@ -690,6 +694,41 @@
         const nameFromInitials = savedUser.initials.replace(/([A-Z])/g, ' $1').trim();
         document.getElementById('customerName').value = nameFromInitials || '';
       }
+    }
+
+    const FALLBACK_RATE = 1361;
+
+    async function fetchUsdToNgnRate() {
+      try {
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://secaghvmfkujeciiapav.supabase.co';
+        const res = await fetch(supabaseUrl + '/functions/v1/paystack-rate', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (!res.ok) return FALLBACK_RATE;
+        const data = await res.json();
+        if (data && data.rate > 0) return Number(data.rate);
+        return FALLBACK_RATE;
+      } catch (err) {
+        console.warn('Rate fetch failed, using fallback:', err);
+        return FALLBACK_RATE;
+      }
+    }
+
+    function usdToNgnKobo(usdCents, rate) {
+      return Math.round((usdCents / 100) * rate) * 100;
+    }
+
+    async function refreshNgnEstimate() {
+      const row = document.getElementById('ngnEstimateRow');
+      const el = document.getElementById('ngnEstimate');
+      if (!row || !el || !currentPlan) return;
+      const plan = planDetails[currentPlan];
+      const usdCents = isAnnual ? plan.annual : plan.monthly;
+      const rate = await fetchUsdToNgnRate();
+      const kobo = usdToNgnKobo(usdCents, rate);
+      el.textContent = '₦' + (kobo / 100).toLocaleString('en-NG');
+      row.style.display = 'flex';
     }
 
     function initiatePayment(e) {
@@ -714,72 +753,88 @@
       payButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
 
       const plan = planDetails[currentPlan];
-      const amount = isAnnual ? plan.annual : plan.monthly;
-      
-      const paymentData = {
-        key: paystackPublicKey,
-        email: email,
-        amount: amount,
-        currency: 'NGN',
-        ref: 'ff_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-        metadata: {
-          plan: currentPlan,
-          billing: isAnnual ? 'annual' : 'monthly',
-          customer_name: name,
-          custom_fields: [
-            {
-              display_name: 'Plan',
-              variable_name: 'plan',
-              value: currentPlan
+      const usdCents = isAnnual ? plan.annual : plan.monthly;
+
+      fetchUsdToNgnRate()
+        .then((rate) => {
+          const amountKobo = usdToNgnKobo(usdCents, rate);
+
+          const paymentData = {
+            key: paystackPublicKey,
+            email: email,
+            amount: amountKobo,
+            currency: 'NGN',
+            ref: 'ff_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            metadata: {
+              plan: currentPlan,
+              billing: isAnnual ? 'annual' : 'monthly',
+              customer_name: name,
+              usd_cents: usdCents,
+              rate: rate,
+              custom_fields: [
+                {
+                  display_name: 'Plan',
+                  variable_name: 'plan',
+                  value: currentPlan
+                },
+                {
+                  display_name: 'Billing',
+                  variable_name: 'billing',
+                  value: isAnnual ? 'annual' : 'monthly'
+                },
+                {
+                  display_name: 'Customer Name',
+                  variable_name: 'customer_name',
+                  value: name
+                }
+              ]
             },
-            {
-              display_name: 'Billing',
-              variable_name: 'billing',
-              value: isAnnual ? 'annual' : 'monthly'
+            callback: function(response) {
+              handlePaystackCallback(response, email, name, amountKobo);
             },
-            {
-              display_name: 'Customer Name',
-              variable_name: 'customer_name',
-              value: name
+            onClose: function() {
+              resetButton();
             }
-          ]
-        },
-        callback: async function(response) {
-          if (response.status === 'success') {
+          };
+
+          if (typeof PaystackPop !== 'undefined') {
             try {
-              const result = await verifyPayment(response.reference, amount);
-              if (result.success && result.verified) {
-                handlePaymentSuccess(email, name, response.reference);
-              } else {
-                showError('Payment could not be verified. Please contact support.');
-                resetButton();
-              }
+              const handler = PaystackPop.setup(paymentData);
+              handler.openIframe();
             } catch (err) {
-              console.error('Verification error:', err);
-              showError('Payment could not be verified. Please contact support.');
+              console.error('Paystack setup error:', err);
+              showError('Payment could not be started. Please try again.');
               resetButton();
             }
           } else {
-            showError('Payment was not completed. Please try again.');
+            showError('Payment gateway could not be loaded. Please try again.');
             resetButton();
           }
-        },
-        onClose: function() {
-          resetButton();
-        }
-      };
-
-      if (typeof PaystackPop !== 'undefined') {
-        try {
-          const handler = PaystackPop.setup(paymentData);
-          handler.openIframe();
-        } catch (err) {
-          console.error('Paystack setup error:', err);
+        })
+        .catch((err) => {
+          console.error('Rate fetch error:', err);
           showError('Payment could not be started. Please try again.');
+          resetButton();
+        });
+    }
+
+    async function handlePaystackCallback(response, email, name, amountKobo) {
+      if (response.status === 'success') {
+        try {
+          const result = await verifyPayment(response.reference, amountKobo);
+          if (result.success && result.verified) {
+            handlePaymentSuccess(email, name, response.reference);
+          } else {
+            showError('Payment could not be verified. Please contact support.');
+            resetButton();
+          }
+        } catch (err) {
+          console.error('Verification error:', err);
+          showError('Payment could not be verified. Please contact support.');
           resetButton();
         }
       } else {
-        showError('Payment gateway could not be loaded. Please try again.');
+        showError('Payment was not completed. Please try again.');
         resetButton();
       }
     }
@@ -883,6 +938,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       getPlanDetails();
+      refreshNgnEstimate();
       document.getElementById('paymentForm').addEventListener('submit', initiatePayment);
     });
   </script>

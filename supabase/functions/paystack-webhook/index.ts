@@ -48,10 +48,11 @@ serve(async (req) => {
     const email = tx.customer?.email || ''
     const plan = mapPlan(tx.plan?.plan_code, tx.metadata)
     const billing = tx.metadata?.billing || 'monthly'
+    const usdCents = Number(tx.metadata?.usd_cents) || 0
 
     if (plan) {
-      await upsertPayment(supabase, tx, email, plan, billing)
-      await upsertSubscription(supabase, email, plan, billing, tx)
+      await upsertPayment(supabase, tx, email, plan, billing, usdCents)
+      await upsertSubscription(supabase, email, plan, billing, tx, usdCents)
     } else {
       await logWebhook(supabase, event)
     }
@@ -91,6 +92,7 @@ async function upsertPayment(
   email: string,
   plan: string,
   billing: string,
+  usdCents: number,
 ) {
   const now = new Date().toISOString()
   const { error } = await supabase.from('payments').upsert({
@@ -99,6 +101,7 @@ async function upsertPayment(
     plan,
     billing,
     amount: Number(tx.amount),
+    usd_amount: usdCents,
     currency: (tx.currency || 'NGN').toUpperCase(),
     status: 'success',
     channel: tx.channel || null,
@@ -117,6 +120,7 @@ async function upsertSubscription(
   plan: string,
   billing: string,
   tx: Record<string, unknown>,
+  usdCents: number,
 ) {
   const now = new Date()
   const periodEnd = new Date(now)
@@ -133,6 +137,7 @@ async function upsertSubscription(
     plan,
     billing_cycle: billing,
     amount: Number(tx.amount),
+    usd_amount: usdCents,
     currency: (tx.currency || 'NGN').toUpperCase(),
     status: 'active',
     current_period_start: now.toISOString(),

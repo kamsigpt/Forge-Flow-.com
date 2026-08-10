@@ -409,8 +409,8 @@ function goToApp(initials, planName, planLabel) {
 // ============ BILLING TOGGLE ============
 let isAnnual = false;
 const prices = { 
-  starter: { monthly: '₦150', annual: '₦120' }, 
-  pro: { monthly: '₦250', annual: '₦200' }
+  starter: { monthly: '$150', annual: '$120' }, 
+  pro: { monthly: '$250', annual: '$200' }
 };
 
 function togglePricing() {
