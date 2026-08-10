@@ -337,7 +337,64 @@ function showModule(id, clickedItem) {
     initTableSearch();
     initTableWrappers();
   }, 50);
+
+  closeMobileMenu();
 }
+
+// ============ MOBILE MENU (SIDEBAR DRAWER) ============
+function isMobileViewport() {
+  return window.innerWidth <= 1024;
+}
+
+function openMobileMenu() {
+  if (!isMobileViewport()) return;
+  const appLayout = document.querySelector('.app-layout');
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const toggle = document.getElementById('mobileMenuToggle');
+  if (appLayout) appLayout.classList.add('mobile-menu-open');
+  if (sidebar) sidebar.classList.add('open');
+  if (backdrop) backdrop.classList.add('open');
+  if (toggle) toggle.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileMenu() {
+  const appLayout = document.querySelector('.app-layout');
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const toggle = document.getElementById('mobileMenuToggle');
+  if (appLayout) appLayout.classList.remove('mobile-menu-open');
+  if (sidebar) sidebar.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('open');
+  if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+function toggleMobileMenu() {
+  const appLayout = document.querySelector('.app-layout');
+  const isOpen = appLayout ? appLayout.classList.contains('mobile-menu-open') : false;
+  if (isOpen) {
+    closeMobileMenu();
+  } else {
+    openMobileMenu();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const appLayout = document.querySelector('.app-layout');
+    if (appLayout && appLayout.classList.contains('mobile-menu-open')) closeMobileMenu();
+  }
+});
+
+window.addEventListener('resize', () => {
+  if (!isMobileViewport()) closeMobileMenu();
+});
+
+window.toggleMobileMenu = toggleMobileMenu;
+window.openMobileMenu = openMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
 
 // ============ MOCK DATA STORE ============
 console.log('App.js loading...');

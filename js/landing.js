@@ -467,6 +467,41 @@ window.addEventListener('load', () => {
   });
 });
 
+// ============ MOBILE NAV ============
+function toggleMobileNav() {
+  const menu = document.getElementById('mobileNav');
+  const btn = document.getElementById('navToggle');
+  if (!menu) return;
+  const open = menu.classList.toggle('open');
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle('is-open', open);
+  }
+  document.body.classList.toggle('nav-menu-open', open);
+}
+
+function closeMobileNav() {
+  const menu = document.getElementById('mobileNav');
+  const btn = document.getElementById('navToggle');
+  if (menu) menu.classList.remove('open');
+  if (btn) {
+    btn.setAttribute('aria-expanded', 'false');
+    btn.classList.remove('is-open');
+  }
+  document.body.classList.remove('nav-menu-open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeMobileNav();
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 1024) closeMobileNav();
+});
+
+window.toggleMobileNav = toggleMobileNav;
+window.closeMobileNav = closeMobileNav;
+
 // ============ SMOOTH SCROLL & INIT ============
 document.addEventListener('DOMContentLoaded', function() {
   initScrollAnimations();
@@ -476,7 +511,10 @@ document.addEventListener('DOMContentLoaded', function() {
     a.addEventListener('click', e => {
       e.preventDefault();
       const t = document.querySelector(a.getAttribute('href'));
-      if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (t) {
+        t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        closeMobileNav();
+      }
     });
   });
 

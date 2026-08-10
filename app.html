@@ -18,6 +18,9 @@
   <aside class="sidebar">
     <div class="sidebar-brand">
       <span class="sidebar-brand-name"><img src="assets/forge flow white logo wirh icon.png" alt="Forge Flow" class="ff-logo ff-logo--sidebar"></span>
+      <button class="sidebar-mobile-close" onclick="closeMobileMenu()" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
 
     <nav class="sidebar-nav">
@@ -88,11 +91,16 @@
     </div>
   </aside>
 
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileMenu()"></div>
+
   <!-- ============ MAIN AREA ============ -->
   <div class="app-main">
 
     <!-- Top Bar -->
     <div class="topbar">
+      <button class="topbar-menu-btn" id="mobileMenuToggle" aria-label="Open menu" aria-expanded="false" onclick="toggleMobileMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <span class="topbar-breadcrumb" id="topbarBreadcrumb">Dashboard</span>
       
       <div class="topbar-center">

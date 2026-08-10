@@ -30,7 +30,21 @@
       <div class="nav-actions">
         <button class="btn-nav-ghost" onclick="openAuthModal('login')">Sign In</button>
         <button class="btn-nav-primary" onclick="location.href='signup.html'">Get Free Trial</button>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" onclick="toggleMobileNav()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
       </div>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#features" onclick="closeMobileNav()">Solutions</a>
+      <a href="#workflow" onclick="closeMobileNav()">How It Works</a>
+      <a href="#compare" onclick="closeMobileNav()">Why ForgeFlow</a>
+      <a href="#pricing" onclick="closeMobileNav()">Pricing</a>
+      <a href="#faq" onclick="closeMobileNav()">FAQ</a>
+      <div class="mobile-nav-divider"></div>
+      <button class="btn-nav-ghost" onclick="openAuthModal('login'); closeMobileNav()">Sign In</button>
+      <button class="btn-nav-primary" onclick="location.href='signup.html'">Get Free Trial</button>
     </div>
   </nav>
 
@@ -1206,9 +1220,28 @@
       line-height: 1.5;
     }
     @media (max-width: 640px) {
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
       .modal-container {
-        padding: 32px 24px;
-        max-height: 95vh;
+        padding: 36px 24px calc(28px + env(safe-area-inset-bottom, 0px));
+        max-height: 92vh;
+        max-height: 92dvh;
+        border-radius: 24px 24px 0 0;
+        width: 100%;
+        max-width: 100%;
+      }
+      .modal-container::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 44px;
+        height: 5px;
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.12);
       }
       .form-row {
         grid-template-columns: 1fr;
