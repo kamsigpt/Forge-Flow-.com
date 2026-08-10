@@ -494,7 +494,7 @@
         Payment failed. Please try again or contact support.
       </div>
 
-      <form id="paymentForm" onsubmit="initiatePayment(event)">
+      <form id="paymentForm">
         <div class="form-group">
           <label class="form-label">Email Address</label>
           <input type="email" class="form-input" id="customerEmail" placeholder="you@company.com" required>
@@ -605,7 +605,7 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
     let currentPlan = null;
     let isAnnual = false;
 
@@ -703,6 +703,12 @@
         return;
       }
 
+      const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || '';
+      if (!paystackPublicKey) {
+        showError('Payment is not configured. Please try again later.');
+        return;
+      }
+
       const payButton = document.getElementById('payButton');
       payButton.disabled = true;
       payButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
@@ -711,12 +717,15 @@
       const amount = isAnnual ? plan.annual : plan.monthly;
       
       const paymentData = {
-        key: 'pk_test_YOUR_PUBLIC_KEY',
+        key: paystackPublicKey,
         email: email,
         amount: amount,
         currency: 'USD',
         ref: 'ff_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
         metadata: {
+          plan: currentPlan,
+          billing: isAnnual ? 'annual' : 'monthly',
+          customer_name: name,
           custom_fields: [
             {
               display_name: 'Plan',
@@ -735,9 +744,21 @@
             }
           ]
         },
-        callback: function(response) {
+        callback: async function(response) {
           if (response.status === 'success') {
-            handlePaymentSuccess(email, name, response.reference);
+            try {
+              const result = await verifyPayment(response.reference, amount);
+              if (result.success && result.verified) {
+                handlePaymentSuccess(email, name, response.reference);
+              } else {
+                showError('Payment could not be verified. Please contact support.');
+                resetButton();
+              }
+            } catch (err) {
+              console.error('Verification error:', err);
+              showError('Payment could not be verified. Please contact support.');
+              resetButton();
+            }
           } else {
             showError('Payment was not completed. Please try again.');
             resetButton();
@@ -752,8 +773,26 @@
         const handler = PaystackPop.setup(paymentData);
         handler.openIframe();
       } else {
-        handleDemoPayment(email, name);
+        showError('Payment gateway could not be loaded. Please try again.');
+        resetButton();
       }
+    }
+
+    async function verifyPayment(reference, expectedAmount) {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+      const verifyUrl = supabaseUrl + '/functions/v1/paystack-verify';
+      const res = await fetch(verifyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reference: reference,
+          expectedAmount: expectedAmount,
+          currency: 'USD',
+          plan: currentPlan,
+          billing: isAnnual ? 'annual' : 'monthly'
+        })
+      });
+      return res.json();
     }
 
     function handlePaymentSuccess(email, name, reference) {
@@ -814,14 +853,6 @@
       localStorage.setItem('forgeflow_subscription', JSON.stringify(subscription));
     }
 
-    function handleDemoPayment(email, name) {
-      console.log('Demo Mode - Paystack not loaded. Simulating payment...');
-      
-      setTimeout(() => {
-        handlePaymentSuccess(email, name, 'demo_ref_' + Date.now());
-      }, 1500);
-    }
-
     function showError(message) {
       const errorEl = document.getElementById('paymentError');
       errorEl.textContent = message;
@@ -846,6 +877,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       getPlanDetails();
+      document.getElementById('paymentForm').addEventListener('submit', initiatePayment);
     });
   </script>
 </body>
