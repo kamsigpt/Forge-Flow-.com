@@ -173,8 +173,8 @@ function applyTheme(theme) {
   const logo = document.querySelector('.ff-logo--sidebar');
   if (logo) {
     logo.src = theme === 'light'
-      ? 'assets/forge_flow_logo-removebg-preview.png'
-      : 'assets/forge flow white logo wirh icon.png';
+      ? new URL('../assets/forge_flow_logo-removebg-preview.png', import.meta.url).href
+      : new URL('../assets/forge flow white logo wirh icon.png', import.meta.url).href;
   }
 }
 
