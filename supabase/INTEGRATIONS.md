@@ -8,23 +8,23 @@ custom webhooks.
 
 | Piece | Location |
 |-------|----------|
-| OAuth auth URL generation | `supabase/functions/integrations/auth-url.ts` |
-| OAuth callback / token storage | `supabase/functions/integrations/auth-callback.ts` |
-| Google Sheets sync | `supabase/functions/integrations/gsheets-sync.ts` |
-| Shopify sync | `supabase/functions/integrations/shopify-sync.ts` |
-| Zoho sync | `supabase/functions/integrations/zoho-sync.ts` |
-| Outgoing webhooks | `supabase/functions/integrations/webhook-sender.ts` |
+| OAuth auth URL generation | `supabase/functions/auth-url/` |
+| OAuth callback / token storage | `supabase/functions/auth-callback/` |
+| Google Sheets sync | `supabase/functions/gsheets-sync/` |
+| Shopify sync | `supabase/functions/shopify-sync/` |
+| Zoho sync | `supabase/functions/zoho-sync/` |
+| Outgoing webhooks | `supabase/functions/webhook-sender/` |
 | Token / log / webhook tables | `supabase/schema.sql` |
 | Extra sync columns | `supabase/migrations/20260811_add_integration_metadata.sql` |
 
 Flow:
 
 1. User clicks **Connect** in the app.
-2. The app calls `integrations/auth-url` (edge function) with the user's JWT.
+2. The app calls `auth-url` (edge function) with the user's JWT.
 3. The edge function builds the provider OAuth URL and signs an `OAuth state`
    containing `companyId`, `userId`, and the `redirectUrl` to return to.
 4. User approves on the provider. The provider redirects the browser to
-   `integrations/auth-callback` with `code` + `state`.
+   `auth-callback` with `code` + `state`.
 5. The callback exchanges the code for tokens, upserts them into
    `integration_tokens`, logs to `integration_logs`, then **redirects the browser
    back to the app** (`?integration=zoho&status=success`).
@@ -52,18 +52,18 @@ If you have not already:
 ## Step 2 — Configure the edge functions
 
 `supabase/config.toml` already declares the project. The one setting that matters
-is that `integrations/auth-callback` runs with `verify_jwt = false` — the OAuth
+is that `auth-callback` runs with `verify_jwt = false` — the OAuth
 provider redirects the browser straight to it with no `Authorization` header.
 
 Deploy all integration functions:
 
 ```bash
-supabase functions deploy integrations/auth-url
-supabase functions deploy integrations/auth-callback
-supabase functions deploy integrations/gsheets-sync
-supabase functions deploy integrations/shopify-sync
-supabase functions deploy integrations/zoho-sync
-supabase functions deploy integrations/webhook-sender
+supabase functions deploy auth-url
+supabase functions deploy auth-callback
+supabase functions deploy gsheets-sync
+supabase functions deploy shopify-sync
+supabase functions deploy zoho-sync
+supabase functions deploy webhook-sender
 ```
 
 You can deploy them all with a single command:
@@ -81,27 +81,27 @@ the secrets:
 # Zoho
 supabase secrets set ZOHO_CLIENT_ID=...
 supabase secrets set ZOHO_CLIENT_SECRET=...
-supabase secrets set ZOHO_REDIRECT_URI=https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback
+supabase secrets set ZOHO_REDIRECT_URI=https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback
 
 # Google Sheets
 supabase secrets set GOOGLE_CLIENT_ID=...
 supabase secrets set GOOGLE_CLIENT_SECRET=...
-supabase secrets set GOOGLE_CALLBACK_URL=https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback
+supabase secrets set GOOGLE_CALLBACK_URL=https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback
 
 # Shopify
 supabase secrets set SHOPIFY_API_KEY=...
 supabase secrets set SHOPIFY_API_SECRET=...
-supabase secrets set SHOPIFY_CALLBACK_URL=https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback
+supabase secrets set SHOPIFY_CALLBACK_URL=https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback
 
 # QuickBooks
 supabase secrets set QUICKBOOKS_CLIENT_ID=...
 supabase secrets set QUICKBOOKS_CLIENT_SECRET=...
-supabase secrets set QUICKBOOKS_CALLBACK_URL=https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback
+supabase secrets set QUICKBOOKS_CALLBACK_URL=https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback
 
 # Xero
 supabase secrets set XERO_CLIENT_ID=...
 supabase secrets set XERO_CLIENT_SECRET=...
-supabase secrets set XERO_REDIRECT_URI=https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback
+supabase secrets set XERO_REDIRECT_URI=https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback
 
 # OAuth state signing key (any long random string — protects against CSRF)
 supabase secrets set OAUTH_STATE_SECRET=$(python -c "import secrets; print(secrets.token_urlsafe(48))")
@@ -117,7 +117,7 @@ Or paste the same values in the dashboard under
 1. Go to the [Zoho API Console](https://api-console.zoho.com/).
 2. **Create Client → Self Client** (or a Server-based app for web flow).
 3. Add the redirect URI:
-   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback`
+   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback`
 4. Note the **Client ID** and **Client Secret**.
 5. Scopes used by ForgeFlow:
    `ZohoCRM.users.ALL, ZohoCRM.org.ALL, ZohoCRM.contacts.READ, ZohoBooks.contacts.READ, ZohoBooks.contacts.CREATE, ZohoBooks.invoices.READ, ZohoBooks.invoices.CREATE, ZohoProjects.tasks.WRITE`
@@ -132,7 +132,7 @@ Or paste the same values in the dashboard under
 2. Create a project and enable the **Google Sheets API** and **Google Drive API**.
 3. **APIs & Services → Credentials → Create Credentials → OAuth client ID → Web application**.
 4. Add authorized redirect URI:
-   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback`
+   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback`
 5. Note the **Client ID** and **Client Secret**.
 
 ### Shopify
@@ -141,7 +141,7 @@ Or paste the same values in the dashboard under
    **Settings → Apps and sales channels → Develop apps**).
 2. Scopes: `read_products, write_products, read_orders, write_orders`.
 3. Add the OAuth redirect URL:
-   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback`
+   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback`
 4. Note the **API key** and **API secret key**.
 
 ### QuickBooks
@@ -149,7 +149,7 @@ Or paste the same values in the dashboard under
 1. Go to [Intuit Developer](https://developer.intuit.com/).
 2. Create an app → **QuickBooks Online**.
 3. Add redirect URI:
-   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback`
+   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback`
 4. Note the **Client ID** and **Client Secret**.
 
 ### Xero
@@ -157,7 +157,7 @@ Or paste the same values in the dashboard under
 1. Go to [Xero Developer Center](https://developer.xero.com/).
 2. Create an app → **Web app**.
 3. Add redirect URI:
-   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback`
+   `https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback`
 4. Note the **Client ID** and **Client Secret**.
 
 ## Step 5 — Verify the callback is reachable
@@ -165,12 +165,12 @@ Or paste the same values in the dashboard under
 After deploying, the callback must respond with a redirect (not a 401). Check it:
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}\n" "https://secaghvmfkujeciiapav.supabase.co/functions/v1/integrations/auth-callback"
+curl -s -o /dev/null -w "%{http_code}\n" "https://secaghvmfkujeciiapav.supabase.co/functions/v1/auth-callback"
 ```
 
 - `303` or `404` → JWT verification is correctly off (404 just means no state/code).
 - `401` → the `verify_jwt = false` override did not apply. Fix `supabase/config.toml`
-  under `[functions."integrations/auth-callback"]` and redeploy. There is a known
+  under `[functions."auth-callback"]` and redeploy. There is a known
   CLI bug where the setting is ignored when a function is *updated*; if so, force it
   with the Management API:
 
@@ -181,7 +181,7 @@ curl -s -o /dev/null -w "%{http_code}\n" "https://secaghvmfkujeciiapav.supabase.
     -d '{"verify_jwt": false}'
   ```
 
-  You can also toggle it in the dashboard: **Edge Functions → integrations/auth-callback → Details → Verify JWT**.
+  You can also toggle it in the dashboard: **Edge Functions → auth-callback → Details → Verify JWT**.
 
 ## Step 6 — Connect from the app
 
@@ -249,7 +249,7 @@ function verifyWebhook(payload, signature, secret) {
 
 | Symptom | Fix |
 |---------|-----|
-| Callback URL returns 401 | `verify_jwt` not disabled; check `[functions."integrations/auth-callback"]` in `config.toml` and redeploy. |
+| Callback URL returns 401 | `verify_jwt` not disabled; check `[functions."auth-callback"]` in `config.toml` and redeploy. |
 | `Invalid redirect_uri` from provider | The registered redirect URI in the provider console must exactly match the secret `*_CALLBACK_URL` / `*_REDIRECT_URI`. |
 | `OAuth state expired` | Re-try the connect; state is valid for 10 minutes. |
 | Sync fails with `Missing provider secret` | `supabase secrets set <PROVIDER>_...` then redeploy or retry (secrets apply at deploy time for local serve). |

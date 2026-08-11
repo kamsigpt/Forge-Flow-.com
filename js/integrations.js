@@ -34,7 +34,7 @@ export const IntegrationService = {
 
   async getAuthUrl(provider) {
     try {
-      const { data, error } = await supabase.functions.invoke('integrations/auth-url', {
+      const { data, error } = await supabase.functions.invoke('auth-url', {
         body: { 
           provider,
           redirectUrl: window.location.origin + window.location.pathname,
@@ -166,7 +166,7 @@ export const IntegrationService = {
   },
 
   async syncShopify(action, data = {}) {
-    const { data: result, error } = await supabase.functions.invoke('integrations/shopify-sync', {
+    const { data: result, error } = await supabase.functions.invoke('shopify-sync', {
       body: { action, data },
     })
 
@@ -175,7 +175,7 @@ export const IntegrationService = {
   },
 
   async syncGoogleSheets(action, data = {}) {
-    const { data: result, error } = await supabase.functions.invoke('integrations/gsheets-sync', {
+    const { data: result, error } = await supabase.functions.invoke('gsheets-sync', {
       body: { action, data },
     })
 
@@ -184,7 +184,7 @@ export const IntegrationService = {
   },
 
   async syncZoho(action, data = {}) {
-    const { data: result, error } = await supabase.functions.invoke('integrations/zoho-sync', {
+    const { data: result, error } = await supabase.functions.invoke('zoho-sync', {
       body: { action, data },
     })
 
@@ -364,7 +364,7 @@ export const IntegrationService = {
   },
 
   async sendWebhook(event, data = {}) {
-    const { data: result, error } = await supabase.functions.invoke('integrations/webhook-sender', {
+    const { data: result, error } = await supabase.functions.invoke('webhook-sender', {
       body: { event, data },
     })
 

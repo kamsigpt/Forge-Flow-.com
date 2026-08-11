@@ -38,11 +38,9 @@ jwt_expiry = 3600
 enable_signup = true
 
 [functions]
-enabled = true
-verify_jwt = true
 
 # The OAuth provider (Google, Zoho, Shopify, QuickBooks, Xero) redirects the
 # browser directly to this edge function after the user approves consent.
 # It has no Authorization header, so JWT verification must be disabled here.
-[functions."integrations/auth-callback"]
+[functions."auth-callback"]
 verify_jwt = false

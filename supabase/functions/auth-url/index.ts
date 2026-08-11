@@ -166,7 +166,7 @@ async function signOAuthState(payload: OAuthStatePayload): Promise<string> {
 
 async function generateGoogleAuthUrl(payload: OAuthStatePayload, redirectUrl?: string) {
   const clientId = Deno.env.get('GOOGLE_CLIENT_ID')
-  const callbackUrl = Deno.env.get('GOOGLE_CALLBACK_URL') || `${new URL(redirectUrl || 'http://localhost').origin}/functions/v1/integrations/auth-callback`
+  const callbackUrl = Deno.env.get('GOOGLE_CALLBACK_URL') || `${new URL(redirectUrl || 'http://localhost').origin}/functions/v1/auth-callback`
   const state = await signOAuthState({ ...payload, provider: 'gsheets' })
 
   const params = new URLSearchParams({
@@ -216,7 +216,7 @@ async function generateZohoAuthUrl(payload: OAuthStatePayload) {
 
 async function generateQuickBooksAuthUrl(payload: OAuthStatePayload, redirectUrl?: string) {
   const clientId = Deno.env.get('QUICKBOOKS_CLIENT_ID')
-  const redirectUri = Deno.env.get('QUICKBOOKS_CALLBACK_URL') || `${new URL(redirectUrl || 'http://localhost').origin}/functions/v1/integrations/auth-callback`
+  const redirectUri = Deno.env.get('QUICKBOOKS_CALLBACK_URL') || `${new URL(redirectUrl || 'http://localhost').origin}/functions/v1/auth-callback`
   const state = await signOAuthState({ ...payload, provider: 'quickbooks' })
 
   const params = new URLSearchParams({

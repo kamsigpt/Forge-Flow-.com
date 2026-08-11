@@ -104,14 +104,14 @@ ForgeFlow supports real-time integration with popular business apps via OAuth 2.
 
 1. Go to Supabase Dashboard → **Edge Functions**
 2. Enable Edge Functions for your project
-3. Deploy the integration functions from `supabase/functions/integrations/`
+3. Deploy the integration functions from `supabase/functions/`
 
 ```bash
-supabase functions deploy integrations/auth-callback
-supabase functions deploy integrations/auth-url
-supabase functions deploy integrations/shopify-sync
-supabase functions deploy integrations/gsheets-sync
-supabase functions deploy integrations/webhook-sender
+supabase functions deploy auth-callback
+supabase functions deploy auth-url
+supabase functions deploy shopify-sync
+supabase functions deploy gsheets-sync
+supabase functions deploy webhook-sender
 ```
 
 ## Step 2: Configure API Credentials
@@ -124,37 +124,37 @@ Set these environment variables in your Supabase project (Settings → Edge Func
 2. Create a new project or select existing
 3. Enable **Google Sheets API** and **Google Drive API**
 4. Create OAuth 2.0 credentials (Web application)
-5. Add authorized redirect URI: `https://your-project.supabase.co/functions/v1/integrations/auth-callback`
+5. Add authorized redirect URI: `https://your-project.supabase.co/functions/v1/auth-callback`
 
 ```bash
 GOOGLE_CLIENT_ID=your-client-id
 GOOGLE_CLIENT_SECRET=your-client-secret
-GOOGLE_CALLBACK_URL=https://your-project.supabase.co/functions/v1/integrations/auth-callback
+GOOGLE_CALLBACK_URL=https://your-project.supabase.co/functions/v1/auth-callback
 ```
 
 ### Shopify
 
 1. Create a Shopify Partner account at [partners.shopify.com](https://partners.shopify.com)
 2. Create a new app
-3. Configure OAuth redirect: `https://your-app.com/functions/v1/integrations/auth-callback`
+3. Configure OAuth redirect: `https://your-app.com/functions/v1/auth-callback`
 4. Install the app on your development store
 
 ```bash
 SHOPIFY_API_KEY=your-api-key
 SHOPIFY_API_SECRET=your-api-secret
-SHOPIFY_CALLBACK_URL=https://your-app.com/functions/v1/integrations/auth-callback
+SHOPIFY_CALLBACK_URL=https://your-app.com/functions/v1/auth-callback
 ```
 
 ### Zoho
 
 1. Go to [Zoho Developer Console](https://console.zoho.com/)
 2. Create a new client application
-3. Set redirect URI: `https://your-project.supabase.co/functions/v1/integrations/auth-callback`
+3. Set redirect URI: `https://your-project.supabase.co/functions/v1/auth-callback`
 
 ```bash
 ZOHO_CLIENT_ID=your-client-id
 ZOHO_CLIENT_SECRET=your-client-secret
-ZOHO_REDIRECT_URI=https://your-project.supabase.co/functions/v1/integrations/auth-callback
+ZOHO_REDIRECT_URI=https://your-project.supabase.co/functions/v1/auth-callback
 ```
 
 ### QuickBooks
@@ -166,7 +166,7 @@ ZOHO_REDIRECT_URI=https://your-project.supabase.co/functions/v1/integrations/aut
 ```bash
 QUICKBOOKS_CLIENT_ID=your-client-id
 QUICKBOOKS_CLIENT_SECRET=your-client-secret
-QUICKBOOKS_CALLBACK_URL=https://your-project.supabase.co/functions/v1/integrations/auth-callback
+QUICKBOOKS_CALLBACK_URL=https://your-project.supabase.co/functions/v1/auth-callback
 ```
 
 ### Xero
@@ -178,7 +178,7 @@ QUICKBOOKS_CALLBACK_URL=https://your-project.supabase.co/functions/v1/integratio
 ```bash
 XERO_CLIENT_ID=your-client-id
 XERO_CLIENT_SECRET=your-client-secret
-XERO_REDIRECT_URI=https://your-project.supabase.co/functions/v1/integrations/auth-callback
+XERO_REDIRECT_URI=https://your-project.supabase.co/functions/v1/auth-callback
 ```
 
 ## Step 3: Update Database Schema
