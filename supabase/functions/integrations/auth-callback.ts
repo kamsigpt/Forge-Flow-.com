@@ -27,22 +27,18 @@ serve(async (req) => {
     const error = url.searchParams.get('error')
 
     if (error) {
-      return new Response(JSON.stringify({
-        success: false,
-        error: error,
-        error_description: url.searchParams.get('error_description'),
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      const partial = decodeStatePayload(rawState)
+      return redirectBack(partial?.meta?.redirectUrl, partial?.provider || null, {
+        status: 'error',
+        message: error,
+        description: url.searchParams.get('error_description') || undefined,
       })
     }
 
     if (!code || !rawState) {
-      return new Response(JSON.stringify({
-        success: false,
-        error: 'Missing required OAuth parameters',
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400,
+      return redirectBack(null, null, {
+        status: 'error',
+        message: 'Missing required OAuth parameters',
       })
     }
 
@@ -107,24 +103,49 @@ serve(async (req) => {
       response_data: { message: 'OAuth flow completed successfully' },
     })
 
-    return new Response(JSON.stringify({
-      success: true,
-      provider,
+    return redirectBack(state.meta?.redirectUrl, provider, {
+      status: 'success',
       message: 'Integration connected successfully',
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (error) {
     console.error('Auth callback error:', error)
-    return new Response(JSON.stringify({
-      success: false,
-      error: error.message,
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 500,
+    return redirectBack(null, null, {
+      status: 'error',
+      message: error.message,
     })
   }
 })
+
+function decodeStatePayload(rawState?: string | null): OAuthStatePayload | null {
+  if (!rawState) return null
+  try {
+    const [payloadEncoded] = rawState.split('.')
+    if (!payloadEncoded) return null
+    return JSON.parse(fromBase64Url(payloadEncoded)) as OAuthStatePayload
+  } catch {
+    return null
+  }
+}
+
+function redirectBack(
+  redirectUrl: string | null | undefined,
+  provider: string | null,
+  params: { status: string; message?: string; description?: string },
+): Response {
+  const target = new URL(redirectUrl || 'https://www.forgeflow.com/app.html')
+  target.searchParams.set('integration', provider || 'unknown')
+  target.searchParams.set('status', params.status)
+  if (params.message) target.searchParams.set('message', params.message)
+  if (params.description) target.searchParams.set('description', params.description)
+
+  return new Response(null, {
+    status: 303,
+    headers: {
+      ...corsHeaders,
+      Location: target.toString(),
+    },
+  })
+}
 
 async function exchangeGoogleCode(code: string) {
   const clientId = Deno.env.get('GOOGLE_CLIENT_ID')

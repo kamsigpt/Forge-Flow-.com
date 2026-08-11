@@ -610,6 +610,8 @@
   </div>
 
   <script type="module">
+    import { supabase } from './js/supabase.js';
+
     let currentPlan = null;
     let isAnnual = false;
 
@@ -882,8 +884,8 @@
     
     function activateSubscriptionInPayment(planKey) {
       const now = new Date();
-      const nextMonth = new Date(now);
-      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      const periodDays = isAnnual ? 365 : 30;
+      const nextPayment = addDaysPayment(now, periodDays);
       
       const plan = planDetails[planKey];
       const amount = isAnnual ? plan.annual : plan.monthly;
@@ -895,15 +897,15 @@
         startDate: now.toISOString(),
         trialEndDate: null,
         currentPeriodStart: now.toISOString(),
-        currentPeriodEnd: nextMonth.toISOString(),
+        currentPeriodEnd: nextPayment.toISOString(),
         billingCycle: isAnnual ? 'annual' : 'monthly',
         lastPaymentDate: now.toISOString(),
-        nextPaymentDate: nextMonth.toISOString(),
+        nextPaymentDate: nextPayment.toISOString(),
         paymentHistory: [
           {
             id: 'sub_' + Date.now(),
             date: now.toISOString(),
-            description: plan.name + ' - ' + (isAnnual ? 'Annual' : 'Monthly'),
+            description: plan.name + ' - ' + (isAnnual ? 'Annual' : 'First 30-Day Period'),
             amount: amount,
             status: 'paid',
             invoiceId: 'INV-' + Date.now()
@@ -912,6 +914,49 @@
       };
       
       localStorage.setItem('forgeflow_subscription', JSON.stringify(subscription));
+      persistPaymentToBackend(subscription);
+    }
+
+    function addDaysPayment(date, days) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + days);
+      return d;
+    }
+
+    async function persistPaymentToBackend(subscription) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) return;
+        const { data: profile } = await supabase
+          .from('users')
+          .select('company_id')
+          .eq('auth_id', session.user.id)
+          .maybeSingle();
+        const companyId = profile?.company_id;
+        if (!companyId) return;
+        
+        const { data: existing } = await supabase
+          .from('module_records')
+          .select('data')
+          .eq('company_id', companyId)
+          .eq('module_key', 'settings')
+          .eq('record_id', 'user_settings')
+          .maybeSingle();
+        
+        const bundle = (existing && existing.data) || {};
+        bundle.subscription = subscription;
+        try { bundle.user = JSON.parse(localStorage.getItem('forgeflow_user') || '{}'); } catch (e) {}
+        
+        await supabase.from('module_records').upsert({
+          company_id: companyId,
+          module_key: 'settings',
+          record_id: 'user_settings',
+          data: bundle,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'company_id,module_key,record_id' });
+      } catch (err) {
+        console.warn('Payment persist to backend failed:', err);
+      }
     }
 
     function showError(message) {

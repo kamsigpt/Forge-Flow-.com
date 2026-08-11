@@ -1,0 +1,48 @@
+# ForgeFlow Supabase configuration
+# Generated manually for the ForgeFlow project.
+# Project ref: secaghvmfkujeciiapav
+
+project_id = "forgeflow"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "graphql_public"]
+max_rows = 1000
+
+[db]
+enabled = true
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+api_keys = []
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/*"]
+jwt_expiry = 3600
+enable_signup = true
+
+[functions]
+enabled = true
+verify_jwt = true
+
+# The OAuth provider (Google, Zoho, Shopify, QuickBooks, Xero) redirects the
+# browser directly to this edge function after the user approves consent.
+# It has no Authorization header, so JWT verification must be disabled here.
+[functions."integrations/auth-callback"]
+verify_jwt = false

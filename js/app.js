@@ -814,10 +814,10 @@ async function loadAllSettings() {
 function getTrialEndDate() {
   const subscription = getSubscription();
   const start = subscription?.startDate ? new Date(subscription.startDate) : new Date();
-  const endDate = new Date(start);
-  endDate.setDate(endDate.getDate() + 14);
-  return endDate;
+  return addDays(start, TRIAL_DURATION_DAYS);
 }
+
+let trialCountdownTimer = null;
 
 function initTrialCountdown() {
   const badgeEl = document.getElementById('planBadge');
@@ -838,11 +838,26 @@ function initTrialCountdown() {
     return;
   }
   
-  // Trial runs 14 days from the persistent subscription start so the countdown
+  // Trial runs 7 days from the persistent subscription start so the countdown
   // is identical on every device instead of resetting each browser session.
   const endDate = getTrialEndDate();
   
   countdownEl.style.display = 'inline';
+  
+  if (trialCountdownTimer) {
+    clearInterval(trialCountdownTimer);
+  }
+  
+  const pad = n => String(n).padStart(2, '0');
+  
+  function formatCountdown(diff) {
+    const totalSeconds = Math.max(0, Math.floor(diff / 1000));
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  }
   
   function updateCountdown() {
     const badge = document.getElementById('planBadge');
@@ -859,17 +874,87 @@ function initTrialCountdown() {
     
     if (diff <= 0) {
       countdownEl.textContent = 'Trial Expired';
+      countdownEl.title = 'Your free trial has expired';
+      const trialDaysLeft = document.getElementById('trialDaysLeft');
+      if (trialDaysLeft) trialDaysLeft.textContent = 'Expired';
+      evaluateTrialStatus();
       return;
     }
     
-    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    countdownEl.textContent = `${days} days left`;
-    console.log('Countdown updated:', days);
+    const text = `${formatCountdown(diff)} left`;
+    countdownEl.textContent = text;
+    countdownEl.title = `Trial ends ${endDate.toLocaleString()}`;
+    
+    // Keep the billing card countdown live too (24h HH:MM:SS)
+    const trialDaysLeft = document.getElementById('trialDaysLeft');
+    if (trialDaysLeft) {
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      trialDaysLeft.textContent = `${days}d ${pad(hours)}:${pad(minutes)}:${pad(totalSeconds % 60)}`;
+    }
   }
   
-  // Run immediately and then set interval
+  // Run immediately and then tick every second so the countdown is live
   updateCountdown();
-  setInterval(updateCountdown, 60000);
+  trialCountdownTimer = setInterval(updateCountdown, 1000);
+}
+
+// ============ LIVE CLOCK (24-hour time system) ============
+function getUserTimezone() {
+  try {
+    const general = JSON.parse(localStorage.getItem('forgeflow_general') || 'null');
+    if (general?.timezone) return general.timezone;
+  } catch (e) { /* ignore */ }
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
+  } catch (e) {
+    return 'America/New_York';
+  }
+}
+
+let liveClockTimer = null;
+
+function initLiveClock() {
+  const timeEl = document.getElementById('topbarClockTime');
+  const dateEl = document.getElementById('topbarClockDate');
+  if (!timeEl || !dateEl) return;
+  
+  if (liveClockTimer) {
+    clearInterval(liveClockTimer);
+    liveClockTimer = null;
+  }
+  
+  const timeZone = getUserTimezone();
+  const pad = n => String(n).padStart(2, '0');
+  
+  const timeFmt = new Intl.DateTimeFormat('en-GB', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hourCycle: 'h23', timeZone
+  });
+  const dateFmt = new Intl.DateTimeFormat('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric', timeZone
+  });
+  
+  function tick() {
+    const now = new Date();
+    const t = timeFmt.formatToParts(now);
+    const hour = t.find(p => p.type === 'hour')?.value || '00';
+    const minute = t.find(p => p.type === 'minute')?.value || '00';
+    const second = t.find(p => p.type === 'second')?.value || '00';
+    timeEl.textContent = `${hour}:${minute}:${second}`;
+    
+    const d = dateFmt.formatToParts(now);
+    const weekday = d.find(p => p.type === 'weekday')?.value || '';
+    const month = d.find(p => p.type === 'month')?.value || '';
+    const day = d.find(p => p.type === 'day')?.value || '';
+    dateEl.textContent = `${weekday}, ${month} ${day}`;
+  }
+  
+  tick();
+  liveClockTimer = setInterval(tick, 1000);
+  console.log('Live clock initialized:', timeZone);
 }
 
 // ============ DASHBOARD RANGE SELECT ============
@@ -967,11 +1052,225 @@ async function initDashboardRange() {
 }
 
 async function onDashboardRangeChange(select) {
+  const value = select?.value || 'this-month';
+  await renderDashboard(value);
+}
+
+// ============ DATA-DRIVEN DASHBOARD (real-time month ranges) ============
+function getMergedModuleData(dataKey) {
+  return {
+    ...(mockData[dataKey] || {}),
+    ...(getRecordOverrides()[dataKey] || {})
+  };
+}
+
+function toDateValue(v) {
+  if (!v) return null;
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function getDashboardRangeBounds(value) {
+  const now = new Date();
+  const startOfCurrent = startOfMonth(now);
+  const endOfMonth = (month) => new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59);
+
+  if (value === 'last-month') {
+    const start = startOfMonth(shiftMonths(now, -1));
+    return { start, end: endOfMonth(start) };
+  }
+  if (typeof value === 'string' && value.startsWith('last-')) {
+    const n = Math.max(1, parseInt(value.replace('last-', ''), 10) || 1);
+    const start = startOfMonth(shiftMonths(now, -(n - 1)));
+    return { start, end: endOfMonth(startOfCurrent) };
+  }
+  if (value === 'all') {
+    return { start: new Date(0), end: new Date(8640000000000000) };
+  }
+  return { start: startOfCurrent, end: endOfMonth(startOfCurrent) };
+}
+
+function recordInRange(record, bounds, dateField) {
+  const d = toDateValue(record?.[dateField]);
+  if (!d) return false;
+  return d >= bounds.start && d <= bounds.end;
+}
+
+function computeDashboardMetrics(rangeValue) {
+  const bounds = getDashboardRangeBounds(rangeValue);
+  const sales = Object.values(getMergedModuleData('sales'));
+  const mfg = Object.values(getMergedModuleData('mfg'));
+  const pr = Object.values(getMergedModuleData('pr'));
+  const inventory = Object.values(getMergedModuleData('inventory'));
+  const staff = Object.values(getMergedModuleData('staff'));
+  const suppliers = Object.values(getMergedModuleData('suppliers'));
+
+  let salesRevenue = 0;
+  const activeCustomers = new Set();
+  sales.forEach(o => {
+    if (!recordInRange(o, bounds, 'deliveryDate') && !recordInRange(o, bounds, 'orderDate')) return;
+    salesRevenue += (parseFloat(o.qty) || 0) * (parseFloat(o.price) || 0);
+    if (o.customer) activeCustomers.add(String(o.customer).toLowerCase());
+  });
+
+  const closedStatuses = ['Delivered', 'Cancelled', 'Rejected'];
+  let activeMfg = 0;
+  mfg.forEach(o => {
+    if (!recordInRange(o, bounds, 'targetDate')) return;
+    if (!closedStatuses.includes((o.status || '').trim())) activeMfg++;
+  });
+
+  let purchaseCost = 0;
+  pr.forEach(o => {
+    if (!recordInRange(o, bounds, 'reqDate') && !recordInRange(o, bounds, 'orderDate')) return;
+    purchaseCost += (parseFloat(o.qty) || 0) * (parseFloat(o.cost) || 0);
+  });
+
+  let inventoryValue = 0;
+  let lowStock = 0;
+  inventory.forEach(o => {
+    inventoryValue += (parseFloat(o.stock) || 0) * (parseFloat(o.cost) || 0);
+    if ((parseFloat(o.stock) || 0) < (parseFloat(o.minStock) || 0)) lowStock++;
+  });
+
+  return {
+    salesRevenue,
+    inventoryValue,
+    activeMfg,
+    lowStock,
+    purchaseCost,
+    staffCount: staff.length,
+    supplierCount: suppliers.length,
+    customerCount: activeCustomers.size
+  };
+}
+
+function getMonthlyBuckets(rangeValue) {
+  const bounds = getDashboardRangeBounds(rangeValue);
+  const buckets = [];
+  const cursor = new Date(bounds.start.getFullYear(), bounds.start.getMonth(), 1);
+  const end = new Date(bounds.end.getFullYear(), bounds.end.getMonth(), 1);
+  while (cursor <= end) {
+    buckets.push(new Date(cursor));
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  return buckets;
+}
+
+function computeChartSeries(rangeValue) {
+  const bounds = getDashboardRangeBounds(rangeValue);
+  const buckets = getMonthlyBuckets(rangeValue);
+  const sales = Object.values(getMergedModuleData('sales'));
+  const mfg = Object.values(getMergedModuleData('mfg'));
+
+  const labels = buckets.map(b => b.toLocaleDateString('en-US', { month: 'short' }));
+  const salesData = buckets.map(() => 0);
+  const prodData = buckets.map(() => 0);
+
+  const bucketIndex = (d) => buckets.findIndex(b => b.getMonth() === d.getMonth() && b.getFullYear() === d.getFullYear());
+
+  sales.forEach(o => {
+    const d = toDateValue(o.deliveryDate || o.orderDate);
+    if (!d || d < bounds.start || d > bounds.end) return;
+    const idx = bucketIndex(d);
+    if (idx >= 0) salesData[idx] += (parseFloat(o.qty) || 0) * (parseFloat(o.price) || 0);
+  });
+  mfg.forEach(o => {
+    const d = toDateValue(o.targetDate);
+    if (!d || d < bounds.start || d > bounds.end) return;
+    const idx = bucketIndex(d);
+    if (idx >= 0) prodData[idx] += parseFloat(o.qty) || 0;
+  });
+
+  return { labels, salesData: salesData.map(v => +(v / 1000).toFixed(1)), prodData };
+}
+
+function computeStatusDistribution(rangeValue) {
+  const bounds = getDashboardRangeBounds(rangeValue);
+  const mfg = Object.values(getMergedModuleData('mfg'));
+  const counts = { 'In Production': 0, 'Completed': 0, 'Pending': 0, 'Shipped': 0, 'Delivered': 0 };
+  mfg.forEach(o => {
+    if (!recordInRange(o, bounds, 'targetDate')) return;
+    const s = (o.status || '').trim();
+    let bucket = 'Pending';
+    if (['Delivered', 'Received'].includes(s)) bucket = 'Delivered';
+    else if (['Shipped'].includes(s)) bucket = 'Shipped';
+    else if (['Completed', 'Closed'].includes(s)) bucket = 'Completed';
+    else if (['In Production', 'Approved', 'Packed', 'Ready', 'Pending MFG', 'On Hold'].includes(s)) bucket = 'In Production';
+    counts[bucket]++;
+  });
+  return counts;
+}
+
+function renderDashboardCharts(rangeValue) {
+  const lCtx = document.getElementById('dashLineChart');
+  const pCtx = document.getElementById('dashPieChart');
+  if (!lCtx || !pCtx) return;
+
+  const dataCleared = localStorage.getItem('forgeflow_data_cleared') === 'true';
+
+  let labels = [], salesData = [], prodData = [];
+  let status = { 'In Production': 0, 'Completed': 0, 'Pending': 0, 'Shipped': 0, 'Delivered': 0 };
+  if (!dataCleared) {
+    const series = computeChartSeries(rangeValue);
+    labels = series.labels; salesData = series.salesData; prodData = series.prodData;
+    status = computeStatusDistribution(rangeValue);
+  }
+
+  if (lineChart) {
+    lineChart.data.labels = labels;
+    lineChart.data.datasets[0].data = salesData;
+    lineChart.data.datasets[1].data = prodData;
+    lineChart.update();
+  }
+  if (pieChart) {
+    pieChart.data.labels = Object.keys(status);
+    pieChart.data.datasets[0].data = Object.values(status);
+    pieChart.update();
+  }
+}
+
+async function renderDashboard(rangeValue) {
+  const select = document.getElementById('dashboardRangeSelect');
+  const value = rangeValue || select?.value || 'this-month';
+  const metrics = computeDashboardMetrics(value);
+
+  const fmt = n => n >= 1000 ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : String(Math.round(n));
+  const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+  setText('kpiSalesRevenue', '$' + fmt(metrics.salesRevenue));
+  setText('kpiInventoryValue', fmt(metrics.inventoryValue));
+  setText('kpiActiveMfg', fmt(metrics.activeMfg));
+  setText('kpiLowStock', fmt(metrics.lowStock));
+  setText('kpiPurchaseCost', fmt(metrics.purchaseCost));
+  setText('kpiStaff', fmt(metrics.staffCount));
+  setText('kpiSuppliers', fmt(metrics.supplierCount));
+  setText('kpiCustomers', fmt(metrics.customerCount));
+
+  renderDashboardCharts(value);
+
   const subtitle = document.getElementById('dashboardSubtitle');
-  const now = startOfMonth(new Date());
   const created = await getAccountCreatedAt();
   const startMonth = created ? startOfMonth(created) : null;
-  updateDashboardSubtitle(subtitle, select.value, now, startMonth);
+  updateDashboardSubtitle(subtitle, value, startOfMonth(new Date()), startMonth);
+}
+
+let dashboardMonthTimer = null;
+
+function initDashboardAutoRefresh() {
+  if (dashboardMonthTimer) return;
+  let lastMonth = startOfMonth(new Date()).getTime();
+  dashboardMonthTimer = setInterval(() => {
+    const now = startOfMonth(new Date()).getTime();
+    if (now !== lastMonth) {
+      lastMonth = now;
+      const select = document.getElementById('dashboardRangeSelect');
+      if (select) {
+        const prev = select.value;
+        void initDashboardRange().then(() => renderDashboard(select.value || prev));
+      }
+    }
+  }, 30000);
 }
 
 async function clearDemoData() {
@@ -1140,6 +1439,12 @@ function updateTrialCountdown() {
   const now = new Date();
   const diff = endDate - now;
   const daysLeft = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  
+  if (diff <= 0) {
+    countdownEl.textContent = 'Trial Expired';
+    countdownEl.title = 'Your free trial has expired';
+    return;
+  }
   
   countdownEl.textContent = daysLeft + ' days left';
 }
@@ -1478,17 +1783,19 @@ async function hydrateSettingsFromBackend() {
       localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
     });
 
-    // Device-exclusive keys are only bootstrapped on a brand-new device so a
-    // stale cloud bundle can never roll back a newer local subscription or
-    // payment method change.
-    ['forgeflow_subscription', 'forgeflow_payment_method'].forEach(key => {
-      const bundleKey = key.replace('forgeflow_', '');
-      const value = data.data[bundleKey];
-      if (value === undefined || value === null) return;
-      if (localStorage.getItem(key) === null) {
-        localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
-      }
-    });
+    // Payment method is only bootstrapped on a brand-new device so a stale
+    // cloud bundle can never roll back a newer local card change.
+    const paymentMethod = data.data.payment_method;
+    if (paymentMethod !== undefined && paymentMethod !== null && localStorage.getItem('forgeflow_payment_method') === null) {
+      localStorage.setItem('forgeflow_payment_method', JSON.stringify(paymentMethod));
+    }
+
+    // Subscription is server-authoritative: the trial anchor (day 7) always
+    // comes from the server and paid upgrades propagate instantly. A stale
+    // bundle can never extend a trial or roll back an active plan.
+    if (data.data.subscription) {
+      applyServerSubscription(data.data.subscription);
+    }
 
     // Restore the plan label on a fresh device so plan gating and the trial
     // countdown match the account that owns this company.
@@ -1813,6 +2120,7 @@ async function openPane(paneId, title, status, data = null, modeOverride = null)
   
   currentPaneData = {
     id: recordId,
+    paneId: paneId,
     type: paneConfig.type,
     title: title,
     status: status,
@@ -1848,6 +2156,17 @@ async function openPane(paneId, title, status, data = null, modeOverride = null)
   }
   
   applyPaneMode(pane, paneMode, currentPaneData.type);
+
+  if (paneMode === 'create' && !data) {
+    const draft = getPaneDraft(paneConfig.type);
+    if (draft && hasMeaningfulDraftData(draft)) {
+      populatePaneWithRecordData(pane, draft, paneId);
+      addMaterialsToPane(pane, draft);
+      addStagesToPane(pane, draft);
+      renderDraftBar(pane, 'restored', getPaneDraftSavedAt(paneConfig.type));
+      showToast('Draft restored for ' + paneConfig.type, 'info');
+    }
+  }
 }
 
 function lookupRecord(dataKey, recordId) {
@@ -2282,6 +2601,23 @@ function changeStatus(select) {
   if (!newStatus) return;
   updateStatus(select, newStatus);
   applyStatusSelectStyle(select);
+  persistRowStatus(select, newStatus);
+}
+
+function persistRowStatus(select, newStatus) {
+  const row = select.closest('tr');
+  const view = select.closest('.module-view');
+  if (!row || !view) return;
+  const type = moduleTypeByViewId[view.id];
+  if (!type) return;
+  const paneId = getPaneId(type);
+  const recordId = extractIdFromRow(row, paneId);
+  if (!recordId) return;
+  const dataKey = paneDataMap[paneId]?.dataKey;
+  if (!dataKey) return;
+  const record = lookupRecord(dataKey, recordId);
+  if (!record) return;
+  saveRecordOverride(dataKey, recordId, { ...record, status: newStatus });
 }
 
 function initStatusDropdowns() {
@@ -2482,6 +2818,186 @@ function restoreAllIntegrationStates() {
   });
 }
 
+async function refreshIntegrationStatuses() {
+  if (!window.IntegrationService) return;
+  try {
+    const statuses = await window.IntegrationService.getAllStatuses();
+    Object.entries(statuses).forEach(([provider, status]) => {
+      if (status && status.connected) {
+        updateIntegrationStatus(provider, true, {
+          connectedVia: status.metadata?.connectedVia || 'oauth',
+          lastSync: status.lastSync,
+        });
+      } else {
+        removeIntegrationState(provider);
+        updateIntegrationStatus(provider, false);
+      }
+    });
+  } catch (error) {
+    console.warn('Failed to refresh integration statuses from backend:', error);
+  }
+}
+
+function handleIntegrationOAuthCallback() {
+  if (!window.IntegrationService) return;
+
+  const result = window.IntegrationService.parseOAuthCallback();
+  if (!result) return;
+
+  window.IntegrationService.clearOAuthCallbackFromUrl();
+
+  const statusMap = {
+    zoho: 'Zoho Suite',
+    shopify: 'Shopify',
+    quickbooks: 'QuickBooks',
+    gsheets: 'Google Sheets'
+  };
+
+  if (result.status === 'success') {
+    updateIntegrationStatus(result.provider, true, { connectedVia: 'oauth' });
+    showToast('Connected to ' + (statusMap[result.provider] || result.provider) + ' successfully!', 'success');
+    void refreshIntegrationStatuses();
+  } else {
+    const reason = result.description || result.message || 'Authorization failed';
+    showToast('Failed to connect ' + (statusMap[result.provider] || result.provider) + ': ' + reason, 'error');
+  }
+}
+
+// ============ WEBHOOK CONFIG ============
+const WEBHOOK_EVENTS = [
+  { value: 'manufacturing_created', label: 'Manufacturing order created' },
+  { value: 'manufacturing_completed', label: 'Manufacturing order completed' },
+  { value: 'inventory_low', label: 'Low stock alert' },
+  { value: 'inventory_updated', label: 'Inventory updated' },
+  { value: 'order_created', label: 'Sales order created' },
+  { value: 'order_shipped', label: 'Sales order shipped' },
+];
+
+async function loadWebhookConfig() {
+  if (!window.IntegrationService) return;
+  try {
+    const config = await window.IntegrationService.getWebhookConfig();
+    const urlInput = document.getElementById('webhookUrl');
+    const secretInput = document.getElementById('webhookSecret');
+    const activeToggle = document.getElementById('webhookActive');
+    const eventsContainer = document.getElementById('webhookEvents');
+
+    if (!urlInput) return;
+
+    if (config) {
+      urlInput.value = config.webhook_url || '';
+      secretInput.value = config.webhook_secret || '';
+      if (activeToggle) {
+        activeToggle.classList.toggle('active', config.is_active !== false);
+      }
+      updateWebhookEventCheckboxes(config.events || []);
+      updateWebhookStatusUI(true, config);
+    } else {
+      if (activeToggle) activeToggle.classList.add('active');
+      updateWebhookStatusUI(false, null);
+    }
+  } catch (error) {
+    console.warn('Failed to load webhook config:', error);
+  }
+}
+
+function updateWebhookEventCheckboxes(selectedEvents) {
+  const eventsContainer = document.getElementById('webhookEvents');
+  if (!eventsContainer) return;
+  eventsContainer.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    cb.checked = selectedEvents.includes(cb.value);
+  });
+}
+
+function getSelectedWebhookEvents() {
+  const eventsContainer = document.getElementById('webhookEvents');
+  if (!eventsContainer) return [];
+  return Array.from(eventsContainer.querySelectorAll('input[type="checkbox"]:checked')).map((cb) => cb.value);
+}
+
+function updateWebhookStatusUI(configured, config) {
+  const statusEl = document.getElementById('webhook-status');
+  const saveBtn = document.getElementById('saveWebhookBtn');
+  const testBtn = document.getElementById('testWebhookBtn');
+  const deleteBtn = document.getElementById('deleteWebhookBtn');
+
+  if (statusEl) {
+    statusEl.textContent = configured ? 'Configured' : 'Not configured';
+    statusEl.className = 'integration-status ' + (configured ? 'connected' : 'disconnected');
+  }
+  if (saveBtn) saveBtn.textContent = configured ? 'Update' : 'Save';
+  if (testBtn) testBtn.style.display = configured ? 'inline-block' : 'none';
+  if (deleteBtn) deleteBtn.style.display = configured ? 'inline-block' : 'none';
+}
+
+async function saveWebhookConfig() {
+  const urlInput = document.getElementById('webhookUrl');
+  const secretInput = document.getElementById('webhookSecret');
+  const activeToggle = document.getElementById('webhookActive');
+
+  if (!urlInput || !urlInput.value.trim()) {
+    showToast('Webhook URL is required', 'error');
+    return;
+  }
+
+  let url = urlInput.value.trim();
+  if (!/^https?:\/\//i.test(url)) {
+    url = 'https://' + url;
+  }
+
+    const config = {
+      webhook_url: url,
+      webhook_secret: secretInput?.value.trim() || null,
+      events: getSelectedWebhookEvents(),
+      headers: {},
+      is_active: activeToggle ? activeToggle.classList.contains('active') : true,
+    };
+
+  try {
+    const result = await window.IntegrationService.saveWebhookConfig(config);
+    updateWebhookStatusUI(true, result.data);
+    showToast('Webhook configuration saved!', 'success');
+  } catch (error) {
+    showToast('Failed to save webhook: ' + error.message, 'error');
+  }
+}
+
+async function testWebhook() {
+  const testBtn = document.getElementById('testWebhookBtn');
+  if (testBtn) {
+    testBtn.disabled = true;
+    testBtn.textContent = 'Sending...';
+  }
+  try {
+    const result = await window.IntegrationService.sendWebhook('test_event', {
+      message: 'ForgeFlow webhook test',
+    });
+    showToast(result.success ? 'Webhook delivered successfully!' : 'Webhook event not subscribed', result.success ? 'success' : 'info');
+  } catch (error) {
+    showToast('Webhook test failed: ' + error.message, 'error');
+  } finally {
+    if (testBtn) {
+      testBtn.disabled = false;
+      testBtn.textContent = 'Test';
+    }
+  }
+}
+
+async function deleteWebhook() {
+  if (!confirm('Are you sure you want to remove the webhook configuration?')) return;
+  try {
+    await window.IntegrationService.deleteWebhookConfig();
+    const urlInput = document.getElementById('webhookUrl');
+    const secretInput = document.getElementById('webhookSecret');
+    if (urlInput) urlInput.value = '';
+    if (secretInput) secretInput.value = '';
+    updateWebhookStatusUI(false, null);
+    showToast('Webhook configuration removed', 'success');
+  } catch (error) {
+    showToast('Failed to remove webhook: ' + error.message, 'error');
+  }
+}
+
 async function disconnectIntegration(provider) {
   if (!confirm('Are you sure you want to disconnect ' + provider + '?')) return;
   
@@ -2535,7 +3051,9 @@ function saveRecord(type, id) {
     };
     saveRecordOverride(paneConfig.dataKey, recordId, mockData[paneConfig.dataKey][recordId]);
   }
-  
+
+  clearPaneDraft(type);
+
   closePane();
   showToast(
     type + (currentPaneData.mode === 'edit' ? ' updated successfully!' : ' saved successfully!'),
@@ -2549,6 +3067,157 @@ function saveRecord(type, id) {
 
 function getLegacyRecordStorageKey(type) {
   return 'forgeflow_' + type.toLowerCase().replace(/\s+/g, '_') + 's';
+}
+
+const DRAFT_STORAGE_KEY = 'forgeflow_drafts';
+let draftSaveTimer = null;
+
+function getDraftServerRecordId(type) {
+  return type.toLowerCase().replace(/\s+/g, '_');
+}
+
+function getPaneDraft(type) {
+  try {
+    const store = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}');
+    const draft = store[type];
+    if (draft && draft.data) return { ...draft.data };
+  } catch (e) { /* ignore */ }
+  const serverDraft = serverRecordCache['drafts']?.[getDraftServerRecordId(type)];
+  if (serverDraft && serverDraft.data) return { ...serverDraft.data };
+  return null;
+}
+
+function getPaneDraftSavedAt(type) {
+  try {
+    const store = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}');
+    const draft = store[type];
+    if (draft && draft.savedAt) return draft.savedAt;
+  } catch (e) { /* ignore */ }
+  const serverDraft = serverRecordCache['drafts']?.[getDraftServerRecordId(type)];
+  return serverDraft?.savedAt || null;
+}
+
+function hasMeaningfulDraftData(data) {
+  return Object.entries(data || {}).some(([key, value]) => {
+    if (key === 'id' || key === 'createdAt' || key === 'updatedAt') return false;
+    if (Array.isArray(value)) return value.length > 0;
+    return value !== '' && value !== null && value !== undefined;
+  });
+}
+
+function savePaneDraft(type, silent = false) {
+  if (!type) return;
+  const data = collectPaneData(type);
+  if (!hasMeaningfulDraftData(data)) return;
+  const savedAt = new Date().toISOString();
+  try {
+    const store = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}');
+    store[type] = { data, savedAt };
+    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(store));
+  } catch (e) { return; }
+  void savePaneDraftToServer(type, { data, savedAt });
+  const pane = document.getElementById(getPaneId(type));
+  if (pane) renderDraftBar(pane, 'saved', savedAt);
+  if (!silent) showToast('Draft saved for ' + type, 'info');
+}
+
+function clearPaneDraft(type) {
+  if (!type) return;
+  try {
+    const store = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}');
+    delete store[type];
+    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(store));
+  } catch (e) { /* ignore */ }
+  const pane = document.getElementById(getPaneId(type));
+  if (pane) renderDraftBar(pane, null);
+  void clearPaneDraftFromServer(type);
+}
+
+async function savePaneDraftToServer(type, draft) {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !supabase) return;
+  try {
+    await supabase.from('module_records').upsert({
+      company_id: companyId,
+      module_key: 'drafts',
+      record_id: getDraftServerRecordId(type),
+      data: draft,
+      updated_at: draft.savedAt
+    }, { onConflict: 'company_id,module_key,record_id' });
+  } catch (e) { console.warn('Draft sync failed:', e); }
+}
+
+async function clearPaneDraftFromServer(type) {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !supabase) return;
+  try {
+    await supabase.from('module_records')
+      .delete()
+      .eq('company_id', companyId)
+      .eq('module_key', 'drafts')
+      .eq('record_id', getDraftServerRecordId(type));
+  } catch (e) { console.warn('Draft delete failed:', e); }
+}
+
+function renderDraftBar(pane, state, savedAt) {
+  if (!pane) return;
+  let bar = pane.querySelector('.pane-draft-bar');
+  if (!state) {
+    if (bar) bar.remove();
+    return;
+  }
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.className = 'pane-draft-bar';
+    const body = pane.querySelector('.pane-body');
+    if (body) body.prepend(bar);
+    else pane.appendChild(bar);
+  }
+  bar.innerHTML = '';
+  const label = document.createElement('span');
+  label.textContent = state === 'restored'
+    ? 'Draft restored — ' + timeAgoLabel(savedAt)
+    : 'Draft saved ' + timeAgoLabel(savedAt);
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.className = 'draft-clear-btn';
+  clearBtn.textContent = 'Discard draft';
+  clearBtn.addEventListener('click', () => {
+    const type = paneDataMap[pane.id]?.type;
+    if (type) clearPaneDraft(type);
+    resetPaneFields(pane);
+    showToast('Draft discarded', 'info');
+  });
+  bar.appendChild(label);
+  bar.appendChild(clearBtn);
+}
+
+function timeAgoLabel(iso) {
+  if (!iso) return 'just now';
+  const diffMs = Date.now() - new Date(iso).getTime();
+  if (diffMs < 60000) return 'just now';
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  return Math.floor(hrs / 24) + 'd ago';
+}
+
+function initPaneDraftBinding() {
+  const scheduleDraftSave = (e) => {
+    const pane = e.target.closest('.pane');
+    if (!pane) return;
+    if (currentPaneData?.paneId !== pane.id) return;
+    if (currentPaneData?.mode !== 'create') return;
+    const type = paneDataMap[pane.id]?.type;
+    if (!type) return;
+    clearTimeout(draftSaveTimer);
+    draftSaveTimer = setTimeout(() => {
+      savePaneDraft(type, true);
+    }, 600);
+  };
+  document.addEventListener('input', scheduleDraftSave);
+  document.addEventListener('change', scheduleDraftSave);
 }
 
 function generateRecordId(dataKey) {
@@ -2861,11 +3530,25 @@ function processImportedData(data) {
 }
 
 // ============ SETTINGS FUNCTIONS ============
+const TRIAL_DURATION_DAYS = 7;
+const BILLING_PERIOD_DAYS = 30;
+const ANNUAL_PERIOD_DAYS = 365;
+
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function getBillingPeriodDays(billingCycle) {
+  return billingCycle === 'annual' ? ANNUAL_PERIOD_DAYS : BILLING_PERIOD_DAYS;
+}
+
 const planDetails = {
   trial: {
     name: 'Free Trial',
     price: '$0',
-    period: '/14 days',
+    period: '/' + TRIAL_DURATION_DAYS + ' days',
     features: ['Full platform access', 'Up to 3 users', '100MB storage', 'Community support'],
     limits: {
       products: 100,
@@ -2924,23 +3607,219 @@ function setSubscription(sub) {
   localStorage.setItem('forgeflow_subscription', JSON.stringify(sub));
 }
 
+// ============ SERVER-AUTHORITATIVE SUBSCRIPTION SYNC ============
+// The subscription is persisted inside the settings bundle on the backend so
+// the 7-day trial is anchored server-wide. The server owns the trial start
+// date, which stops users from resetting their countdown by clearing local
+// storage, and keeps every device for the same company counting down together.
+function resolveSubscription(local, serverSub) {
+  if (!local) return serverSub;
+  if (!serverSub) return local;
+
+  const localStatus = local.status || 'trial';
+  const serverStatus = serverSub.status || 'trial';
+
+  // A paid/active subscription on the server is authoritative because a payment
+  // was received (and instantly persisted) somewhere — adopt it everywhere.
+  if (serverStatus === 'active') return serverSub;
+
+  // Never downgrade a locally active plan because of a stale trial bundle.
+  if (localStatus === 'active') return local;
+
+  // Both are trial/expired: the server owns the trial start so every device
+  // counts down from the same day-7 anchor.
+  return {
+    ...local,
+    status: serverSub.status || local.status,
+    plan: serverSub.plan || local.plan,
+    planName: serverSub.planName || local.planName,
+    startDate: serverSub.startDate || local.startDate,
+    trialEndDate: serverSub.trialEndDate || local.trialEndDate,
+    currentPeriodStart: serverSub.currentPeriodStart || local.currentPeriodStart,
+    currentPeriodEnd: serverSub.currentPeriodEnd || local.currentPeriodEnd,
+    nextPaymentDate: serverSub.nextPaymentDate || local.nextPaymentDate,
+    billingCycle: serverSub.billingCycle || local.billingCycle,
+    lastPaymentDate: serverSub.lastPaymentDate || local.lastPaymentDate,
+    paymentHistory: serverSub.paymentHistory && serverSub.paymentHistory.length
+      ? serverSub.paymentHistory
+      : (local.paymentHistory || [])
+  };
+}
+
+function applyServerSubscription(serverSub) {
+  if (!serverSub || typeof serverSub !== 'object') return;
+  const local = getSubscription();
+  const merged = resolveSubscription(local, serverSub);
+  if (!merged) return;
+
+  const localJson = local ? JSON.stringify(local) : null;
+  if (JSON.stringify(merged) === localJson) return;
+
+  setSubscription(merged);
+  refreshSubscriptionUI();
+  void persistSettingsToBackend();
+}
+
+function refreshSubscriptionUI() {
+  initTrialCountdown();
+  applyUser(getForgeflowUser());
+  updateBillingInfo();
+  checkAndProcessRenewal();
+  evaluateTrialStatus();
+}
+
+let subscriptionRealtimeChannel = null;
+
+function initSubscriptionRealtime() {
+  if (!supabase || subscriptionRealtimeChannel) return;
+  try {
+    subscriptionRealtimeChannel = supabase
+      .channel('forgeflow-subscription-sync')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'module_records',
+        filter: 'module_key=eq.settings'
+      }, (payload) => {
+        const newData = payload?.new?.data;
+        if (!newData || !newData.subscription) return;
+        applyServerSubscription(newData.subscription);
+      })
+      .subscribe();
+  } catch (e) {
+    console.warn('Realtime subscription sync unavailable:', e);
+  }
+}
+
+// ============ TRIAL EXPIRED DETECTION + UPGRADE POPUP ============
+let trialExpiredPromptShown = false;
+
+function evaluateTrialStatus() {
+  const user = getForgeflowUser() || {};
+  if (['STARTER', 'PRO', 'PROFESSIONAL', 'ENTERPRISE'].includes(user.planLabel)) return;
+  if (!isTrialExpired()) return;
+
+  const subscription = getSubscription() || {};
+  if (subscription.status !== 'expired') {
+    subscription.status = 'expired';
+    setSubscription(subscription);
+    void persistSettingsToBackend();
+  }
+
+  const badgeText = document.getElementById('planBadge')?.querySelector('.plan-badge-text');
+  if (badgeText && badgeText.textContent !== 'TRIAL EXPIRED') {
+    badgeText.textContent = 'TRIAL EXPIRED';
+  }
+
+  if (!trialExpiredPromptShown) {
+    trialExpiredPromptShown = true;
+    showTrialExpiredModal();
+  }
+}
+
+function createTrialExpiredModal() {
+  const modalHTML = `
+    <div id="trialExpiredModal" class="modal-overlay">
+      <div class="modal-container upgrade-modal">
+        <button class="modal-close" onclick="closeTrialExpiredModal()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        
+        <div class="modal-header">
+          <div class="modal-icon upgrade-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <h2 class="modal-title">Your Free Trial Has Ended</h2>
+          <p class="modal-subtitle">Your 7-day free trial has expired. Upgrade to a paid plan to keep using ForgeFlow without interruption. Paid plans recur every 30 days.</p>
+        </div>
+        
+        <div class="upgrade-features">
+          <div class="upgrade-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Full platform access</span>
+          </div>
+          <div class="upgrade-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Workfloor Operations</span>
+          </div>
+          <div class="upgrade-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Advanced Reporting</span>
+          </div>
+          <div class="upgrade-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Priority Support</span>
+          </div>
+        </div>
+        
+        <button class="modal-submit-btn" onclick="goToUpgradeFromTrial()">
+          Upgrade Now
+        </button>
+        <button class="trial-later-btn" onclick="closeTrialExpiredModal()">Maybe Later</button>
+        
+        <p class="modal-disclaimer">Cancel anytime. No hidden fees.</p>
+      </div>
+    </div>
+  `;
+  
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  const modal = document.getElementById('trialExpiredModal');
+  modal.addEventListener('click', function(e) {
+    if (e.target === this) closeTrialExpiredModal();
+  });
+}
+
+function showTrialExpiredModal() {
+  let modal = document.getElementById('trialExpiredModal');
+  if (!modal) {
+    createTrialExpiredModal();
+    modal = document.getElementById('trialExpiredModal');
+  }
+  if (!modal) return;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTrialExpiredModal() {
+  const modal = document.getElementById('trialExpiredModal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function goToUpgradeFromTrial() {
+  closeTrialExpiredModal();
+  window.location.href = 'pricing-select.html?upgrade=true';
+}
+
+window.closeTrialExpiredModal = closeTrialExpiredModal;
+window.goToUpgradeFromTrial = goToUpgradeFromTrial;
+
 function initSubscription() {
   let subscription = getSubscription();
   
   if (!subscription) {
+    const now = new Date();
     subscription = {
       status: 'trial',
       plan: 'trial',
-      startDate: new Date().toISOString(),
-      trialEndDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-      currentPeriodStart: new Date().toISOString(),
-      currentPeriodEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+      startDate: now.toISOString(),
+      trialEndDate: addDays(now, TRIAL_DURATION_DAYS).toISOString(),
+      currentPeriodStart: now.toISOString(),
+      currentPeriodEnd: addDays(now, TRIAL_DURATION_DAYS).toISOString(),
       billingCycle: 'monthly',
       lastPaymentDate: null,
-      nextPaymentDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+      nextPaymentDate: addDays(now, TRIAL_DURATION_DAYS).toISOString(),
       paymentHistory: []
     };
     setSubscription(subscription);
+    void persistSettingsToBackend();
   }
   
   return subscription;
@@ -2948,8 +3827,7 @@ function initSubscription() {
 
 function activateSubscription(planKey) {
   const now = new Date();
-  const nextMonth = new Date(now);
-  nextMonth.setMonth(nextMonth.getMonth() + 1);
+  const periodDays = getBillingPeriodDays('monthly');
   
   const subscription = {
     status: 'active',
@@ -2958,10 +3836,10 @@ function activateSubscription(planKey) {
     startDate: now.toISOString(),
     trialEndDate: null,
     currentPeriodStart: now.toISOString(),
-    currentPeriodEnd: nextMonth.toISOString(),
+    currentPeriodEnd: addDays(now, periodDays).toISOString(),
     billingCycle: 'monthly',
     lastPaymentDate: now.toISOString(),
-    nextPaymentDate: nextMonth.toISOString(),
+    nextPaymentDate: addDays(now, periodDays).toISOString(),
     paymentHistory: []
   };
   
@@ -2970,19 +3848,21 @@ function activateSubscription(planKey) {
   subscription.paymentHistory.unshift({
     id: 'sub_' + Date.now(),
     date: now.toISOString(),
-    description: plan.name + ' Plan - First Month',
+    description: plan.name + ' Plan - First Payment',
     amount: plan.priceCents || 0,
     status: 'paid',
     invoiceId: 'INV-' + Date.now()
   });
   
   setSubscription(subscription);
+  void persistSettingsToBackend();
   
   // Update user plan
   const user = getForgeflowUser() || {};
   user.planLabel = planKey.toUpperCase() === 'PROFESSIONAL' ? 'PRO' : planKey.toUpperCase();
   user.planName = plan.name;
   setForgeflowUser(user);
+  applyUser(user);
   
   return subscription;
 }
@@ -3007,28 +3887,28 @@ function simulateRenewal() {
   if (!subscription) return;
   
   const now = new Date();
-  const nextMonth = new Date(now);
-  nextMonth.setMonth(nextMonth.getMonth() + 1);
+  const periodDays = getBillingPeriodDays(subscription.billingCycle || 'monthly');
   
   const plan = planDetails[subscription.plan] || planDetails.starter;
   
   subscription.currentPeriodStart = now.toISOString();
-  subscription.currentPeriodEnd = nextMonth.toISOString();
+  subscription.currentPeriodEnd = addDays(now, periodDays).toISOString();
   subscription.lastPaymentDate = now.toISOString();
-  subscription.nextPaymentDate = nextMonth.toISOString();
+  subscription.nextPaymentDate = addDays(now, periodDays).toISOString();
   
   // Add payment to history
   subscription.paymentHistory.unshift({
     id: 'sub_' + Date.now(),
     date: now.toISOString(),
-    description: plan.name + ' Plan - Monthly Renewal',
+    description: plan.name + ' Plan - ' + (subscription.billingCycle === 'annual' ? 'Annual Renewal' : '30-Day Renewal'),
     amount: plan.priceCents || 0,
     status: 'paid',
     invoiceId: 'INV-' + Date.now()
   });
   
   setSubscription(subscription);
-  showToast('Monthly subscription renewed successfully!', 'success');
+  void persistSettingsToBackend();
+  showToast('Subscription renewed successfully!', 'success');
 }
 
 function formatDate(dateString) {
@@ -3042,12 +3922,21 @@ function formatCurrency(cents) {
 
 function getTrialDaysRemaining() {
   const subscription = getSubscription();
-  if (!subscription) return 14;
+  if (!subscription) return TRIAL_DURATION_DAYS;
   
   const now = new Date();
   const endDate = new Date(subscription.trialEndDate || subscription.nextPaymentDate);
   const diff = endDate - now;
   return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+}
+
+function isTrialExpired() {
+  const user = getForgeflowUser() || {};
+  if (['STARTER', 'PRO', 'PROFESSIONAL', 'ENTERPRISE'].includes(user.planLabel)) return false;
+  const subscription = getSubscription();
+  if (!subscription) return false;
+  const endDate = new Date(subscription.trialEndDate || subscription.nextPaymentDate);
+  return new Date() >= endDate;
 }
 
 function updateBillingInfo() {
@@ -3079,10 +3968,15 @@ function updateBillingInfo() {
     document.getElementById('billingCycle').textContent = subscription.billingCycle.charAt(0).toUpperCase() + subscription.billingCycle.slice(1);
   } else {
     billingCard.classList.add('trial');
-    statusText.textContent = 'Free Trial';
     billingDetails.style.display = 'none';
     billingTrialInfo.style.display = 'block';
-    trialDaysLeft.textContent = getTrialDaysRemaining() + ' days';
+    if (isTrialExpired()) {
+      statusText.textContent = 'Trial Expired';
+      trialDaysLeft.textContent = 'Expired';
+    } else {
+      statusText.textContent = 'Free Trial';
+      trialDaysLeft.textContent = getTrialDaysRemaining() + ' days';
+    }
   }
   
   // Update billing history
@@ -3296,6 +4190,7 @@ function saveSettings(section) {
     
     applyGeneralSettings(settings);
     updateUserUI();
+    initLiveClock();
     showToast('General settings saved successfully!', 'success');
     return;
   }
@@ -4880,6 +5775,10 @@ window.connectIntegration = connectIntegration;
 window.closeIntegrationModal = closeIntegrationModal;
 window.saveRecord = saveRecord;
 window.importData = importData;
+window.loadWebhookConfig = loadWebhookConfig;
+window.saveWebhookConfig = saveWebhookConfig;
+window.testWebhook = testWebhook;
+window.deleteWebhook = deleteWebhook;
 
 // ============ INIT ============
 let appInitializationComplete = false;
@@ -4909,6 +5808,9 @@ async function initializeApplication() {
     initSubscription();
     checkAndProcessRenewal();
     initTrialCountdown();
+    initSubscriptionRealtime();
+    evaluateTrialStatus();
+    initLiveClock();
     initPlanAccessControl();
     initDashboardRange();
     loadAppearanceSettings();
@@ -4921,6 +5823,9 @@ async function initializeApplication() {
 
     initFilters();
     initCharts();
+    void renderDashboard('this-month');
+    initDashboardAutoRefresh();
+    initPaneDraftBinding();
     initTableWrappers();
     initTableSearch();
     initStatusDropdowns();
@@ -4928,6 +5833,9 @@ async function initializeApplication() {
     bindRecordActionButtons();
     bindStorageSyncListener();
     restoreAllIntegrationStates();
+    void refreshIntegrationStatuses();
+    handleIntegrationOAuthCallback();
+    void loadWebhookConfig();
     initGlobalSearch();
     initUserDropdown();
 

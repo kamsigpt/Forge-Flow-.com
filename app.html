@@ -109,7 +109,15 @@
           <input type="text" id="topbarSearchInput" name="" class="topbar-search-input" placeholder="Search anything..." autocomplete="off" spellcheck="false">
         </div>
       </div>
-      
+
+      <div class="topbar-clock" id="topbarClock" title="Current date &amp; time">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div class="topbar-clock-body">
+          <span class="topbar-clock-time" id="topbarClockTime">--:--:--</span>
+          <span class="topbar-clock-date" id="topbarClockDate"></span>
+        </div>
+      </div>
+
       <div class="topbar-actions">
         <div class="notification-dropdown">
           <button class="topbar-icon-btn" title="Notifications" onclick="toggleNotifications()">
@@ -178,7 +186,7 @@
         </button>
         <span class="plan-badge" id="planBadge" data-plan="">
           <span class="plan-badge-text">FREE TRIAL</span>
-          <span class="plan-badge-countdown">14 days left</span>
+          <span class="plan-badge-countdown">7 days left</span>
           <span class="plan-active-text">Active</span>
         </span>
         <button class="demo-data-btn" onclick="clearDemoData()" title="Clear all demo data">
@@ -250,7 +258,7 @@
               </div>
               <span class="kpi-trend up">↑ 12%</span>
             </div>
-            <div class="kpi-value">4,200</div>
+            <div class="kpi-value" id="kpiSalesRevenue">4,200</div>
             <div class="kpi-label">Total Sales Revenue</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%"></div></div>
           </div>
@@ -261,7 +269,7 @@
               </div>
               <span class="kpi-trend up">↑ 3%</span>
             </div>
-            <div class="kpi-value">10,450</div>
+            <div class="kpi-value" id="kpiInventoryValue">10,450</div>
             <div class="kpi-label">Inventory Value</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:60%"></div></div>
           </div>
@@ -272,7 +280,7 @@
               </div>
               <span class="kpi-trend up">↑ 4 new</span>
             </div>
-            <div class="kpi-value">12</div>
+            <div class="kpi-value" id="kpiActiveMfg">12</div>
             <div class="kpi-label">Active MFG Orders</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:55%"></div></div>
           </div>
@@ -283,7 +291,7 @@
               </div>
               <span class="kpi-trend down">3 items</span>
             </div>
-            <div class="kpi-value" style="color:var(--danger)">3</div>
+            <div class="kpi-value" id="kpiLowStock" style="color:var(--danger)">3</div>
             <div class="kpi-label">Low Stock Alerts</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:30%;background:var(--danger)"></div></div>
           </div>
@@ -294,7 +302,7 @@
               </div>
               <span class="kpi-trend up">↑ 8%</span>
             </div>
-            <div class="kpi-value">7,800</div>
+            <div class="kpi-value" id="kpiPurchaseCost">7,800</div>
             <div class="kpi-label">Purchase Cost MTD</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:45%"></div></div>
           </div>
@@ -305,7 +313,7 @@
               </div>
               <span class="kpi-trend warn">3 on leave</span>
             </div>
-            <div class="kpi-value">24</div>
+            <div class="kpi-value" id="kpiStaff">24</div>
             <div class="kpi-label">Total Staff</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:80%"></div></div>
           </div>
@@ -316,7 +324,7 @@
               </div>
               <span class="kpi-trend up">2 POs active</span>
             </div>
-            <div class="kpi-value">8</div>
+            <div class="kpi-value" id="kpiSuppliers">8</div>
             <div class="kpi-label">Suppliers</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:90%"></div></div>
           </div>
@@ -327,7 +335,7 @@
               </div>
               <span class="kpi-trend up">↑ 3 new</span>
             </div>
-            <div class="kpi-value">31</div>
+            <div class="kpi-value" id="kpiCustomers">31</div>
             <div class="kpi-label">Active Customers</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:85%"></div></div>
           </div>
@@ -1140,6 +1148,64 @@
           </div>
         </div>
 
+        <!-- Webhooks -->
+        <div class="integrations-section">
+          <div class="integration-section-title">Webhooks</div>
+          <div class="integration-card">
+            <div class="integration-header">
+              <div class="integration-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px;color:var(--cobalt)"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div class="integration-header-content">
+                <div class="integration-header-top">
+                  <div class="integration-info">
+                    <h3>Outgoing Webhooks</h3>
+                    <p>Send events to your own server</p>
+                  </div>
+                  <span class="integration-status disconnected" id="webhook-status">Not configured</span>
+                </div>
+              </div>
+            </div>
+            <div class="integration-desc">
+              ForgeFlow will POST JSON payloads to your endpoint when configured events fire. Set a secret to sign payloads with HMAC-SHA256.
+            </div>
+            <div style="padding: 0 20px 8px">
+              <div class="integration-form-group">
+                <label>Webhook URL</label>
+                <input type="text" id="webhookUrl" placeholder="https://your-server.com/webhook">
+              </div>
+              <div class="integration-form-group">
+                <label>Webhook Secret (optional)</label>
+                <input type="text" id="webhookSecret" placeholder="Shared secret for HMAC signature">
+                <small>Signs each payload with X-ForgeFlow-Signature header.</small>
+              </div>
+              <div class="integration-form-group">
+                <label>Events</label>
+                <div id="webhookEvents" style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;padding:8px 0">
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-700);cursor:pointer"><input type="checkbox" value="manufacturing_created"> Manufacturing order created</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-700);cursor:pointer"><input type="checkbox" value="manufacturing_completed"> Manufacturing order completed</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-700);cursor:pointer"><input type="checkbox" value="inventory_low"> Low stock alert</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-700);cursor:pointer"><input type="checkbox" value="inventory_updated"> Inventory updated</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-700);cursor:pointer"><input type="checkbox" value="order_created"> Sales order created</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-700);cursor:pointer"><input type="checkbox" value="order_shipped"> Sales order shipped</label>
+                </div>
+              </div>
+              <div class="integration-toggle">
+                <div>
+                  <span class="integration-toggle-label">Active</span>
+                  <span class="integration-toggle-desc">Enable delivery of webhook events</span>
+                </div>
+                <div class="integration-toggle-switch active" id="webhookActive" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div style="display:flex;gap:12px;padding:16px 0 8px">
+                <button class="btn-primary" id="saveWebhookBtn" onclick="saveWebhookConfig()">Save</button>
+                <button class="btn-secondary" id="testWebhookBtn" onclick="testWebhook()" style="display:none">Test</button>
+                <button class="btn-danger" id="deleteWebhookBtn" onclick="deleteWebhook()" style="display:none">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Integration Detail Modal -->
         <div class="integration-modal" id="integrationModal" style="display:none">
           <div class="integration-modal-content">
@@ -1669,7 +1735,7 @@
                     </div>
                   </div>
                   <div class="billing-trial-info" id="billingTrialInfo">
-                    <p>Your free trial ends in <strong id="trialDaysLeft">14 days</strong></p>
+                    <p>Your free trial ends in <strong id="trialDaysLeft">7 days</strong></p>
                     <p class="billing-trial-desc">Upgrade now to continue using all features without interruption</p>
                   </div>
                 </div>

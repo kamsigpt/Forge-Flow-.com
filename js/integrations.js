@@ -150,6 +150,9 @@ export const IntegrationService = {
         case 'gsheets':
           result = await this.syncGoogleSheets(action, data)
           break
+        case 'zoho':
+          result = await this.syncZoho(action, data)
+          break
         default:
           throw new Error(`Sync not supported for ${provider}`)
       }
@@ -173,6 +176,15 @@ export const IntegrationService = {
 
   async syncGoogleSheets(action, data = {}) {
     const { data: result, error } = await supabase.functions.invoke('integrations/gsheets-sync', {
+      body: { action, data },
+    })
+
+    if (error) throw error
+    return result
+  },
+
+  async syncZoho(action, data = {}) {
+    const { data: result, error } = await supabase.functions.invoke('integrations/zoho-sync', {
       body: { action, data },
     })
 
@@ -223,6 +235,9 @@ export const IntegrationService = {
         case 'gsheets':
           testResult = await this.syncGoogleSheets('list_spreadsheets')
           break
+        case 'zoho':
+          testResult = await this.syncZoho('test')
+          break
         default:
           testResult = await this.getStatus(provider)
       }
@@ -268,6 +283,93 @@ export const IntegrationService = {
       return JSON.parse(completed)
     }
     return null
+  },
+
+  // Reads the OAuth callback result that auth-callback redirects back with,
+  // e.g. app.html?integration=zoho&status=success&message=...
+  parseOAuthCallback() {
+    const params = new URLSearchParams(window.location.search)
+    const provider = params.get('integration')
+    const status = params.get('status')
+    if (!provider || !status) return null
+
+    return {
+      provider,
+      status,
+      message: params.get('message') || null,
+      description: params.get('description') || null,
+    }
+  },
+
+  clearOAuthCallbackFromUrl() {
+    const params = new URLSearchParams(window.location.search)
+    if (!params.has('integration')) return
+    params.delete('integration')
+    params.delete('status')
+    params.delete('message')
+    params.delete('description')
+    const qs = params.toString()
+    const url = window.location.pathname + (qs ? `?${qs}` : '')
+    window.history.replaceState({}, '', url)
+  },
+
+  // ============ WEBHOOKS ============
+
+  async getWebhookConfig() {
+    try {
+      const { data, error } = await supabase
+        .from('webhook_configs')
+        .select('*')
+        .maybeSingle()
+
+      if (error) throw error
+      return data || null
+    } catch (error) {
+      console.error('Failed to get webhook config:', error)
+      return null
+    }
+  },
+
+  async saveWebhookConfig(config) {
+    try {
+      const { data, error } = await supabase
+        .from('webhook_configs')
+        .upsert(config, { onConflict: 'company_id' })
+        .select()
+        .single()
+
+      if (error) throw error
+      await this.logAction('webhooks', 'connect', 'success', { response: { url: config.webhook_url } })
+      return { success: true, data }
+    } catch (error) {
+      await this.logAction('webhooks', 'connect', 'error', { error: error.message })
+      console.error('Failed to save webhook config:', error)
+      throw error
+    }
+  },
+
+  async deleteWebhookConfig() {
+    try {
+      const { error } = await supabase
+        .from('webhook_configs')
+        .delete()
+
+      if (error) throw error
+      await this.logAction('webhooks', 'disconnect', 'success')
+      return { success: true }
+    } catch (error) {
+      console.error('Failed to delete webhook config:', error)
+      throw error
+    }
+  },
+
+  async sendWebhook(event, data = {}) {
+    const { data: result, error } = await supabase.functions.invoke('integrations/webhook-sender', {
+      body: { event, data },
+    })
+
+    if (error) throw error
+    return result
   },
 }
 

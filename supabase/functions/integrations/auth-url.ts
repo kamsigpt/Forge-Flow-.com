@@ -83,6 +83,9 @@ serve(async (req) => {
       userId: user.id,
       exp: Date.now() + 10 * 60 * 1000,
       nonce: crypto.randomUUID(),
+      meta: {
+        ...(redirectUrl ? { redirectUrl } : {}),
+      },
     }
 
     let authUrl = ''
@@ -106,7 +109,7 @@ serve(async (req) => {
       }
       case 'zoho': {
         authUrl = await generateZohoAuthUrl(statePayload)
-        scopes = 'ZohoCRM.users.ALL,ZohoBooks.contacts.READ,ZohoProjects.tasks.WRITE'
+        scopes = 'ZohoCRM.users.ALL,ZohoCRM.org.ALL,ZohoCRM.contacts.READ,ZohoBooks.contacts.READ,ZohoBooks.contacts.CREATE,ZohoBooks.invoices.READ,ZohoBooks.invoices.CREATE,ZohoProjects.tasks.WRITE'
         break
       }
       case 'quickbooks': {
@@ -204,7 +207,7 @@ async function generateZohoAuthUrl(payload: OAuthStatePayload) {
     response_type: 'code',
     client_id: clientId!,
     redirect_uri: redirectUri!,
-    scope: 'ZohoCRM.users.ALL,ZohoBooks.contacts.READ,ZohoProjects.tasks.WRITE',
+    scope: 'ZohoCRM.users.ALL,ZohoCRM.org.ALL,ZohoCRM.contacts.READ,ZohoBooks.contacts.READ,ZohoBooks.contacts.CREATE,ZohoBooks.invoices.READ,ZohoBooks.invoices.CREATE,ZohoProjects.tasks.WRITE',
     state,
   })
 
