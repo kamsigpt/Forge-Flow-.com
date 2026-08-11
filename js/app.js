@@ -598,7 +598,7 @@ function updateNotificationBadge() {
   }
 }
 
-function addNotification(type, title, description, iconType = 'system') {
+function addNotification(type, title, description, iconType = 'system', moduleId = null) {
   const notifications = getNotifications();
   const newNotif = {
     id: 'notif_' + Date.now(),
@@ -606,6 +606,7 @@ function addNotification(type, title, description, iconType = 'system') {
     title: title,
     description: description,
     iconType: iconType,
+    moduleId: moduleId,
     read: false,
     timestamp: new Date().toISOString()
   };
@@ -613,6 +614,7 @@ function addNotification(type, title, description, iconType = 'system') {
   if (notifications.length > 50) notifications.pop();
   saveNotifications(notifications);
   renderNotifications();
+  return newNotif;
 }
 
 function renderNotifications() {
@@ -637,7 +639,7 @@ function renderNotifications() {
     const timeAgo = getTimeAgo(notif.timestamp);
     const iconSvg = getNotificationIcon(notif.iconType);
     return `
-      <div class="notification-item ${notif.read ? '' : 'unread'}" data-id="${notif.id}" data-type="${notif.type}">
+      <div class="notification-item ${notif.read ? '' : 'unread'}" data-id="${notif.id}" data-type="${notif.type}" data-module="${notif.moduleId || ''}">
         <div class="notif-icon ${notif.type}">${iconSvg}</div>
         <div class="notif-content">
           <div class="notif-title">${notif.title}</div>
@@ -651,7 +653,13 @@ function renderNotifications() {
   listEl.querySelectorAll('.notification-item').forEach(item => {
     item.addEventListener('click', function() {
       const notifId = this.dataset.id;
+      const moduleId = this.dataset.module;
       markAsRead(notifId);
+      if (moduleId && typeof showModule === 'function') {
+        const dropdown = document.querySelector('.notification-dropdown');
+        if (dropdown) dropdown.classList.remove('open');
+        showModule(moduleId);
+      }
     });
   });
 }
@@ -663,9 +671,39 @@ function getNotificationIcon(type) {
     operation: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
     system: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
     maintenance: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
-    inventory: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>'
+    inventory: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>',
+    user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    draft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+    import: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+    export: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+    role: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    webhook: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="M6 17V3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v2a1 1 0 0 0 1 1h1"/><path d="M18 17a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>',
+    integration: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+    settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
   };
   return icons[type] || icons.system;
+}
+
+// Maps a module data key to its sidebar module id so a notification can jump
+// straight to the affected module when clicked.
+function getModuleIdForDataKey(dataKey) {
+  const map = {
+    mfg: 'manufacturing',
+    inventory: 'inventory',
+    sales: 'sales',
+    pr: 'purchase',
+    bom: 'bom',
+    suppliers: 'suppliers',
+    staff: 'staff',
+    maintenance: 'maintenance',
+    operations: 'workops',
+    uom: 'uom'
+  };
+  return map[dataKey] || null;
 }
 
 function getTimeAgo(timestamp) {
@@ -740,6 +778,8 @@ function sendEmailNotification(notifType, title, message) {
 }
 
 function initNotifications() {
+  const list = getNotifications();
+  notificationCount = list.filter(n => !n.read).length;
   renderNotifications();
   updateNotificationBadge();
 }
@@ -2606,6 +2646,14 @@ function changeStatus(select) {
   updateStatus(select, newStatus);
   applyStatusSelectStyle(select);
   persistRowStatus(select, newStatus);
+  
+  const row = select.closest('tr');
+  const view = select.closest('.module-view');
+  const type = view ? (moduleTypeByViewId[view.id] || 'Record') : 'Record';
+  const paneId = getPaneId(type);
+  const recordId = row ? (extractIdFromRow(row, paneId) || '') : '';
+  const moduleId = view?.id ? view.id.replace('mod-', '') : null;
+  addNotification('order', 'Status Changed', `${type} ${recordId} was changed to ${newStatus}.`.trim(), 'order', moduleId);
 }
 
 function persistRowStatus(select, newStatus) {
@@ -2641,12 +2689,14 @@ function initStatusDropdowns() {
 function triggerMRP(soRef) {
   console.log('triggerMRP called:', soRef);
   showToast('MRP triggered for ' + soRef, 'success');
+  addNotification('operation', 'MRP Triggered', 'MRP run triggered for sales order ' + soRef + '.', 'operation', 'sales');
 }
 
 function confirmSalesOrder(btn, soRef) {
   console.log('confirmSalesOrder called:', soRef);
   updateStatus(btn, 'Pending MFG');
   showToast('Sales order ' + soRef + ' confirmed', 'success');
+  addNotification('order', 'Sales Order Confirmed', 'Sales order ' + soRef + ' was confirmed and queued for manufacturing.', 'order', 'sales');
 }
 
 function showToast(message, type) {
@@ -2745,6 +2795,7 @@ async function connectIntegration(provider) {
     
     updateIntegrationStatus(provider, true, { connectedVia: 'manual' });
     showToast('Connected to ' + (statusMap[provider] || provider) + ' successfully!', 'success');
+    addNotification('integration', 'Integration Connected', 'Connected to ' + (statusMap[provider] || provider) + '.', 'integration', 'integrations');
   } catch (error) {
     console.error('Failed to connect integration:', error);
     showToast('Failed to connect to ' + provider + ': ' + error.message, 'error');
@@ -2961,6 +3012,7 @@ async function saveWebhookConfig() {
     const result = await window.IntegrationService.saveWebhookConfig(config);
     updateWebhookStatusUI(true, result.data);
     showToast('Webhook configuration saved!', 'success');
+    addNotification('webhook', 'Webhook Saved', 'Outgoing webhook configuration was saved.', 'webhook', 'integrations');
   } catch (error) {
     showToast('Failed to save webhook: ' + error.message, 'error');
   }
@@ -2997,6 +3049,7 @@ async function deleteWebhook() {
     if (secretInput) secretInput.value = '';
     updateWebhookStatusUI(false, null);
     showToast('Webhook configuration removed', 'success');
+    addNotification('webhook', 'Webhook Removed', 'Outgoing webhook configuration was removed.', 'webhook', 'integrations');
   } catch (error) {
     showToast('Failed to remove webhook: ' + error.message, 'error');
   }
@@ -3013,6 +3066,7 @@ async function disconnectIntegration(provider) {
     updateIntegrationStatus(provider, false);
     removeIntegrationState(provider);
     showToast('Disconnected from ' + provider, 'success');
+    addNotification('integration', 'Integration Disconnected', 'Disconnected from ' + provider + '.', 'integration', 'integrations');
   } catch (error) {
     console.error('Failed to disconnect:', error);
     showToast('Failed to disconnect', 'error');
@@ -3059,9 +3113,21 @@ function saveRecord(type, id) {
   clearPaneDraft(type);
 
   closePane();
+  const isEdit = currentPaneData?.mode === 'edit';
+  const savedAction = isEdit ? 'updated' : 'saved';
   showToast(
-    type + (currentPaneData.mode === 'edit' ? ' updated successfully!' : ' saved successfully!'),
+    type + (isEdit ? ' updated successfully!' : ' saved successfully!'),
     'success'
+  );
+  
+  const recordLabel = recordData.name || recordData.product || recordData.customer || recordData.supplier || recordData.firstName || recordId;
+  const moduleId = paneConfig.dataKey ? getModuleIdForDataKey(paneConfig.dataKey) : null;
+  addNotification(
+    isEdit ? 'order' : 'success',
+    (isEdit ? 'Record Updated' : 'Record Created'),
+    `${type} ${recordLabel} was ${savedAction}.`,
+    isEdit ? 'order' : 'success',
+    moduleId
   );
   
   if (typeof refreshCurrentModule === 'function') {
@@ -3114,11 +3180,18 @@ function savePaneDraft(type, silent = false) {
   const data = collectPaneData(type);
   if (!hasMeaningfulDraftData(data)) return;
   const savedAt = new Date().toISOString();
+  let isNewDraft = false;
   try {
     const store = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}');
+    isNewDraft = !store[type];
     store[type] = { data, savedAt };
     localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(store));
   } catch (e) { return; }
+  if (isNewDraft) {
+    const paneId = getPaneId(type);
+    const moduleId = paneDataMap[paneId]?.dataKey ? getModuleIdForDataKey(paneDataMap[paneId].dataKey) : null;
+    addNotification('draft', 'Draft Saved', `A draft for ${type} was saved and will restore on your next visit.`, 'draft', moduleId);
+  }
   void savePaneDraftToServer(type, { data, savedAt });
   const pane = document.getElementById(getPaneId(type));
   if (pane) renderDraftBar(pane, 'saved', savedAt);
@@ -3530,6 +3603,8 @@ function parseCSV(content) {
 function processImportedData(data) {
   if (!Array.isArray(data)) data = [data];
   showToast(`Imported ${data.length} record(s) successfully!`, 'success');
+  const activeModule = document.querySelector('.module-view.active')?.id?.replace('mod-', '') || null;
+  addNotification('import', 'Data Imported', `${data.length} record(s) imported into the active module.`, 'import', activeModule);
   console.log('Imported data:', data);
 }
 
@@ -4288,6 +4363,7 @@ function saveSettings(section) {
     updateUserUI();
     initLiveClock();
     showToast('General settings saved successfully!', 'success');
+    addNotification('settings', 'General Settings Saved', 'Your profile and general preferences were saved.', 'settings');
     return;
   }
   
@@ -4305,6 +4381,7 @@ function saveSettings(section) {
     localStorage.setItem('forgeflow_company', JSON.stringify(settings));
     applyCompanySettings(settings);
     showToast('Company settings saved successfully!', 'success');
+    addNotification('settings', 'Company Settings Saved', 'Your company details were saved.', 'settings');
     return;
   }
   
@@ -4314,6 +4391,7 @@ function saveSettings(section) {
     };
     localStorage.setItem('forgeflow_security', JSON.stringify(settings));
     showToast('Security settings saved successfully!', 'success');
+    addNotification('settings', 'Security Settings Saved', 'Your security preferences were saved.', 'settings');
     return;
   }
   
@@ -4334,6 +4412,7 @@ function saveSettings(section) {
     localStorage.setItem('forgeflow_notifications', JSON.stringify(settings));
     applyNotificationSettings(settings);
     showToast('Notification settings saved successfully!', 'success');
+    addNotification('settings', 'Notification Settings Saved', 'Your notification preferences were saved.', 'settings');
     return;
   }
   
@@ -4343,6 +4422,7 @@ function saveSettings(section) {
     };
     localStorage.setItem('forgeflow_integrations_settings', JSON.stringify(settings));
     showToast('Integration settings saved successfully!', 'success');
+    addNotification('settings', 'Integration Settings Saved', 'Your integration preferences were saved.', 'settings');
     return;
   }
   
@@ -4361,9 +4441,11 @@ function saveSettings(section) {
     applyAppearanceSettings(settings);
     applyAccentColor(accentColor);
     showToast('Appearance settings saved successfully!', 'success');
+    addNotification('settings', 'Appearance Settings Saved', 'Your theme and layout preferences were saved.', 'settings');
     return;
   }
   showToast(`${section} settings saved successfully!`, 'success');
+  addNotification('settings', section + ' Settings Saved', 'Your ' + section + ' settings were saved.', 'settings');
 }
 
 function applyGeneralSettings(settings) {
@@ -4482,6 +4564,7 @@ function confirmClearData() {
     void persistSettingsToBackend();
 
     showToast('All data has been cleared successfully', 'success');
+    addNotification('trash', 'All Data Cleared', 'Every record across all modules was cleared.', 'trash');
     
     setTimeout(() => {
       window.location.reload();
@@ -4561,6 +4644,7 @@ function exportAllData() {
   a.click();
   URL.revokeObjectURL(url);
   showToast('All data exported as CSV!', 'success');
+  addNotification('export', 'Data Exported', 'All data was exported as a CSV file.', 'export');
 }
 
 function exportCurrentModule() {
@@ -4608,6 +4692,7 @@ function exportCurrentModule() {
   a.click();
   URL.revokeObjectURL(url);
   showToast(moduleName + ' exported as CSV!', 'success');
+  addNotification('export', 'Module Exported', moduleName + ' was exported as a CSV file.', 'export', moduleView.id.replace('mod-', ''));
 }
 
 function clearModuleData(moduleName) {
@@ -4619,6 +4704,7 @@ function clearModuleData(moduleName) {
   localStorage.removeItem(storageKey);
   
   showToast(moduleName + ' data cleared!', 'success');
+  addNotification('trash', 'Module Data Cleared', moduleName + ' data was cleared.', 'trash');
   
   setTimeout(() => {
     window.location.reload();
@@ -4649,6 +4735,7 @@ function updatePassword() {
   document.getElementById('newPassword').value = '';
   document.getElementById('confirmPassword').value = '';
   showToast('Password updated successfully', 'success');
+  addNotification('system', 'Password Updated', 'Your account password was changed successfully.', 'user');
 }
 
 function revokeSession(btn) {
@@ -4669,6 +4756,7 @@ function regenerateApiKey() {
       apiKeyInput.value = newKey;
     }
     showToast('New API key generated', 'success');
+    addNotification('system', 'API Key Regenerated', 'A new API key was generated and your old key was invalidated.', 'settings');
   }
 }
 
@@ -4868,6 +4956,7 @@ function handleAddCard(e) {
     closeAddCardModal();
     
     showToast('Payment method added successfully!', 'success');
+    addNotification('settings', 'Payment Method Added', 'A ' + cardBrand + ' card ending in ' + last4 + ' was added to your account.', 'settings');
     
     submitBtn.disabled = false;
     submitBtn.innerHTML = 'Add Payment Method';
@@ -4880,6 +4969,7 @@ function removePaymentMethod() {
   removePaymentMethodData();
   updatePaymentMethodDisplay();
   showToast('Payment method removed', 'success');
+  addNotification('settings', 'Payment Method Removed', 'Your saved payment method was removed.', 'settings');
 }
 
 function addPaymentMethod() {
@@ -5133,6 +5223,7 @@ function saveNewRole() {
       role.permissions = permissions;
     }
     showToast('Role updated successfully', 'success');
+    addNotification('role', 'Role Updated', 'Role "' + name + '" was updated.', 'role', 'teams');
   } else {
     if (roles.find(r => r.name.toLowerCase() === name.toLowerCase())) {
       showToast('A role with this name already exists', 'warn');
@@ -5149,6 +5240,7 @@ function saveNewRole() {
     };
     roles.push(newRole);
     showToast('Role created successfully', 'success');
+    addNotification('role', 'Role Created', 'Role "' + name + '" was created.', 'role', 'teams');
   }
   
   saveRoles(roles);
@@ -5310,6 +5402,7 @@ function sendInvite() {
   void syncTeamMemberToBackend(newUser);
   void persistSettingsToBackend();
   showToast(name + ' added to your team. They can sign in with ' + email + ' using your password.', 'success');
+  addNotification('role', 'Team Member Added', name + ' (' + email + ') was added to your team.', 'role', 'teams');
 }
 
 function editUserRole(userId) {
@@ -5335,6 +5428,7 @@ function editUserRole(userId) {
   void syncTeamMemberToBackend(user);
   void persistSettingsToBackend();
   showToast('User role updated', 'success');
+  addNotification('role', 'User Role Updated', user.name + "'s role was changed to " + role.name + '.', 'role', 'teams');
 }
 
 function removeUser(userId) {
@@ -5352,6 +5446,7 @@ function removeUser(userId) {
   void deleteTeamMemberFromBackend(removed.email);
   void persistSettingsToBackend();
   showToast('User removed successfully', 'success');
+  addNotification('role', 'User Removed', removed.name + ' (' + removed.email + ') was removed from the team.', 'trash', 'teams');
 }
 
 function editRole(roleId) {
@@ -5373,11 +5468,13 @@ function deleteRole(roleId) {
   const roleIndex = roles.findIndex(r => r.id === roleId);
   if (roleIndex === -1) return;
   
+  const deletedRole = roles[roleIndex];
   roles.splice(roleIndex, 1);
   saveRoles(roles);
   renderRoles();
   void persistSettingsToBackend();
   showToast('Role deleted successfully', 'success');
+  addNotification('role', 'Role Deleted', 'Role "' + deletedRole.name + '" was deleted.', 'trash', 'teams');
 }
 
 function applyUserRolePermissions() {
@@ -5897,6 +5994,11 @@ async function initializeApplication() {
 
   try {
     await updateUserUI();
+    if (!sessionStorage.getItem('forgeflow_login_notified')) {
+      sessionStorage.setItem('forgeflow_login_notified', '1');
+      const loggedInUser = getForgeflowUser() || {};
+      addNotification('system', 'Welcome back, ' + (loggedInUser.firstName || loggedInUser.fullName || 'there') + '!', 'You signed in to ForgeFlow successfully.', 'user');
+    }
     await hydrateModuleRecords();
     applyClearedDataState();
     await hydrateSettingsFromBackend();

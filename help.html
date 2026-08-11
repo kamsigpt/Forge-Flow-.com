@@ -319,6 +319,47 @@
       </div>
     </div>
 
+    <!-- Units of Measure -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        </div>
+        <span class="help-section-title">Units of Measure (UOM)</span>
+      </div>
+      <div class="help-section-body">
+        <p>The UOM module manages the <strong>standard units of measurement</strong> used across inventory, BOMs, purchase requests and manufacturing orders.</p>
+        <p><strong>What you can do:</strong></p>
+        <ul>
+          <li><strong>Create Units</strong> - Add units like PCS, KG, L, M, BOX, SET</li>
+          <li><strong>Define Base Units</strong> - Set the base measurement for each unit</li>
+          <li><strong>Track Conversions</strong> - Keep quantities consistent across modules</li>
+        </ul>
+        <p>Choosing the correct UOM on inventory items keeps every material quantity (required, allocated, available) comparable across BOMs and the MRP engine.</p>
+      </div>
+    </div>
+
+    <!-- Suppliers -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <span class="help-section-title">Suppliers</span>
+      </div>
+      <div class="help-section-body">
+        <p>The Suppliers module stores your <strong>vendor database</strong> so purchasing and procurement can be routed to the right partner.</p>
+        <p><strong>What it tracks:</strong></p>
+        <ul>
+          <li><strong>Company & Contact Details</strong> - Name, contact person, phone, email, address</li>
+          <li><strong>Materials Supplied</strong> - Which raw materials each vendor provides</li>
+          <li><strong>Status</strong> - Active or Inactive vendors</li>
+          <li><strong>Related Purchase Requests</strong> - Purchase requests can be sent to any supplier</li>
+        </ul>
+        <p>Approved purchase requests reference a supplier so the order is ready to send for replenishment.</p>
+      </div>
+    </div>
+
     <!-- Purchase Requests -->
     <div class="help-section">
       <div class="help-section-header">
@@ -385,6 +426,33 @@
       </div>
     </div>
 
+    <!-- Teams & Roles -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <span class="help-section-title">Teams, Roles & Permissions</span>
+      </div>
+      <div class="help-section-body">
+        <p>The Teams section manages <strong>who can access the workspace</strong> and what each person is allowed to do.</p>
+        <p><strong>Roles:</strong></p>
+        <ul>
+          <li><strong>Custom Roles</strong> - Create roles (e.g. Storekeeper, QC, Production Manager)</li>
+          <li><strong>Module Access</strong> - Pick exactly which modules a role can open</li>
+          <li><strong>Action Permissions</strong> - Grant or restrict create, edit, delete per module</li>
+          <li><strong>System Roles</strong> - Super Admin and Admin defaults that cannot be modified</li>
+        </ul>
+        <p><strong>Members:</strong></p>
+        <ul>
+          <li><strong>Invite Members</strong> - Add teammates by name, email and role</li>
+          <li><strong>Change Roles</strong> - Update a member's role at any time</li>
+          <li><strong>Remove Members</strong> - Revoke access when someone leaves</li>
+        </ul>
+        <p><strong>Access Control:</strong> Permissions are enforced app-wide. A member only sees modules and actions their role allows, and plan gating (Free Trial / Starter / Professional / Enterprise) applies on top.</p>
+      </div>
+    </div>
+
     <!-- Maintenance -->
     <div class="help-section">
       <div class="help-section-header">
@@ -403,6 +471,119 @@
           <li><strong>Service History</strong> - Full audit trail of all maintenance</li>
         </ul>
         <p><strong>Impact on Operations:</strong> When a machine is down, related Work Operations can be paused until repairs are complete.</p>
+      </div>
+    </div>
+
+    <!-- Integrations -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <span class="help-section-title">Integrations & Webhooks</span>
+      </div>
+      <div class="help-section-body">
+        <p>Connect ForgeFlow to the <strong>third-party tools</strong> your business already uses. Connections are made securely with OAuth.</p>
+        <p><strong>Available integrations:</strong></p>
+        <ul>
+          <li><strong>Zoho</strong> - Sync contacts, invoices and export sales orders to Zoho Books</li>
+          <li><strong>Google Sheets</strong> - Export inventory, orders and manufacturing data to spreadsheets</li>
+          <li><strong>Shopify</strong> - Sync products and orders, and update inventory from Shopify</li>
+          <li><strong>QuickBooks</strong> - Connect QuickBooks Online accounting</li>
+          <li><strong>Xero</strong> - Connect Xero accounting</li>
+        </ul>
+        <p><strong>Outgoing Webhooks:</strong> Send real-time events (e.g. low stock alerts) to your own endpoint with HMAC-SHA256 signed payloads for verification.</p>
+        <div class="help-flow">
+          <span class="help-flow-step">Connect</span>
+          <span class="help-flow-arrow">→</span>
+          <span class="help-flow-step">Authorize</span>
+          <span class="help-flow-arrow">→</span>
+          <span class="help-flow-step">Sync Actions</span>
+          <span class="help-flow-arrow">→</span>
+          <span class="help-flow-step">Live Data</span>
+        </div>
+        <p>Go to <strong>Integrations</strong> in the sidebar to connect providers, run sync actions and configure webhooks.</p>
+      </div>
+    </div>
+
+    <!-- Notifications Center -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <span class="help-section-title">Notifications Center</span>
+      </div>
+      <div class="help-section-body">
+        <p>The <strong>bell icon</strong> in the top bar is your real-time activity feed. Every important event is recorded there so nothing slips by.</p>
+        <p><strong>What triggers a notification:</strong></p>
+        <ul>
+          <li><strong>Record changes</strong> - Any record created, edited or status-changed across every module</li>
+          <li><strong>Drafts saved</strong> - When a new draft is auto-saved while creating a record</li>
+          <li><strong>Processes</strong> - MRP runs, sales order confirmation, imports and exports</li>
+          <li><strong>Logins</strong> - A "Welcome back" entry each time you sign in</li>
+          <li><strong>Team & settings</strong> - Member invites, role changes, webhook saves, plan/payment updates</li>
+        </ul>
+        <p><strong>How to use it:</strong></p>
+        <ul>
+          <li>Unread items show a count badge on the bell (up to 9+)</li>
+          <li>Click any notification to mark it read and jump straight to the affected module</li>
+          <li>Use <strong>Mark all read</strong> to clear the badge in one tap</li>
+          <li>Notification preferences live in <strong>Settings → Notifications</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Free Trial & Plans -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <span class="help-section-title">Free Trial, Plans & Billing</span>
+      </div>
+      <div class="help-section-body">
+        <p>Every new account starts a <strong>7-day free trial with full Professional features</strong> — all modules unlocked, no starter limits.</p>
+        <p><strong>Trial countdown (Day 7 → Day 1):</strong></p>
+        <ul>
+          <li>The plan badge in the top bar counts down from <strong>Day 7</strong> (the day your trial started) to <strong>Day 1</strong> (the last day)</li>
+          <li>On <strong>Day 1</strong> a popup reminds you to upgrade so your Pro features keep working</li>
+          <li>When the trial expires, an upgrade popup appears — choose a paid plan to continue without interruption</li>
+        </ul>
+        <p><strong>Plans:</strong></p>
+        <ul>
+          <li><strong>Free Trial</strong> - Full Professional access for 7 days, $0</li>
+          <li><strong>Starter</strong> - $150/month, up to 15 users, core modules</li>
+          <li><strong>Professional</strong> - $250/month, up to 30 users, workfloor, reporting, API, priority support</li>
+          <li><strong>Enterprise</strong> - Custom, unlimited users and full feature set</li>
+        </ul>
+        <p>Manage your plan, payment method and billing history under <strong>Settings → Subscription</strong>. Paid plans recur every 30 days.</p>
+      </div>
+    </div>
+
+    <!-- Recent Updates -->
+    <div class="help-section">
+      <div class="help-section-header">
+        <div class="help-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <span class="help-section-title">Recent Updates & Features</span>
+      </div>
+      <div class="help-section-body">
+        <p>Here's what's new and how to find it:</p>
+        <ul>
+          <li><strong>12-Hour Clock</strong> - The top bar shows the current date and time in an orange block with a 12-hour (AM/PM) clock</li>
+          <li><strong>Functional Notifications</strong> - The bell now tracks every module change, draft, login and process</li>
+          <li><strong>Trial Countdown Day 7 → Day 1</strong> - The free trial lock counts down by day and prompts you to upgrade on the last day</li>
+          <li><strong>Pro Features on Free Trial</strong> - Trial users get full Professional access (Workfloor, Teams, Maintenance, Integrations)</li>
+          <li><strong>Integrations</strong> - Zoho, Google Sheets, Shopify, QuickBooks and Xero with OAuth and outgoing webhooks</li>
+          <li><strong>Server-Anchored Trial</strong> - Your trial start date is stored on the backend so every device counts down together</li>
+          <li><strong>Global Search</strong> - Search across all modules from the top bar</li>
+        </ul>
+        <div class="help-tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <p>Tip: the plan badge and the clock live in the top bar. Hover over the plan badge to see the live countdown at any time.</p>
+        </div>
       </div>
     </div>
 
