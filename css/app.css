@@ -477,10 +477,11 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 5px 12px;
-    border: 1px solid var(--gray-100);
+    padding: 5px 14px;
+    border: 1.5px solid var(--cobalt, #FF6A00);
     border-radius: var(--radius-full);
-    background: var(--gray-50);
+    background: linear-gradient(180deg, rgba(255, 106, 0, 0.14), rgba(255, 106, 0, 0.06));
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12), inset 0 0 0 1px rgba(255, 106, 0, 0.25);
     flex-shrink: 0;
     cursor: default;
     user-select: none;
@@ -489,14 +490,21 @@ body {
 .topbar-clock svg {
     width: 15px;
     height: 15px;
-    color: var(--sidebar-accent, var(--cobalt));
+    color: var(--cobalt, #FF6A00);
     flex-shrink: 0;
 }
 
 .topbar-clock-body {
     display: flex;
     flex-direction: column;
+    gap: 1px;
     line-height: 1.15;
+}
+
+.topbar-clock-time-row {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
 }
 
 .topbar-clock-time {
@@ -504,16 +512,29 @@ body {
     font-size: 13px;
     font-weight: 800;
     letter-spacing: 0.4px;
-    color: var(--topbar-text);
+    color: var(--cobalt-dark, #E55D00);
     font-variant-numeric: tabular-nums;
+}
+
+.topbar-clock-period {
+    font-family: var(--font-display);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 1px 5px;
+    border-radius: var(--radius-full);
+    background: var(--cobalt, #FF6A00);
+    color: #FFFFFF;
+    line-height: 1.4;
+    flex-shrink: 0;
 }
 
 .topbar-clock-date {
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.3px;
     text-transform: uppercase;
-    color: var(--sidebar-inactive);
+    color: var(--cobalt-dark, #E55D00);
 }
 
 .topbar-actions {

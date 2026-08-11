@@ -852,11 +852,11 @@ function initTrialCountdown() {
   
   function formatCountdown(diff) {
     const totalSeconds = Math.max(0, Math.floor(diff / 1000));
-    const days = Math.floor(totalSeconds / 86400);
+    const day = Math.max(1, Math.min(Math.ceil(totalSeconds / 86400), TRIAL_DURATION_DAYS));
     const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
-    return `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    return `Day ${day} · ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
   }
   
   function updateCountdown() {
@@ -883,16 +883,16 @@ function initTrialCountdown() {
     
     const text = `${formatCountdown(diff)} left`;
     countdownEl.textContent = text;
-    countdownEl.title = `Trial ends ${endDate.toLocaleString()}`;
+    countdownEl.title = `Trial ends ${endDate.toLocaleString()} — upgrade to keep Pro features`;
     
-    // Keep the billing card countdown live too (24h HH:MM:SS)
+    // Keep the billing card countdown live too (Day 7 → Day 1)
     const trialDaysLeft = document.getElementById('trialDaysLeft');
     if (trialDaysLeft) {
       const totalSeconds = Math.floor(diff / 1000);
-      const days = Math.floor(totalSeconds / 86400);
+      const day = Math.max(1, Math.min(Math.ceil(totalSeconds / 86400), TRIAL_DURATION_DAYS));
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
-      trialDaysLeft.textContent = `${days}d ${pad(hours)}:${pad(minutes)}:${pad(totalSeconds % 60)}`;
+      trialDaysLeft.textContent = `Day ${day} left · ${pad(hours)}:${pad(minutes)}:${pad(totalSeconds % 60)}`;
     }
   }
   
@@ -919,6 +919,7 @@ let liveClockTimer = null;
 function initLiveClock() {
   const timeEl = document.getElementById('topbarClockTime');
   const dateEl = document.getElementById('topbarClockDate');
+  const periodEl = document.getElementById('topbarClockPeriod');
   if (!timeEl || !dateEl) return;
   
   if (liveClockTimer) {
@@ -927,11 +928,11 @@ function initLiveClock() {
   }
   
   const timeZone = getUserTimezone();
-  const pad = n => String(n).padStart(2, '0');
   
-  const timeFmt = new Intl.DateTimeFormat('en-GB', {
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
-    hourCycle: 'h23', timeZone
+  // 12-hour clock (AM/PM) regardless of locale defaults
+  const timeFmt = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric', minute: '2-digit', second: '2-digit',
+    hour12: true, timeZone
   });
   const dateFmt = new Intl.DateTimeFormat('en-US', {
     weekday: 'short', month: 'short', day: 'numeric', timeZone
@@ -940,10 +941,12 @@ function initLiveClock() {
   function tick() {
     const now = new Date();
     const t = timeFmt.formatToParts(now);
-    const hour = t.find(p => p.type === 'hour')?.value || '00';
+    const hour = t.find(p => p.type === 'hour')?.value || '12';
     const minute = t.find(p => p.type === 'minute')?.value || '00';
     const second = t.find(p => p.type === 'second')?.value || '00';
+    const period = t.find(p => p.type === 'dayPeriod')?.value?.toUpperCase() || '';
     timeEl.textContent = `${hour}:${minute}:${second}`;
+    if (periodEl) periodEl.textContent = period;
     
     const d = dateFmt.formatToParts(now);
     const weekday = d.find(p => p.type === 'weekday')?.value || '';
@@ -954,7 +957,7 @@ function initLiveClock() {
   
   tick();
   liveClockTimer = setInterval(tick, 1000);
-  console.log('Live clock initialized:', timeZone);
+  console.log('Live clock initialized (12-hour):', timeZone);
 }
 
 // ============ DASHBOARD RANGE SELECT ============
@@ -1438,7 +1441,7 @@ function updateTrialCountdown() {
   
   const now = new Date();
   const diff = endDate - now;
-  const daysLeft = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  const daysLeft = Math.max(0, Math.min(Math.ceil(diff / (1000 * 60 * 60 * 24)), TRIAL_DURATION_DAYS));
   
   if (diff <= 0) {
     countdownEl.textContent = 'Trial Expired';
@@ -1446,14 +1449,15 @@ function updateTrialCountdown() {
     return;
   }
   
-  countdownEl.textContent = daysLeft + ' days left';
+  countdownEl.textContent = 'Day ' + daysLeft + ' left';
+  countdownEl.title = 'Free trial ends ' + endDate.toLocaleString() + ' — upgrade to keep Pro features';
 }
 
 // ============ PLAN-BASED ACCESS CONTROL ============
 
 const planHierarchy = {
-  'trial': 1,
-  'starter': 2,
+  'starter': 1,
+  'trial': 3,
   'professional': 3,
   'enterprise': 4
 };
@@ -3549,12 +3553,12 @@ const planDetails = {
     name: 'Free Trial',
     price: '$0',
     period: '/' + TRIAL_DURATION_DAYS + ' days',
-    features: ['Full platform access', 'Up to 3 users', '100MB storage', 'Community support'],
+    features: ['Full platform access', 'Workfloor Operations', 'Advanced reporting', 'API access', 'Up to 30 users', 'Priority support'],
     limits: {
-      products: 100,
-      users: 3,
-      storage: '100MB',
-      api: '1,000'
+      products: 2000,
+      users: 30,
+      storage: '50GB',
+      api: '100,000'
     }
   },
   starter: {
@@ -3693,11 +3697,21 @@ function initSubscriptionRealtime() {
 
 // ============ TRIAL EXPIRED DETECTION + UPGRADE POPUP ============
 let trialExpiredPromptShown = false;
+let trialEndingPromptShown = false;
 
 function evaluateTrialStatus() {
   const user = getForgeflowUser() || {};
   if (['STARTER', 'PRO', 'PROFESSIONAL', 'ENTERPRISE'].includes(user.planLabel)) return;
-  if (!isTrialExpired()) return;
+
+  // Day 1 (last day) of the trial → prompt the user to upgrade so they can
+  // keep using the Pro features they already have access to.
+  if (!isTrialExpired()) {
+    if (!trialEndingPromptShown && getTrialDaysRemaining() <= 1) {
+      trialEndingPromptShown = true;
+      showTrialEndingModal();
+    }
+    return;
+  }
 
   const subscription = getSubscription() || {};
   if (subscription.status !== 'expired') {
@@ -3800,6 +3814,88 @@ function goToUpgradeFromTrial() {
 
 window.closeTrialExpiredModal = closeTrialExpiredModal;
 window.goToUpgradeFromTrial = goToUpgradeFromTrial;
+
+function createTrialEndingModal() {
+  const modalHTML = `
+    <div id="trialEndingModal" class="modal-overlay">
+      <div class="modal-container upgrade-modal">
+        <button class="modal-close" onclick="closeTrialEndingModal()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        
+        <div class="modal-header">
+          <div class="modal-icon upgrade-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h2 class="modal-title">Last Day of Your Free Trial</h2>
+          <p class="modal-subtitle">This is <strong>Day 1</strong> of your 7-day free trial — tomorrow your Pro features switch off unless you upgrade. Keep full platform access with a paid plan that recurs every 30 days.</p>
+        </div>
+        
+        <div class="upgrade-features">
+          <div class="upgrade-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Full platform access</span>
+          </div>
+          <div class="upgrade-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Workfloor Operations</span>
+          </div>
+          <div class="upgrade-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Advanced Reporting</span>
+          </div>
+          <div class="upgrade-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Priority Support</span>
+          </div>
+        </div>
+        
+        <button class="modal-submit-btn" onclick="goToUpgradeFromTrialEnding()">
+          Upgrade Now
+        </button>
+        <button class="trial-later-btn" onclick="closeTrialEndingModal()">Maybe Later</button>
+        
+        <p class="modal-disclaimer">Cancel anytime. No hidden fees.</p>
+      </div>
+    </div>
+  `;
+  
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  const modal = document.getElementById('trialEndingModal');
+  modal.addEventListener('click', function(e) {
+    if (e.target === this) closeTrialEndingModal();
+  });
+}
+
+function showTrialEndingModal() {
+  let modal = document.getElementById('trialEndingModal');
+  if (!modal) {
+    createTrialEndingModal();
+    modal = document.getElementById('trialEndingModal');
+  }
+  if (!modal) return;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTrialEndingModal() {
+  const modal = document.getElementById('trialEndingModal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function goToUpgradeFromTrialEnding() {
+  closeTrialEndingModal();
+  window.location.href = 'pricing-select.html?upgrade=true';
+}
+
+window.closeTrialEndingModal = closeTrialEndingModal;
+window.goToUpgradeFromTrialEnding = goToUpgradeFromTrialEnding;
 
 function initSubscription() {
   let subscription = getSubscription();
@@ -3975,7 +4071,7 @@ function updateBillingInfo() {
       trialDaysLeft.textContent = 'Expired';
     } else {
       statusText.textContent = 'Free Trial';
-      trialDaysLeft.textContent = getTrialDaysRemaining() + ' days';
+      trialDaysLeft.textContent = 'Day ' + getTrialDaysRemaining() + ' left';
     }
   }
   

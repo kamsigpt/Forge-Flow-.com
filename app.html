@@ -113,7 +113,10 @@
       <div class="topbar-clock" id="topbarClock" title="Current date &amp; time">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <div class="topbar-clock-body">
-          <span class="topbar-clock-time" id="topbarClockTime">--:--:--</span>
+          <div class="topbar-clock-time-row">
+            <span class="topbar-clock-time" id="topbarClockTime">--:--:--</span>
+            <span class="topbar-clock-period" id="topbarClockPeriod">AM</span>
+          </div>
           <span class="topbar-clock-date" id="topbarClockDate"></span>
         </div>
       </div>
@@ -186,7 +189,7 @@
         </button>
         <span class="plan-badge" id="planBadge" data-plan="">
           <span class="plan-badge-text">FREE TRIAL</span>
-          <span class="plan-badge-countdown">7 days left</span>
+          <span class="plan-badge-countdown">Day 7 left</span>
           <span class="plan-active-text">Active</span>
         </span>
         <button class="demo-data-btn" onclick="clearDemoData()" title="Clear all demo data">
@@ -1735,7 +1738,7 @@
                     </div>
                   </div>
                   <div class="billing-trial-info" id="billingTrialInfo">
-                    <p>Your free trial ends in <strong id="trialDaysLeft">7 days</strong></p>
+                    <p>Your free trial ends in <strong id="trialDaysLeft">Day 7 left</strong></p>
                     <p class="billing-trial-desc">Upgrade now to continue using all features without interruption</p>
                   </div>
                 </div>
