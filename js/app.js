@@ -590,6 +590,108 @@ function saveNotifications(list) {
   updateNotificationBadge();
 }
 
+async function syncNotificationToServer(notif) {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !supabase) return;
+  try {
+    await supabase.from('notifications').upsert({
+      id: notif.id,
+      company_id: companyId,
+      type: notif.type,
+      title: notif.title,
+      description: notif.description,
+      icon_type: notif.iconType || 'system',
+      module_id: notif.moduleId || null,
+      read: notif.read || false,
+      created_at: notif.timestamp
+    }, { onConflict: 'id' });
+  } catch (e) {
+    console.warn('Notification sync failed:', e);
+  }
+}
+
+async function syncNotificationRead(id) {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !supabase) return;
+  try {
+    await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', id)
+      .eq('company_id', companyId);
+  } catch (e) {
+    console.warn('Notification read sync failed:', e);
+  }
+}
+
+async function syncAllNotificationsRead() {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !supabase) return;
+  try {
+    await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('company_id', companyId)
+      .eq('read', false);
+  } catch (e) {
+    console.warn('Notification read-all sync failed:', e);
+  }
+}
+
+async function clearNotificationsFromServer() {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !supabase) return;
+  try {
+    await supabase.from('notifications').delete().eq('company_id', companyId);
+  } catch (e) {
+    console.warn('Notification clear sync failed:', e);
+  }
+}
+
+async function hydrateNotificationsFromServer() {
+  const companyId = await ensureCompanyContext();
+  if (!companyId || !supabase) return;
+  try {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('company_id', companyId)
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+
+    const serverList = (data || []).map(row => ({
+      id: row.id,
+      type: row.type,
+      title: row.title,
+      description: row.description,
+      iconType: row.icon_type || 'system',
+      moduleId: row.module_id || null,
+      read: !!row.read,
+      timestamp: row.created_at
+    }));
+
+    const byId = new Map();
+    getNotifications().forEach(n => byId.set(n.id, n));
+    serverList.forEach(n => {
+      if (byId.has(n.id)) {
+        const existing = byId.get(n.id);
+        byId.set(n.id, { ...existing, ...n, read: n.read || existing.read });
+      } else {
+        byId.set(n.id, n);
+      }
+    });
+
+    const merged = Array.from(byId.values())
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, 50);
+    saveNotifications(merged);
+  } catch (e) {
+    console.warn('Failed to hydrate notifications from backend:', e);
+  }
+}
+
 function updateNotificationBadge() {
   const dot = document.getElementById('notifDot');
   if (dot) {
@@ -614,6 +716,7 @@ function addNotification(type, title, description, iconType = 'system', moduleId
   if (notifications.length > 50) notifications.pop();
   saveNotifications(notifications);
   renderNotifications();
+  void syncNotificationToServer(newNotif);
   return newNotif;
 }
 
@@ -725,6 +828,7 @@ function markAsRead(notifId) {
     notif.read = true;
     saveNotifications(notifications);
     renderNotifications();
+    void syncNotificationRead(notifId);
   }
 }
 
@@ -757,6 +861,7 @@ function markAllRead() {
   notifications.forEach(n => n.read = true);
   saveNotifications(notifications);
   renderNotifications();
+  void syncAllNotificationsRead();
   showToast('All notifications marked as read', 'success');
 }
 
@@ -777,7 +882,8 @@ function sendEmailNotification(notifType, title, message) {
   }
 }
 
-function initNotifications() {
+async function initNotifications() {
+  await hydrateNotificationsFromServer();
   const list = getNotifications();
   notificationCount = list.filter(n => !n.read).length;
   renderNotifications();
@@ -1362,6 +1468,7 @@ async function clearDemoData() {
   if (notifList) notifList.innerHTML = '';
   const notifDot = document.getElementById('notifDot');
   if (notifDot) notifDot.style.display = 'none';
+  await clearNotificationsFromServer();
 
   // 7. Clear search history and close the results dropdown
   localStorage.removeItem('forgeflow_search_history');
@@ -4564,6 +4671,7 @@ function confirmClearData() {
     void persistSettingsToBackend();
 
     showToast('All data has been cleared successfully', 'success');
+    await clearNotificationsFromServer();
     addNotification('trash', 'All Data Cleared', 'Every record across all modules was cleared.', 'trash');
     
     setTimeout(() => {
