@@ -1056,6 +1056,7 @@
               </div>
               <div class="integration-actions">
                 <button class="btn-primary" id="zoho-connect" onclick="connectIntegration('zoho')">Connect</button>
+                <button class="btn-secondary" id="zoho-config" style="display:none" onclick="openIntegrationModal('zoho')">Configure</button>
               </div>
             </div>
 
@@ -1085,6 +1086,7 @@
               </div>
               <div class="integration-actions">
                 <button class="btn-primary" id="shopify-connect" onclick="connectIntegration('shopify')">Connect</button>
+                <button class="btn-secondary" id="shopify-config" style="display:none" onclick="openIntegrationModal('shopify')">Configure</button>
               </div>
             </div>
 
@@ -1114,6 +1116,7 @@
               </div>
               <div class="integration-actions">
                 <button class="btn-primary" id="quickbooks-connect" onclick="connectIntegration('quickbooks')">Connect</button>
+                <button class="btn-secondary" id="quickbooks-config" style="display:none" onclick="openIntegrationModal('quickbooks')">Configure</button>
               </div>
             </div>
 
@@ -1143,6 +1146,7 @@
               </div>
               <div class="integration-actions">
                 <button class="btn-primary" id="gsheets-connect" onclick="connectIntegration('gsheets')">Connect</button>
+                <button class="btn-secondary" id="gsheets-config" style="display:none" onclick="openIntegrationModal('gsheets')">Configure</button>
               </div>
             </div>
 
@@ -1879,6 +1883,7 @@
                     </div>
                     <div class="integration-actions">
                       <button class="btn-primary" id="settings-zoho-connect" onclick="connectIntegration('zoho')">Connect</button>
+                      <button class="btn-secondary" id="settings-zoho-config" style="display:none" onclick="openIntegrationModal('zoho')">Configure</button>
                     </div>
                   </div>
 
@@ -1908,6 +1913,7 @@
                     </div>
                     <div class="integration-actions">
                       <button class="btn-primary" id="settings-shopify-connect" onclick="connectIntegration('shopify')">Connect</button>
+                      <button class="btn-secondary" id="settings-shopify-config" style="display:none" onclick="openIntegrationModal('shopify')">Configure</button>
                     </div>
                   </div>
 
@@ -1937,6 +1943,7 @@
                     </div>
                     <div class="integration-actions">
                       <button class="btn-primary" id="settings-quickbooks-connect" onclick="connectIntegration('quickbooks')">Connect</button>
+                      <button class="btn-secondary" id="settings-quickbooks-config" style="display:none" onclick="openIntegrationModal('quickbooks')">Configure</button>
                     </div>
                   </div>
 
@@ -1966,9 +1973,52 @@
                     </div>
                     <div class="integration-actions">
                       <button class="btn-primary" id="settings-gsheets-connect" onclick="connectIntegration('gsheets')">Connect</button>
+                      <button class="btn-secondary" id="settings-gsheets-config" style="display:none" onclick="openIntegrationModal('gsheets')">Configure</button>
                     </div>
                   </div>
 
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Integration Preferences</h3>
+                <p class="section-desc">Control how ForgeFlow syncs with connected apps</p>
+                <div class="integration-toggle">
+                  <div>
+                    <span class="integration-toggle-label">Automatic Sync</span>
+                    <span class="integration-toggle-desc">Keep connected apps in sync on a schedule</span>
+                  </div>
+                  <div class="integration-toggle-switch" id="integrationsAutoSync" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div class="integration-toggle">
+                  <div>
+                    <span class="integration-toggle-label">Sync Interval</span>
+                    <span class="integration-toggle-desc">How often background syncs should run</span>
+                  </div>
+                  <select id="integrationsSyncInterval" style="max-width:160px;padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;color:var(--gray-700);background:var(--off-white)">
+                    <option value="hourly">Hourly</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="manual">Manual only</option>
+                  </select>
+                </div>
+                <div class="integration-toggle">
+                  <div>
+                    <span class="integration-toggle-label">Notify on sync failure</span>
+                    <span class="integration-toggle-desc">Send a notification when a sync errors</span>
+                  </div>
+                  <div class="integration-toggle-switch active" id="integrationsNotifyOnFailure" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div style="display:flex;gap:12px;padding:20px 0 4px">
+                  <button class="btn-primary" onclick="saveSettings('Integrations')">Save Integration Settings</button>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h3>Webhooks</h3>
+                <p class="section-desc">Outgoing webhooks are configured in the Integrations module</p>
+                <div class="integration-actions">
+                  <button class="btn-secondary" onclick="showModule('integrations')">Manage Webhooks</button>
                 </div>
               </div>
             </div>

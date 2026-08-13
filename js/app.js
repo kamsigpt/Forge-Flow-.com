@@ -955,6 +955,30 @@ async function loadAllSettings() {
       if (lastNameInput) lastNameInput.value = userData.lastName;
     }
   }
+
+  loadIntegrationSettings();
+}
+
+function getIntegrationSettings() {
+  try {
+    const saved = localStorage.getItem('forgeflow_integrations_settings');
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+}
+
+function loadIntegrationSettings() {
+  const settings = getIntegrationSettings();
+
+  const autoSync = document.getElementById('integrationsAutoSync');
+  if (autoSync) autoSync.classList.toggle('active', settings.autoSync === true);
+
+  const syncInterval = document.getElementById('integrationsSyncInterval');
+  if (syncInterval) syncInterval.value = settings.syncInterval || 'manual';
+
+  const notify = document.getElementById('integrationsNotifyOnFailure');
+  if (notify) notify.classList.toggle('active', settings.notifyOnFailure !== false);
 }
 
 function getTrialEndDate() {
@@ -2868,6 +2892,76 @@ async function doLogout() {
 }
 
 // ============ INTEGRATION FUNCTIONS ============
+const INTEGRATION_PROVIDER_MAP = {
+  zoho: 'Zoho Suite',
+  shopify: 'Shopify',
+  quickbooks: 'QuickBooks',
+  gsheets: 'Google Sheets',
+};
+
+const INTEGRATION_PROVIDER_CONFIG = {
+  zoho: {
+    name: 'Zoho Suite',
+    fields: [
+      { key: 'organization_id', label: 'Organization ID', type: 'text', placeholder: 'Zoho Books org id', help: 'Auto-detected on first sync. Set manually if detection fails.' },
+      { key: 'api_domain', label: 'API Domain', type: 'text', placeholder: 'https://www.zohoapis.com', help: 'Data-center specific API domain.' },
+    ],
+  },
+  shopify: {
+    name: 'Shopify',
+    fields: [
+      { key: 'store_domain', label: 'Store Domain', type: 'text', placeholder: 'your-store.myshopify.com', help: 'Used to address your store API.' },
+    ],
+  },
+  quickbooks: {
+    name: 'QuickBooks',
+    fields: [
+      { key: 'company_id', label: 'Company ID (Realm)', type: 'text', placeholder: '1234567890', help: 'Your QuickBooks company realm ID.' },
+    ],
+  },
+  gsheets: {
+    name: 'Google Sheets',
+    fields: [
+      { key: 'spreadsheet_id', label: 'Spreadsheet ID', type: 'text', placeholder: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms', help: 'The id in your spreadsheet URL.' },
+      { key: 'sheet_name', label: 'Default Sheet Name', type: 'text', placeholder: 'Inventory', help: 'Default tab used for exports.' },
+    ],
+  },
+};
+
+const INTEGRATION_SYNC_ACTIONS = {
+  gsheets: [
+    { action: 'list_spreadsheets', label: 'List Spreadsheets' },
+    { action: 'export_inventory', label: 'Export Inventory' },
+    { action: 'export_orders', label: 'Export Sales Orders' },
+    { action: 'export_mfg', label: 'Export Manufacturing' },
+  ],
+  zoho: [
+    { action: 'test', label: 'Test Connection' },
+    { action: 'list_contacts', label: 'List Contacts' },
+    { action: 'list_invoices', label: 'List Invoices' },
+    { action: 'export_sales_orders', label: 'Export Sales Orders to Zoho' },
+  ],
+  shopify: [
+    { action: 'get_products', label: 'Get Products' },
+    { action: 'get_orders', label: 'Get Orders' },
+    { action: 'sync_products', label: 'Sync Products' },
+    { action: 'sync_orders', label: 'Sync Orders' },
+  ],
+  quickbooks: [],
+};
+
+let activeIntegrationProvider = null;
+let activeIntegrationSettings = {};
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 async function connectIntegration(provider) {
   console.log('connectIntegration called:', provider);
 
@@ -2884,28 +2978,19 @@ async function connectIntegration(provider) {
   }
   
   try {
-    if (window.IntegrationService) {
-      const result = await window.IntegrationService.connect(provider);
+    const result = await window.IntegrationService.connect(provider);
       
-      if (result.redirecting) {
-        showToast('Redirecting to ' + provider + '...', 'info');
-        return;
-      }
+    if (result.redirecting) {
+      showToast('Redirecting to ' + provider + '...', 'info');
+      return;
     }
-    
-    const statusMap = {
-      zoho: 'Zoho Suite',
-      shopify: 'Shopify',
-      quickbooks: 'QuickBooks',
-      gsheets: 'Google Sheets'
-    };
-    
+
     updateIntegrationStatus(provider, true, { connectedVia: 'manual' });
-    showToast('Connected to ' + (statusMap[provider] || provider) + ' successfully!', 'success');
-    addNotification('integration', 'Integration Connected', 'Connected to ' + (statusMap[provider] || provider) + '.', 'integration', 'integrations');
+    showToast('Connected to ' + (INTEGRATION_PROVIDER_MAP[provider] || provider) + ' successfully!', 'success');
+    addNotification('integration', 'Integration Connected', 'Connected to ' + (INTEGRATION_PROVIDER_MAP[provider] || provider) + '.', 'integration', 'integrations');
   } catch (error) {
     console.error('Failed to connect integration:', error);
-    showToast('Failed to connect to ' + provider + ': ' + error.message, 'error');
+    showToast('Failed to connect to ' + (INTEGRATION_PROVIDER_MAP[provider] || provider) + ': ' + error.message, 'error');
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -2937,32 +3022,31 @@ function removeIntegrationState(provider) {
   void persistSettingsToBackend();
 }
 
-function updateIntegrationStatus(provider, connected, meta = {}) {
-  const statusEl = document.getElementById(provider + '-status') || document.getElementById('settings-' + provider + '-status');
-  const connectBtn = document.getElementById(provider + '-connect') || document.getElementById('settings-' + provider + '-connect');
-  const configBtn = document.getElementById(provider + '-config') || document.getElementById('settings-' + provider + '-config');
-  
+function updateIntegrationCard(provider, prefix, connected) {
+  const statusEl = document.getElementById(prefix + provider + '-status');
+  const connectBtn = document.getElementById(prefix + provider + '-connect');
+  const configBtn = document.getElementById(prefix + provider + '-config');
+
   if (statusEl) {
-    if (connected) {
-      statusEl.textContent = 'Connected';
-      statusEl.className = 'integration-status connected';
-    } else {
-      statusEl.textContent = 'Not Connected';
-      statusEl.className = 'integration-status disconnected';
-    }
+    statusEl.textContent = connected ? 'Connected' : 'Not Connected';
+    statusEl.className = 'integration-status ' + (connected ? 'connected' : 'disconnected');
   }
-  
+
   if (connectBtn && configBtn) {
+    connectBtn.style.display = connected ? 'none' : 'inline-block';
+    configBtn.style.display = connected ? 'inline-block' : 'none';
     if (connected) {
-      connectBtn.style.display = 'none';
-      configBtn.style.display = 'inline-block';
-      configBtn.textContent = 'Disconnect';
-      configBtn.onclick = () => disconnectIntegration(provider);
+      configBtn.textContent = 'Configure';
+      configBtn.onclick = () => openIntegrationModal(provider);
     } else {
-      connectBtn.style.display = 'inline-block';
-      configBtn.style.display = 'none';
+      configBtn.onclick = null;
     }
   }
+}
+
+function updateIntegrationStatus(provider, connected, meta = {}) {
+  updateIntegrationCard(provider, '', connected);
+  updateIntegrationCard(provider, 'settings-', connected);
 
   if (connected) {
     setIntegrationState(provider, { connected: true, ...meta });
@@ -2990,9 +3074,6 @@ async function refreshIntegrationStatuses() {
           connectedVia: status.metadata?.connectedVia || 'oauth',
           lastSync: status.lastSync,
         });
-      } else {
-        removeIntegrationState(provider);
-        updateIntegrationStatus(provider, false);
       }
     });
   } catch (error) {
@@ -3008,20 +3089,13 @@ function handleIntegrationOAuthCallback() {
 
   window.IntegrationService.clearOAuthCallbackFromUrl();
 
-  const statusMap = {
-    zoho: 'Zoho Suite',
-    shopify: 'Shopify',
-    quickbooks: 'QuickBooks',
-    gsheets: 'Google Sheets'
-  };
-
   if (result.status === 'success') {
     updateIntegrationStatus(result.provider, true, { connectedVia: 'oauth' });
-    showToast('Connected to ' + (statusMap[result.provider] || result.provider) + ' successfully!', 'success');
+    showToast('Connected to ' + (INTEGRATION_PROVIDER_MAP[result.provider] || result.provider) + ' successfully!', 'success');
     void refreshIntegrationStatuses();
   } else {
     const reason = result.description || result.message || 'Authorization failed';
-    showToast('Failed to connect ' + (statusMap[result.provider] || result.provider) + ': ' + reason, 'error');
+    showToast('Failed to connect ' + (INTEGRATION_PROVIDER_MAP[result.provider] || result.provider) + ': ' + reason, 'error');
   }
 }
 
@@ -3184,6 +3258,178 @@ function closeIntegrationModal() {
   const modal = document.getElementById('integrationModal');
   if (modal) modal.classList.remove('open');
   document.body.style.overflow = '';
+  activeIntegrationProvider = null;
+  activeIntegrationSettings = {};
+}
+
+function buildIntegrationSettingsForm(provider, settings) {
+  const config = INTEGRATION_PROVIDER_CONFIG[provider];
+  if (!config) return '';
+
+  return config.fields.map((field) => {
+    const value = settings[field.key] || '';
+    return `<div class="integration-form-group">
+      <label for="int-settings-${field.key}">${field.label}</label>
+      <input type="${field.type || 'text'}" id="int-settings-${field.key}" value="${escapeHtml(value)}" placeholder="${field.placeholder || ''}">
+      ${field.help ? `<small>${field.help}</small>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function buildIntegrationSyncActions(provider) {
+  const actions = INTEGRATION_SYNC_ACTIONS[provider] || [];
+  if (!actions.length) return '';
+
+  return `<div class="integration-form-group">
+    <label>Sync Actions</label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      ${actions.map((a) => `<button type="button" class="btn-secondary" style="flex:none;font-size:12px;padding:8px 12px" onclick="runIntegrationSync('${provider}', '${a.action}')">${a.label}</button>`).join('')}
+    </div>
+    <small>Runs a sync against the connected provider. Results are recorded in the activity log.</small>
+  </div>`;
+}
+
+function buildIntegrationSyncLogs(provider) {
+  return `<div class="integration-form-group">
+    <label>Recent Activity</label>
+    <div id="integrationLogsList"><p style="font-size:13px;color:var(--gray-400);padding:8px 0">Loading...</p></div>
+  </div>`;
+}
+
+async function openIntegrationModal(provider) {
+  if (!window.IntegrationService) return;
+
+  const modal = document.getElementById('integrationModal');
+  const title = document.getElementById('modalIntegrationTitle');
+  const body = document.getElementById('modalIntegrationBody');
+  if (!modal || !body) return;
+
+  activeIntegrationProvider = provider;
+  activeIntegrationSettings = {};
+
+  title.textContent = 'Configure ' + (INTEGRATION_PROVIDER_MAP[provider] || provider);
+
+  const status = await window.IntegrationService.getStatus(provider);
+  const settings = (status && status.settings) || {};
+
+  body.innerHTML = `
+    <div class="integration-form-group">
+      <label>Connection Status</label>
+      <div class="integration-sync-info">
+        <p>${status && status.connected ? 'Connected' : 'Not connected'}</p>
+        ${status && status.lastSync ? `<small>Last sync: ${new Date(status.lastSync).toLocaleString()}</small>` : ''}
+      </div>
+    </div>
+    ${buildIntegrationSettingsForm(provider, settings)}
+    <div class="integration-toggle">
+      <div>
+        <span class="integration-toggle-label">Auto Sync</span>
+        <span class="integration-toggle-desc">Allow scheduled background syncs for this provider</span>
+      </div>
+      <div class="integration-toggle-switch${settings.auto_sync !== false ? ' active' : ''}" id="int-auto-sync" onclick="this.classList.toggle('active')"></div>
+    </div>
+    ${buildIntegrationSyncActions(provider)}
+    <div style="display:flex;gap:12px;padding:20px 0 8px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="saveProviderSettings('${provider}')">Save Settings</button>
+      <button class="btn-secondary" onclick="testProviderConnection('${provider}')">Test Connection</button>
+      <button class="btn-danger" onclick="disconnectIntegrationFromModal('${provider}')">Disconnect</button>
+    </div>
+    ${buildIntegrationSyncLogs(provider)}
+  `;
+
+  activeIntegrationSettings = settings;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  void renderIntegrationLogs(provider);
+}
+
+async function saveProviderSettings(provider) {
+  if (!window.IntegrationService) return;
+
+  const settings = { ...activeIntegrationSettings };
+  const config = INTEGRATION_PROVIDER_CONFIG[provider];
+  if (config) {
+    config.fields.forEach((field) => {
+      const el = document.getElementById('int-settings-' + field.key);
+      if (el) settings[field.key] = el.value.trim();
+    });
+  }
+  const autoSync = document.getElementById('int-auto-sync');
+  if (autoSync) settings.auto_sync = autoSync.classList.contains('active');
+
+  try {
+    await window.IntegrationService.saveSettings(provider, settings);
+    activeIntegrationSettings = settings;
+    showToast('Settings saved for ' + (INTEGRATION_PROVIDER_MAP[provider] || provider), 'success');
+    addNotification('integration', 'Integration Settings Saved', 'Updated settings for ' + (INTEGRATION_PROVIDER_MAP[provider] || provider) + '.', 'settings', 'integrations');
+  } catch (error) {
+    console.error('Failed to save integration settings:', error);
+    showToast('Failed to save settings: ' + error.message, 'error');
+  }
+}
+
+async function testProviderConnection(provider) {
+  if (!window.IntegrationService) return;
+  showToast('Testing connection to ' + (INTEGRATION_PROVIDER_MAP[provider] || provider) + '...', 'info');
+  const result = await window.IntegrationService.testConnection(provider);
+  if (result.success) {
+    showToast('Connection OK', 'success');
+  } else {
+    showToast('Connection failed: ' + (result.error || 'Unknown error'), 'error');
+  }
+  void renderIntegrationLogs(provider);
+}
+
+async function runIntegrationSync(provider, action) {
+  if (!window.IntegrationService) return;
+  const data = {};
+  if (provider === 'gsheets') {
+    data.spreadsheetId = activeIntegrationSettings.spreadsheet_id || '';
+    data.sheetName = activeIntegrationSettings.sheet_name || 'Inventory';
+  }
+  showToast('Running ' + action + '...', 'info');
+  try {
+    await window.IntegrationService.sync(provider, action, data);
+    showToast('Sync completed successfully', 'success');
+  } catch (error) {
+    console.error('Sync failed:', error);
+    showToast('Sync failed: ' + error.message, 'error');
+  }
+  void renderIntegrationLogs(provider);
+}
+
+async function renderIntegrationLogs(provider) {
+  if (!window.IntegrationService) return;
+  const container = document.getElementById('integrationLogsList');
+  if (!container) return;
+
+  const logs = await window.IntegrationService.getLogs(provider, 10);
+  if (!logs.length) {
+    container.innerHTML = '<p style="font-size:13px;color:var(--gray-400);padding:8px 0">No activity yet.</p>';
+    return;
+  }
+
+  container.innerHTML = logs.map((log) => {
+    const time = log.created_at ? new Date(log.created_at).toLocaleString() : '';
+    const isSuccess = log.status === 'success';
+    const isError = log.status === 'error';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px">
+      <div>
+        <strong>${escapeHtml(log.action)}</strong>
+        ${log.error_message ? `<span style="color:var(--danger);display:block;font-size:12px">${escapeHtml(log.error_message)}</span>` : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <span style="color:var(--gray-400);font-size:12px">${time}</span>
+        <span class="badge ${isSuccess ? 'badge-active' : (isError ? 'badge-pending' : 'badge-draft')}" style="${isError ? 'background:var(--danger-bg);color:var(--danger)' : ''}">${escapeHtml(log.status)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function disconnectIntegrationFromModal(provider) {
+  await disconnectIntegration(provider);
+  closeIntegrationModal();
 }
 
 // ============ RECORD MANAGEMENT ============
@@ -4415,6 +4661,11 @@ function switchSettingsTab(el, tabName) {
     updateBillingInfo();
     updatePaymentMethodDisplay();
   }
+
+  // Refresh integration settings when the integrations tab is shown
+  if (tabName === 'integrations') {
+    loadIntegrationSettings();
+  }
 }
 
 function applyCurrentAppearanceSettings() {
@@ -4525,9 +4776,12 @@ function saveSettings(section) {
   
   if (section === 'Integrations') {
     const settings = {
-      webhooksEnabled: Object.keys(getIntegrationStates()).length > 0
+      autoSync: document.getElementById('integrationsAutoSync')?.classList.contains('active') || false,
+      syncInterval: document.getElementById('integrationsSyncInterval')?.value || 'manual',
+      notifyOnFailure: document.getElementById('integrationsNotifyOnFailure')?.classList.contains('active') ?? true,
     };
     localStorage.setItem('forgeflow_integrations_settings', JSON.stringify(settings));
+    void persistSettingsToBackend();
     showToast('Integration settings saved successfully!', 'success');
     addNotification('settings', 'Integration Settings Saved', 'Your integration preferences were saved.', 'settings');
     return;
@@ -6074,6 +6328,11 @@ window.switchSettingsTab = switchSettingsTab;
 window.doLogout = doLogout;
 window.connectIntegration = connectIntegration;
 window.closeIntegrationModal = closeIntegrationModal;
+window.openIntegrationModal = openIntegrationModal;
+window.saveProviderSettings = saveProviderSettings;
+window.testProviderConnection = testProviderConnection;
+window.runIntegrationSync = runIntegrationSync;
+window.disconnectIntegrationFromModal = disconnectIntegrationFromModal;
 window.saveRecord = saveRecord;
 window.importData = importData;
 window.loadWebhookConfig = loadWebhookConfig;
