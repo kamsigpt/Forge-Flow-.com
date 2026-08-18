@@ -34,7 +34,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_PAYSTACK_PUBLIC_KEY: pk_test_e6633f20b4fe1f77357b0dee95622fbf6817b6cb
+          VITE_PAYSTACK_PUBLIC_KEY: pk_live_878c04462f7cc02bc019c0f69138afc3c4f0ceee
           VITE_SUPABASE_URL: https://secaghvmfkujeciiapav.supabase.co
 
       - name: Upload artifact
