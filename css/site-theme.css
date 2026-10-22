@@ -1,0 +1,635 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================================
+   Forge Flow — shared public-site theme
+   Loaded after each page's inline styles so the whole marketing
+   site matches the landing page design system.
+   ============================================================ */
+
+:root {
+  --ff-primary: #123B7A;
+  --ff-primary-dark: #0B1F3A;
+  --ff-primary-light: #2E6EEB;
+  --ff-accent: #2E6EEB;
+  --ff-primary-hover: #0E2F63;
+  --ff-gradient: #123B7A;
+  --ff-bg: #FFFFFF;
+  --ff-bg-alt: #F6F8FB;
+  --ff-border: #E2E8F0;
+  --ff-text: #172B4D;
+  --ff-text-secondary: #64748B;
+  --ff-text-muted: #64748B;
+  --ff-success: #16A34A;
+  --ff-warning: #D97706;
+  --ff-error: #DC2626;
+  --ff-shadow-sm: 0 1px 2px rgba(11, 31, 58, 0.06);
+  --ff-shadow-md: 0 4px 16px rgba(11, 31, 58, 0.08);
+  --ff-shadow-lg: 0 20px 50px rgba(11, 31, 58, 0.14);
+  --ff-shadow-xl: 0 24px 64px rgba(11, 31, 58, 0.14);
+  --ff-radius-sm: 6px;
+  --ff-radius-md: 8px;
+  --ff-radius-lg: 10px;
+  --ff-radius-xl: 12px;
+  --ff-radius-2xl: 12px;
+  --ff-ease: cubic-bezier(0.2, 0, 0, 1);
+  --ff-ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ff-ease-spring: cubic-bezier(0.2, 0, 0, 1);
+  --ff-container: 1220px;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+  background: var(--ff-bg);
+  color: var(--ff-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ---- NAVBAR ---- */
+.nav {
+  padding: 0 28px;
+  background: rgba(255, 255, 255, 0.86);
+  border-bottom: 1px solid var(--ff-border);
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.nav.scrolled {
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 10px 30px rgba(11, 31, 58, 0.09);
+}
+
+.nav-inner {
+  padding: 14px 0;
+}
+
+.nav.scrolled .nav-inner {
+  padding: 12px 0;
+}
+
+.ff-logo--nav {
+  height: 36px;
+}
+
+.nav.scrolled .ff-logo--nav {
+  height: 34px;
+}
+
+.nav-links {
+  gap: 4px;
+}
+
+.nav-links a {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: var(--ff-radius-sm);
+}
+
+.nav-links a::after {
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+}
+
+.btn-nav-ghost {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--ff-radius-sm);
+  color: var(--ff-text-secondary);
+}
+
+.btn-nav-ghost:hover {
+  background: var(--ff-bg-alt);
+  color: var(--ff-primary);
+}
+
+/* ---- BUTTONS ---- */
+.btn-primary,
+.btn-nav-primary,
+.btn-pricing-fill,
+.btn-cta-primary,
+.btn-about-cta-primary,
+.btn-auth-primary,
+.btn-auth-submit,
+.btn-pay,
+.subscribe-form button,
+.submit-btn,
+.modal-submit-btn,
+.ps-card-btn {
+  background: var(--ff-primary) !important;
+  background-image: none !important;
+  border: 1px solid var(--ff-primary) !important;
+  border-radius: var(--ff-radius-sm) !important;
+  color: #FFFFFF !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transform: none !important;
+}
+
+.btn-primary:hover,
+.btn-nav-primary:hover,
+.btn-pricing-fill:hover,
+.btn-cta-primary:hover,
+.btn-about-cta-primary:hover,
+.btn-auth-primary:hover:not(:disabled),
+.btn-auth-submit:hover,
+.btn-pay:hover:not(:disabled),
+.subscribe-form button:hover,
+.submit-btn:hover,
+.modal-submit-btn:hover:not(:disabled),
+.ps-card-btn:hover {
+  background: var(--ff-primary-hover) !important;
+  border-color: var(--ff-primary-hover) !important;
+  box-shadow: 0 6px 16px rgba(18, 59, 122, 0.18) !important;
+  transform: none !important;
+}
+
+.btn-primary::before,
+.btn-nav-primary::before {
+  display: none !important;
+}
+
+.btn-primary:active,
+.btn-nav-primary:active {
+  transform: none !important;
+}
+
+.btn-lg {
+  padding: 15px 26px;
+  font-size: 15px;
+}
+
+.btn-ghost,
+.btn-pricing-outline,
+.btn-cta-secondary,
+.btn-about-cta-secondary {
+  background: #FFFFFF !important;
+  border: 1px solid #D5E0F0 !important;
+  border-radius: var(--ff-radius-sm) !important;
+  color: var(--ff-primary) !important;
+  box-shadow: none !important;
+}
+
+.btn-ghost:hover,
+.btn-pricing-outline:hover,
+.btn-cta-secondary:hover,
+.btn-about-cta-secondary:hover {
+  background: var(--ff-bg-alt) !important;
+  border-color: #B9CCE6 !important;
+  color: var(--ff-primary) !important;
+  transform: none !important;
+}
+
+.btn-social {
+  background: #FFFFFF !important;
+  border: 1px solid #D5E0F0 !important;
+  border-radius: var(--ff-radius-sm) !important;
+  color: var(--ff-text-secondary) !important;
+}
+
+.btn-social:hover {
+  background: var(--ff-bg-alt) !important;
+  border-color: #B9CCE6 !important;
+}
+
+/* Disabled / unavailable plan states stay neutral */
+.ps-card-btn.current,
+.ps-card-btn.downgrade {
+  background: var(--ff-bg-alt) !important;
+  border: 1px solid var(--ff-border) !important;
+  color: var(--ff-text-secondary) !important;
+  cursor: default;
+}
+
+/* ---- PAGE HEROES ---- */
+.page-hero {
+  background: linear-gradient(180deg, var(--ff-bg-alt) 0%, var(--ff-bg) 100%);
+}
+
+.page-hero-glow {
+  background: radial-gradient(ellipse at 50% 0%, rgba(46, 110, 235, 0.1) 0%, transparent 62%);
+}
+
+.page-hero h1 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  color: var(--ff-primary-dark);
+}
+
+.page-hero p {
+  color: var(--ff-text-secondary);
+}
+
+.about-hero-title,
+.contact-hero-title,
+.section-title,
+.cta-title,
+.cta-card h3 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  color: var(--ff-primary-dark) !important;
+}
+
+.about-hero-title .highlight,
+.contact-hero-title .highlight,
+.section-title .highlight {
+  background: none !important;
+  -webkit-text-fill-color: var(--ff-primary) !important;
+  color: var(--ff-primary) !important;
+}
+
+.about-hero-desc,
+.contact-hero-desc,
+.section-desc {
+  color: var(--ff-text-secondary) !important;
+}
+
+/* ---- CONTACT HERO ---- */
+.contact-hero {
+  background: linear-gradient(180deg, var(--ff-bg-alt) 0%, var(--ff-bg) 100%) !important;
+}
+
+.contact-hero-overlay {
+  display: none;
+}
+
+.contact-hero-buildings {
+  opacity: 0.18;
+}
+
+.contact-hero-buildings svg {
+  opacity: 1;
+  filter: invert(1);
+}
+
+.contact-hero-glow {
+  background: radial-gradient(circle, rgba(46, 110, 235, 0.09) 0%, transparent 68%);
+}
+
+.contact-hero-badge {
+  background: rgba(18, 59, 122, 0.07) !important;
+  border: 1px solid rgba(18, 59, 122, 0.14) !important;
+  color: var(--ff-primary) !important;
+}
+
+/* ---- ABOUT: STATS ---- */
+.about-stats {
+  background: var(--ff-bg-alt) !important;
+  border: 1px solid #E4EAF2;
+  border-radius: var(--ff-radius-md) !important;
+  box-shadow: 0 16px 40px -24px rgba(11, 31, 58, 0.18);
+}
+
+.about-stats::before {
+  background: radial-gradient(circle, rgba(46, 110, 235, 0.09) 0%, transparent 70%) !important;
+}
+
+.about-stat-val {
+  color: var(--ff-primary) !important;
+}
+
+.about-stat-label {
+  color: var(--ff-text-secondary) !important;
+}
+
+/* ---- ABOUT: FEATURED COMPARISON CARD ---- */
+.about-compare-card.featured {
+  background: var(--ff-bg-alt) !important;
+  border: 2px solid var(--ff-primary) !important;
+  color: var(--ff-text) !important;
+  transform: scale(1.03);
+  box-shadow: 0 20px 50px -24px rgba(11, 31, 58, 0.22) !important;
+}
+
+.about-compare-card.featured:hover {
+  transform: scale(1.03) translateY(-4px);
+}
+
+.about-compare-card.featured .about-compare-title {
+  color: var(--ff-primary-dark) !important;
+}
+
+.about-compare-card.featured .about-compare-list li {
+  color: var(--ff-text-secondary) !important;
+}
+
+.about-compare-card.featured .about-compare-icon {
+  background: rgba(18, 59, 122, 0.09) !important;
+}
+
+.about-compare-card.featured .about-compare-icon svg {
+  stroke: var(--ff-primary);
+}
+
+.about-compare-card.featured .about-compare-list .chk {
+  background: var(--ff-primary) !important;
+}
+
+@media (max-width: 1024px) {
+  .about-compare-card.featured {
+    transform: none;
+  }
+
+  .about-compare-card.featured:hover {
+    transform: translateY(-6px);
+  }
+}
+
+/* ---- ABOUT: FEATURE / INDUSTRY CARDS ---- */
+.about-feature-card,
+.about-industry-card,
+.about-compare-card {
+  border-radius: var(--ff-radius-md) !important;
+}
+
+.about-feature-card {
+  border: 1px solid var(--ff-border) !important;
+  box-shadow: var(--ff-shadow-sm);
+}
+
+.about-feature-card:hover,
+.about-industry-card:hover,
+.about-compare-card:not(.featured):hover {
+  border-color: rgba(18, 59, 122, 0.2) !important;
+  box-shadow: var(--ff-shadow-md) !important;
+  transform: translateY(-4px);
+}
+
+.about-feature-icon {
+  background: rgba(18, 59, 122, 0.07) !important;
+}
+
+.about-feature-icon svg {
+  color: var(--ff-primary);
+}
+
+.about-divider,
+.about-compare-badge,
+.about-compare-list .chk,
+.about-dash-bar {
+  background: var(--ff-primary) !important;
+}
+
+/* ---- SHARED MARKETING CTA BLOCK ---- */
+.about-cta,
+.cta-section {
+  margin: 0 24px 72px !important;
+  background: var(--ff-bg-alt) !important;
+  border: 1px solid #E4EAF2 !important;
+  border-radius: var(--ff-radius-md) !important;
+  box-shadow: 0 16px 40px -24px rgba(11, 31, 58, 0.22) !important;
+  padding: 64px 48px !important;
+}
+
+.cta-card {
+  background: var(--ff-bg-alt) !important;
+  border: 1px solid #E4EAF2 !important;
+  border-radius: var(--ff-radius-md) !important;
+  box-shadow: 0 16px 40px -24px rgba(11, 31, 58, 0.22) !important;
+}
+
+.about-cta-glow,
+.cta-glow {
+  background: radial-gradient(circle, rgba(46, 110, 235, 0.12) 0%, transparent 68%) !important;
+}
+
+.cta-particles {
+  display: none;
+}
+
+.about-cta-title {
+  color: var(--ff-primary-dark) !important;
+}
+
+.about-cta-desc,
+.cta-card p {
+  color: var(--ff-text-secondary) !important;
+}
+
+.cta-card a {
+  background: var(--ff-primary) !important;
+  border: 1px solid var(--ff-primary) !important;
+  border-radius: var(--ff-radius-sm) !important;
+  color: #FFFFFF !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.cta-card a:hover {
+  background: var(--ff-primary-hover) !important;
+  border-color: var(--ff-primary-hover) !important;
+  box-shadow: 0 6px 16px rgba(18, 59, 122, 0.18) !important;
+  transform: none !important;
+}
+
+/* ---- CARDS / CONTENT ---- */
+.content-card,
+.section-card,
+.doc-card,
+.guide-list,
+.contact-info-card,
+.contact-form-card,
+.services-card,
+.incidents-card,
+.subscribe-card,
+.pricing-select-card,
+.payment-container,
+.success-modal,
+.modal-container {
+  border: 1px solid var(--ff-border) !important;
+  border-radius: var(--ff-radius-md) !important;
+  box-shadow: var(--ff-shadow-md) !important;
+}
+
+.content-card h2,
+.section-card h2,
+.doc-card h3,
+.contact-form-title,
+.contact-info-card-label,
+.services-card h2,
+.incidents-card h2,
+.subscribe-card h3 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--ff-primary-dark);
+}
+
+.content-card h2::before,
+.section-card h2::before,
+.doc-icon {
+  background: var(--ff-primary) !important;
+}
+
+.search-box,
+.search-box input {
+  border-radius: var(--ff-radius-sm) !important;
+}
+
+/* ---- PRICING SELECT ---- */
+.pricing-select-page {
+  background: var(--ff-bg) !important;
+}
+
+.pricing-select-title,
+.pricing-select-brand,
+.ps-card-name,
+.pricing-toggle-label.active {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--ff-primary-dark) !important;
+}
+
+.pricing-select-subtitle,
+.ps-card-desc,
+.ps-price-period,
+.ps-card-features li {
+  color: var(--ff-text-secondary) !important;
+}
+
+.ps-price-amount {
+  color: var(--ff-primary-dark) !important;
+}
+
+.pricing-select-card.featured {
+  background: var(--ff-bg-alt) !important;
+  border: 2px solid var(--ff-primary) !important;
+  color: var(--ff-text) !important;
+  transform: none;
+  box-shadow: 0 20px 50px -24px rgba(11, 31, 58, 0.22) !important;
+}
+
+.pricing-select-card.featured:hover {
+  transform: translateY(-4px);
+}
+
+.pricing-select-card.featured .ps-card-name,
+.pricing-select-card.featured .ps-price-amount {
+  color: var(--ff-primary-dark) !important;
+}
+
+.pricing-select-card.featured .ps-price-period,
+.pricing-select-card.featured .ps-card-desc,
+.pricing-select-card.featured .ps-card-features li {
+  color: var(--ff-text-secondary) !important;
+}
+
+.pricing-select-card.featured .ps-card-features svg {
+  color: var(--ff-success) !important;
+}
+
+.ps-card-badge,
+.ps-card-badge.popular,
+.ps-card-badge.pro,
+.ps-card-badge.current {
+  background: rgba(18, 59, 122, 0.08) !important;
+  color: var(--ff-primary) !important;
+}
+
+.pricing-toggle input:checked + .pricing-toggle-slider {
+  background: var(--ff-primary) !important;
+}
+
+.pricing-save-badge {
+  background: rgba(22, 163, 74, 0.1) !important;
+  color: #15803D !important;
+}
+
+/* ---- PAYMENT ---- */
+.payment-container {
+  background: #FFFFFF !important;
+}
+
+.payment-sidebar {
+  background: var(--ff-primary) !important;
+}
+
+.payment-title,
+.order-plan-name,
+.order-total-label,
+.success-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--ff-primary-dark) !important;
+}
+
+.payment-subtitle,
+.order-header,
+.order-price-label,
+.payment-secure,
+.paystack-branding,
+.success-message {
+  color: var(--ff-text-secondary) !important;
+}
+
+.order-summary {
+  background: var(--ff-bg-alt) !important;
+  border-radius: var(--ff-radius-md) !important;
+}
+
+.form-input {
+  border-radius: var(--ff-radius-sm) !important;
+}
+
+/* ---- FOOTER ---- */
+.footer {
+  background: #FFFFFF !important;
+  border-top: 1px solid var(--ff-border);
+  padding: 56px 28px 24px;
+}
+
+.footer-grid {
+  border-bottom-color: var(--ff-border);
+}
+
+.footer-brand .ff-logo--footer {
+  height: 40px;
+  margin-bottom: 14px;
+}
+
+.footer-brand p {
+  color: var(--ff-text-secondary) !important;
+}
+
+.footer-col h4 {
+  color: var(--ff-primary-dark) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+}
+
+.footer-col ul a,
+.footer-bottom,
+.footer-bottom a {
+  color: var(--ff-text-secondary) !important;
+}
+
+.footer-col ul a:hover,
+.footer-bottom a:hover {
+  color: var(--ff-primary) !important;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .nav {
+    padding: 0 20px;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.97);
+  }
+
+  .about-cta,
+  .cta-section {
+    margin: 0 16px 56px !important;
+    padding: 48px 24px !important;
+  }
+
+  .footer {
+    padding: 44px 20px 20px;
+  }
+}
