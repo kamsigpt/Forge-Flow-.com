@@ -4789,7 +4789,7 @@ function saveSettings(section) {
   
   if (section === 'Appearance') {
     const activeColor = document.querySelector('.color-option.active');
-    const accentColor = activeColor ? activeColor.style.background : '#FF6A00';
+    const accentColor = activeColor ? activeColor.style.background : '#123B7A';
     
     const settings = {
       theme: document.querySelector('.theme-option.active')?.dataset.theme || 'light',
@@ -6166,13 +6166,13 @@ function initCharts() {
           {
             label: 'Sales ($k)',
             data: dataCleared ? [] : [42, 48, 51, 58, 63, 55, 69, 72, 78, 75, 82, 84],
-            borderColor: '#F97316',
+            borderColor: '#2E6EEB',
             backgroundColor: 'rgba(249,115,22,0.06)',
             tension: 0.4,
             fill: true,
             pointRadius: 3,
             pointHoverRadius: 6,
-            pointBackgroundColor: '#F97316',
+            pointBackgroundColor: '#2E6EEB',
           },
           {
             label: 'Production (units)',
@@ -6210,7 +6210,7 @@ function initCharts() {
         labels: ['In Production', 'Completed', 'Pending', 'Shipped', 'Delivered'],
         datasets: [{
           data: dataCleared ? [] : [35, 22, 18, 12, 13],
-          backgroundColor: ['#F97316', '#0EA5A4', '#F59E0B', '#22D3EE', '#14B8A6'],
+          backgroundColor: ['#2E6EEB', '#0EA5A4', '#F59E0B', '#22D3EE', '#14B8A6'],
           borderColor: '#F9FAFB',
           borderWidth: 2,
           hoverOffset: 6,

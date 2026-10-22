@@ -478,10 +478,10 @@ body {
     align-items: center;
     gap: 8px;
     padding: 5px 14px;
-    border: 1.5px solid var(--cobalt, #FF6A00);
+    border: 1.5px solid var(--cobalt, #123B7A);
     border-radius: var(--radius-full);
-    background: linear-gradient(180deg, rgba(255, 106, 0, 0.14), rgba(255, 106, 0, 0.06));
-    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12), inset 0 0 0 1px rgba(255, 106, 0, 0.25);
+    background: linear-gradient(180deg, rgba(18, 59, 122, 0.14), rgba(18, 59, 122, 0.06));
+    box-shadow: 0 0 0 3px rgba(18, 59, 122, 0.12), inset 0 0 0 1px rgba(18, 59, 122, 0.25);
     flex-shrink: 0;
     cursor: default;
     user-select: none;
@@ -490,7 +490,7 @@ body {
 .topbar-clock svg {
     width: 15px;
     height: 15px;
-    color: var(--cobalt, #FF6A00);
+    color: var(--cobalt, #123B7A);
     flex-shrink: 0;
 }
 
@@ -512,7 +512,7 @@ body {
     font-size: 13px;
     font-weight: 800;
     letter-spacing: 0.4px;
-    color: var(--cobalt-dark, #E55D00);
+    color: var(--cobalt-dark, #0B1F3A);
     font-variant-numeric: tabular-nums;
 }
 
@@ -523,7 +523,7 @@ body {
     letter-spacing: 0.5px;
     padding: 1px 5px;
     border-radius: var(--radius-full);
-    background: var(--cobalt, #FF6A00);
+    background: var(--cobalt, #123B7A);
     color: #FFFFFF;
     line-height: 1.4;
     flex-shrink: 0;
@@ -534,7 +534,7 @@ body {
     font-weight: 700;
     letter-spacing: 0.3px;
     text-transform: uppercase;
-    color: var(--cobalt-dark, #E55D00);
+    color: var(--cobalt-dark, #0B1F3A);
 }
 
 .topbar-actions {
@@ -3690,7 +3690,7 @@ body {
 
 .modal-submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 106, 0, 0.4);
+    box-shadow: 0 8px 25px rgba(18, 59, 122, 0.4);
 }
 
 .upgrade-modal .modal-submit-btn {
@@ -3962,7 +3962,7 @@ body {
 
 .form-input:focus {
     border-color: var(--cobalt);
-    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.08);
+    box-shadow: 0 0 0 3px rgba(18, 59, 122, 0.08);
 }
 
 .form-input::placeholder {
@@ -4064,7 +4064,7 @@ body {
 
 .billing-trial-info {
     padding-top: 16px;
-    border-top: 1px solid rgba(255, 106, 0, 0.2);
+    border-top: 1px solid rgba(18, 59, 122, 0.2);
 }
 
 .billing-trial-info p {

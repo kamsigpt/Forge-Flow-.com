@@ -449,19 +449,32 @@ window.addEventListener('load', () => {
     data: {
       labels: ['Oct','Nov','Dec','Jan','Feb','Mar'],
       datasets: [{
+        label: 'Completed units',
         data: [58, 72, 78, 75, 82, 84],
-        backgroundColor: 'rgba(255, 106, 0, 0.12)',
-        borderColor: '#FF6A00',
-        borderWidth: 1.5,
-        borderRadius: 6,
+        backgroundColor: 'rgba(18, 59, 122, 0.85)',
+        hoverBackgroundColor: '#123B7A',
+        borderWidth: 0,
+        borderRadius: 4,
+        barPercentage: 0.62,
+        categoryPercentage: 0.72,
       }]
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#9CA3AF' } },
-        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 9 }, color: '#9CA3AF' } }
+        x: {
+          grid: { display: false },
+          border: { display: false },
+          ticks: { font: { family: 'Inter', size: 10 }, color: '#64748B' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: '#EEF2F7' },
+          border: { display: false },
+          ticks: { font: { family: 'Inter', size: 10 }, color: '#64748B', maxTicksLimit: 5 }
+        }
       }
     }
   });
@@ -475,6 +488,7 @@ function toggleMobileNav() {
   const open = menu.classList.toggle('open');
   if (btn) {
     btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
     btn.classList.toggle('is-open', open);
   }
   document.body.classList.toggle('nav-menu-open', open);
@@ -486,6 +500,7 @@ function closeMobileNav() {
   if (menu) menu.classList.remove('open');
   if (btn) {
     btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'Open navigation menu');
     btn.classList.remove('is-open');
   }
   document.body.classList.remove('nav-menu-open');

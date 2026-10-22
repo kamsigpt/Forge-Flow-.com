@@ -1,45 +1,50 @@
 /* ============================================
-   MARIA MRP — SHARED DESIGN SYSTEM
-   Manufacturing Orange + Graphite Theme
-   Font: Outfit (display) + Figtree (body)
+   FORGE FLOW — SHARED DESIGN SYSTEM
+   Manufacturing Blue + Neutral Theme
+   Font: Inter
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Figtree:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Core Brand - ForgeFlow Orange */
-  --cobalt:        #FF6A00;
-  --cobalt-dark:   #E55D00;
-  --cobalt-light:  #FF8C42;
-  --cobalt-shadow: rgba(255, 106, 0, 0.4);
-  --cobalt-shadow-hover: rgba(255, 106, 0, 0.6);
-  --accent-color:      #FF6A00;
-  --ff-primary:        #FF6A00;
-  --ff-primary-dark:   #E55D00;
-  --ff-primary-light:  #FF8C42;
+  /* Core Brand - Forge Flow Blue */
+  --cobalt:        #123B7A;
+  --cobalt-dark:   #0B1F3A;
+  --cobalt-light:  #2E6EEB;
+  --cobalt-shadow: rgba(18, 59, 122, 0.28);
+  --cobalt-shadow-hover: rgba(18, 59, 122, 0.4);
+  --accent-color:      #123B7A;
+  --ff-primary:        #123B7A;
+  --ff-primary-dark:   #0B1F3A;
+  --ff-primary-light:  #2E6EEB;
+  --ff-bg:             #FFFFFF;
+  --ff-bg-alt:         #F6F8FB;
+  --ff-border:         #E2E8F0;
+  --ff-text:           #172B4D;
+  --ff-text-secondary: #64748B;
 
-  /* Sidebar - ForgeFlow Jet Black */
-  --sidebar-bg:   #111111;
-  --sidebar-active-bg: #1F1F1F;
-  --sidebar-accent: #FF6A00;
-  --sidebar-text: #D4D4D4;
-  --sidebar-inactive: #9CA3AF;
-  --sidebar-hover-bg: rgba(255,255,255,0.07);
-  --sidebar-accent-hover: rgba(255, 106, 0, 0.14);
-  --sidebar-accent-active: rgba(255, 106, 0, 0.22);
-  --sidebar-count-bg: rgba(255, 106, 0, 0.2);
-  --sidebar-count-color: #FF6A00;
-  --sidebar-count-border: 1px solid #FF6A00;
+  /* Sidebar - Forge Flow Navy */
+  --sidebar-bg:   #0B1F3A;
+  --sidebar-active-bg: #123B7A;
+  --sidebar-accent: #2E6EEB;
+  --sidebar-text: #CBD5E1;
+  --sidebar-inactive: #94A3B8;
+  --sidebar-hover-bg: rgba(255,255,255,0.06);
+  --sidebar-accent-hover: rgba(46, 110, 235, 0.16);
+  --sidebar-accent-active: rgba(46, 110, 235, 0.24);
+  --sidebar-count-bg: rgba(46, 110, 235, 0.22);
+  --sidebar-count-color: #BFD3F8;
+  --sidebar-count-border: 1px solid rgba(126, 166, 240, 0.5);
 
-  /* Topbar - ForgeFlow Jet Black */
-  --topbar-bg:    #0A0A0A;
-  --topbar-text:  #E5E5E5;
-  --topbar-alt:   #111111;
+  /* Topbar - Forge Flow Navy */
+  --topbar-bg:    #0B1F3A;
+  --topbar-text:  #E2E8F0;
+  --topbar-alt:   #123B7A;
 
   /* Legacy - kept for compatibility */
-  --ultra:        #111111;
-  --sky:          #FF6A00;
-  --sky-pale:     #FFF7ED;
+  --ultra:        #0B1F3A;
+  --sky:          #123B7A;
+  --sky-pale:     #EEF3FB;
 
   /* Neutrals - ForgeFlow */
   --white:        #FFFFFF;
@@ -56,32 +61,32 @@
   --gray-900:     #111827;
 
   /* Semantic */
-  --success:      #10B981;
-  --success-bg:   #ECFDF5;
-  --success-ink:  #047857;
-  --warn:        #F59E0B;
+  --success:      #16A34A;
+  --success-bg:   #DCFCE7;
+  --success-ink:  #15803D;
+  --warn:        #D97706;
   --warn-bg:     #FEF3C7;
   --warn-ink:    #B45309;
-  --danger:      #EF4444;
+  --danger:      #DC2626;
   --danger-bg:   #FEE2E2;
   --danger-ink:  #B91C1C;
-  --info:        #FF6A00;
-  --blue:        #3B82F6;
-  --blue-bg:     #DBEAFE;
-  --blue-ink:    #1D4ED8;
-  --purple:      #8B5CF6;
-  --purple-bg:   #EDE9FE;
-  --purple-ink:  #6D28D9;
+  --info:        #2E6EEB;
+  --blue:        #2E6EEB;
+  --blue-bg:     #E8EFFD;
+  --blue-ink:    #123B7A;
+  --purple:      #6366F1;
+  --purple-bg:   #EEF2FF;
+  --purple-ink:  #4338CA;
   --neutral:     #94A3B8;
   --neutral-bg:  #E2E8F0;
   --neutral-ink: #475569;
 
   /* Cobalt alpha helpers */
-  --cobalt-05: rgba(255, 106, 0, 0.05);
-  --cobalt-10: rgba(255, 106, 0, 0.10);
-  --cobalt-15: rgba(255, 106, 0, 0.15);
-  --cobalt-30: rgba(255, 106, 0, 0.30);
-  --cobalt-50: rgba(255, 106, 0, 0.50);
+  --cobalt-05: rgba(18, 59, 122, 0.05);
+  --cobalt-10: rgba(18, 59, 122, 0.10);
+  --cobalt-15: rgba(18, 59, 122, 0.15);
+  --cobalt-30: rgba(18, 59, 122, 0.30);
+  --cobalt-50: rgba(18, 59, 122, 0.50);
 
   /* Shadows - Neutral */
   --shadow-sm:    0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
@@ -91,8 +96,8 @@
   --shadow-card:  0 1px 3px rgba(0,0,0,0.05);
 
   /* Typography */
-  --font-display: 'Outfit', sans-serif;
-  --font-body:    'Figtree', sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   /* Layout */
   --radius-sm:    6px;
@@ -136,16 +141,16 @@ html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
   --gray-900:     #111827;
 
   --sidebar-bg:   #FFFFFF;
-  --sidebar-active-bg: rgba(255, 106, 0, 0.1);
+  --sidebar-active-bg: rgba(18, 59, 122, 0.1);
   --sidebar-text: #374151;
   --sidebar-inactive: #9CA3AF;
-  --sidebar-accent: #FF6A00;
-  --sidebar-hover-bg: rgba(255, 106, 0, 0.08);
-  --sidebar-accent-hover: rgba(255, 106, 0, 0.08);
-  --sidebar-accent-active: rgba(255, 106, 0, 0.14);
-  --sidebar-count-bg: rgba(255, 106, 0, 0.2);
-  --sidebar-count-color: #FF6A00;
-  --sidebar-count-border: 1px solid #FF6A00;
+  --sidebar-accent: #123B7A;
+  --sidebar-hover-bg: rgba(18, 59, 122, 0.08);
+  --sidebar-accent-hover: rgba(18, 59, 122, 0.08);
+  --sidebar-accent-active: rgba(18, 59, 122, 0.14);
+  --sidebar-count-bg: rgba(18, 59, 122, 0.2);
+  --sidebar-count-color: #123B7A;
+  --sidebar-count-border: 1px solid #123B7A;
 
   --topbar-bg:    #FFFFFF;
   --topbar-text:  #374151;
@@ -173,7 +178,7 @@ html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
   --gray-800:     #E5E7EB;
   --gray-900:     #F9FAFB;
 
-  --sky-pale:     rgba(255, 106, 0, 0.12);
+  --sky-pale:     rgba(18, 59, 122, 0.12);
   --success-bg:   rgba(16, 185, 129, 0.14);
   --success-ink:  #34D399;
   --warn-bg:      rgba(245, 158, 11, 0.14);
@@ -191,13 +196,13 @@ html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
   --sidebar-active-bg: #1F1F1F;
   --sidebar-text: #E5E5E5;
   --sidebar-inactive: #9CA3AF;
-  --sidebar-accent: #FF6A00;
+  --sidebar-accent: #123B7A;
   --sidebar-hover-bg: rgba(255,255,255,0.05);
-  --sidebar-accent-hover: rgba(255, 106, 0, 0.12);
-  --sidebar-accent-active: rgba(255, 106, 0, 0.20);
-  --sidebar-count-bg: rgba(255, 106, 0, 0.2);
-  --sidebar-count-color: #FF6A00;
-  --sidebar-count-border: 1px solid #FF6A00;
+  --sidebar-accent-hover: rgba(18, 59, 122, 0.12);
+  --sidebar-accent-active: rgba(18, 59, 122, 0.20);
+  --sidebar-count-bg: rgba(18, 59, 122, 0.2);
+  --sidebar-count-color: #123B7A;
+  --sidebar-count-border: 1px solid #123B7A;
 
   --topbar-bg:    #000000;
   --topbar-text:  #E5E5E5;
@@ -238,28 +243,28 @@ input, select, textarea { font-family: inherit; }
 }
 
 .ff-logo--nav {
-  height: 52px;
+  height: 38px;
 }
 
 .ff-logo--sidebar {
   height: auto;
-  max-height: 90px;
+  max-height: 48px;
 }
 
 .ff-logo--auth {
-  height: 56px;
+  height: 42px;
 }
 
 .ff-logo--auth-modal {
-  height: 50px;
+  height: 38px;
 }
 
 .ff-logo--pricing {
-  height: 60px;
+  height: 42px;
 }
 
 .ff-logo--payment {
-  height: 56px;
+  height: 42px;
 }
 
 .ff-logo--mock {
@@ -267,16 +272,16 @@ input, select, textarea { font-family: inherit; }
 }
 
 .ff-logo--footer {
-  height: 72px;
+  height: 42px;
 }
 
 @media (max-width: 768px) {
   .ff-logo--nav {
-    height: 44px;
+    height: 34px;
   }
 
   .ff-logo--footer {
-    height: 60px;
+    height: 36px;
   }
 }
 
@@ -322,8 +327,8 @@ input, select, textarea { font-family: inherit; }
 .feature-icon-wrap {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
-  background: #FF6A00;
+  border-radius: 10px;
+  background: var(--sky-pale);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -333,7 +338,7 @@ input, select, textarea { font-family: inherit; }
 .feature-icon {
   width: 24px;
   height: 24px;
-  color: white;
+  color: var(--cobalt);
 }
 
 .tag-icon {

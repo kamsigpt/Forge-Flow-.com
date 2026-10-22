@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Forge Flow symbol">
+  <rect x="4" y="4" width="9" height="40" rx="2" fill="#123B7A"/>
+  <path d="M13 4h18l9 9-9 9H13V4z" fill="#123B7A"/>
+  <path d="M31 4h0l9 9-9 9V4z" fill="#2E6EEB"/>
+  <path d="M13 22h14v9H13v-9z" fill="#123B7A"/>
+  <path d="M13 31h9v13h-9V31z" fill="#123B7A"/>
+</svg>

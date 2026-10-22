@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 286 56" role="img" aria-label="Forge Flow">
+  <g transform="translate(0,6)" fill="#FFFFFF">
+    <rect x="4" y="4" width="9" height="40" rx="2"/>
+    <path d="M13 4h18l9 9-9 9H13V4z"/>
+    <path d="M31 4h0l9 9-9 9V4z"/>
+    <path d="M13 22h14v9H13v-9z"/>
+    <path d="M13 31h9v13h-9V31z"/>
+  </g>
+  <text x="60" y="38" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="27" font-weight="700" letter-spacing="-0.7" fill="#FFFFFF">Forge Flow</text>
+</svg>

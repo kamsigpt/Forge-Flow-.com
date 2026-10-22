@@ -1,10 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FF6A00"/>
-      <stop offset="100%" style="stop-color:#FF8C42"/>
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="6" fill="url(#grad)"/>
-  <text x="16" y="23" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white" text-anchor="middle">F</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#123B7A"/>
+  <g transform="translate(10,10) scale(0.92)" fill="#FFFFFF">
+    <rect x="4" y="4" width="9" height="40" rx="2"/>
+    <path d="M13 4h18l9 9-9 9H13V4z"/>
+    <path d="M13 22h14v9H13v-9z"/>
+    <path d="M13 31h9v13h-9V31z"/>
+  </g>
 </svg>
