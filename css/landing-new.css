@@ -705,12 +705,13 @@ img { max-width: 100%; }
   border: 1px solid var(--ff-border);
   border-radius: var(--ff-radius-md);
   background: #FFFFFF;
-  transition: border-color 0.18s var(--ff-ease), box-shadow 0.18s var(--ff-ease);
+  transition: transform 0.24s var(--ff-ease), border-color 0.24s var(--ff-ease), box-shadow 0.24s var(--ff-ease);
 }
 
 .ff-feature-card:hover {
-  border-color: #C7D7EC;
-  box-shadow: var(--ff-shadow-sm);
+  transform: translateY(-6px);
+  border-color: rgba(18, 59, 122, 0.26);
+  box-shadow: 0 22px 40px -14px rgba(11, 31, 58, 0.38), 0 8px 18px -10px rgba(11, 31, 58, 0.24);
 }
 
 .ff-icon-box {
@@ -722,9 +723,23 @@ img { max-width: 100%; }
   border-radius: var(--ff-radius-sm);
   background: #EEF3FB;
   color: var(--ff-primary);
+  transition: background 0.24s var(--ff-ease), color 0.24s var(--ff-ease), transform 0.24s var(--ff-ease), box-shadow 0.24s var(--ff-ease);
 }
 
-.ff-icon-box svg { width: 21px; height: 21px; }
+.ff-feature-card:hover .ff-icon-box {
+  background: var(--ff-primary);
+  color: #FFFFFF;
+  transform: scale(1.08) rotate(3deg);
+  box-shadow: 0 8px 18px rgba(18, 59, 122, 0.28);
+}
+
+.ff-icon-box svg {
+  width: 21px;
+  height: 21px;
+  transition: transform 0.24s var(--ff-ease);
+}
+
+.ff-feature-card:hover .ff-icon-box svg { transform: scale(1.06); }
 
 .ff-feature-card h3 {
   margin: 18px 0 7px;
@@ -1059,6 +1074,15 @@ img { max-width: 100%; }
   color: var(--ff-primary);
   font-size: 11px;
   font-weight: 600;
+  transition: background 0.22s var(--ff-ease), border-color 0.22s var(--ff-ease), color 0.22s var(--ff-ease), transform 0.22s var(--ff-ease), box-shadow 0.22s var(--ff-ease);
+}
+
+.ff-step:hover .ff-step-num {
+  background: var(--ff-primary-dark);
+  border-color: var(--ff-primary-dark);
+  color: #FFFFFF;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 18px rgba(11, 31, 58, 0.24);
 }
 
 .ff-step h3 {
@@ -1343,14 +1367,62 @@ img { max-width: 100%; }
 /* ---- CTA ---- */
 
 .ff-cta {
-  padding: 76px 0;
-  background: var(--ff-bg-alt);
+  padding: 72px 0;
+  background: #FFFFFF;
   border-top: 1px solid var(--ff-border);
 }
 
 .ff-cta-inner {
-  max-width: 680px;
+  position: relative;
+  max-width: 1060px;
+  padding: 64px 48px;
   text-align: center;
+  background: var(--ff-bg-alt);
+  border: 1px solid #E4EAF2;
+  border-radius: var(--ff-radius-md);
+  box-shadow: 0 16px 40px -24px rgba(11, 31, 58, 0.22);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ff-cta-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  border: 1px solid rgba(46, 110, 235, 0.14);
+  background: radial-gradient(circle at 32% 30%, rgba(46, 110, 235, 0.14), rgba(46, 110, 235, 0.02) 68%);
+  box-shadow: 0 0 0 26px rgba(46, 110, 235, 0.035), 0 0 0 52px rgba(46, 110, 235, 0.02);
+}
+
+.ff-cta-circle--one {
+  width: 360px;
+  height: 360px;
+  top: -220px;
+  left: -120px;
+}
+
+.ff-cta-circle--two {
+  width: 300px;
+  height: 300px;
+  right: -140px;
+  bottom: -190px;
+  background: radial-gradient(circle at 40% 35%, rgba(46, 110, 235, 0.11), rgba(46, 110, 235, 0.02) 70%);
+}
+
+.ff-cta-circle--three {
+  width: 150px;
+  height: 150px;
+  top: -72px;
+  right: 14%;
+  border-color: rgba(46, 110, 235, 0.1);
+  background: radial-gradient(circle at 40% 40%, rgba(46, 110, 235, 0.09), rgba(46, 110, 235, 0.01) 72%);
+  box-shadow: 0 0 0 20px rgba(46, 110, 235, 0.025);
+}
+
+.ff-cta-content {
+  position: relative;
+  z-index: 1;
 }
 
 .ff-cta h2 {
@@ -1902,6 +1974,7 @@ img { max-width: 100%; }
   .ff-price-badge { left: 18px; }
 
   .ff-cta { padding: 56px 0; }
+  .ff-cta-inner { padding: 48px 28px; }
   .ff-cta-actions { flex-direction: column; align-items: stretch; }
   .ff-cta-actions .btn { width: 100%; }
 
@@ -1941,6 +2014,9 @@ img { max-width: 100%; }
   .ff-metric-row > div { border-right: none; border-bottom: 1px solid var(--ff-border); }
   .ff-metric-row > div:last-child { border-bottom: none; }
   .ff-price { font-size: 30px; }
+  .ff-cta-inner { padding: 40px 20px; }
+  .ff-cta-circle--one { width: 260px; height: 260px; }
+  .ff-cta-circle--two { width: 220px; height: 220px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
