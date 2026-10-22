@@ -1,10 +1,17 @@
 import { createClient } from './supabase-auth.js';
 
 // ============ NAV SCROLL ============
+const nav = document.querySelector('.ff-nav');
+let navTicking = false;
+
 window.addEventListener('scroll', () => {
-  const nav = document.querySelector('.nav');
-  if (nav) nav.classList.toggle('scrolled', window.scrollY > 30);
-});
+  if (!nav || navTicking) return;
+  navTicking = true;
+  requestAnimationFrame(() => {
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+    navTicking = false;
+  });
+}, { passive: true });
 
 // ============ PARTICLES ============
 // Particles disabled for performance on low-end devices

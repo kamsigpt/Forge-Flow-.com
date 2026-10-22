@@ -26,6 +26,8 @@
   --ff-ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
+html { scroll-behavior: auto; }
+
 body {
   background: var(--ff-bg);
   color: var(--ff-text);
@@ -130,16 +132,16 @@ img { max-width: 100%; }
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.58);
+  background: rgba(255, 255, 255, 0.82);
   border-bottom: 1px solid rgba(226, 232, 240, 0.55);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   transition: background 0.25s var(--ff-ease), box-shadow 0.25s var(--ff-ease), border-color 0.25s var(--ff-ease);
 }
 
 .ff-nav.scrolled {
-  background: rgba(255, 255, 255, 0.76);
+  background: rgba(255, 255, 255, 0.94);
   border-bottom-color: rgba(203, 213, 225, 0.8);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75) inset, 0 10px 30px rgba(11, 31, 58, 0.09);
 }
@@ -231,8 +233,8 @@ img { max-width: 100%; }
   background: rgba(255, 255, 255, 0.86);
   border-bottom: 1px solid rgba(226, 232, 240, 0.7);
   box-shadow: 0 12px 24px rgba(11, 31, 58, 0.08);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .ff-mobile-nav.open { display: block; }
@@ -1374,7 +1376,10 @@ img { max-width: 100%; }
 
 .ff-cta-inner {
   position: relative;
-  max-width: 1060px;
+  width: calc(100% - 48px);
+  max-width: 1760px;
+  margin-left: auto;
+  margin-right: auto;
   padding: 64px 48px;
   text-align: center;
   background: var(--ff-bg-alt);
@@ -1912,6 +1917,12 @@ img { max-width: 100%; }
 
 @media (max-width: 768px) {
   .ff-container { padding: 0 20px; }
+  .ff-nav {
+    background: rgba(255, 255, 255, 0.96);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .ff-nav.scrolled { background: rgba(255, 255, 255, 0.98); }
   .ff-nav-inner { height: 64px; }
   .ff-logo--nav { height: 32px; }
   .ff-logo--footer { height: 34px; }
@@ -1974,7 +1985,7 @@ img { max-width: 100%; }
   .ff-price-badge { left: 18px; }
 
   .ff-cta { padding: 56px 0; }
-  .ff-cta-inner { padding: 48px 28px; }
+  .ff-cta-inner { width: calc(100% - 32px); padding: 48px 28px; }
   .ff-cta-actions { flex-direction: column; align-items: stretch; }
   .ff-cta-actions .btn { width: 100%; }
 
@@ -2014,7 +2025,7 @@ img { max-width: 100%; }
   .ff-metric-row > div { border-right: none; border-bottom: 1px solid var(--ff-border); }
   .ff-metric-row > div:last-child { border-bottom: none; }
   .ff-price { font-size: 30px; }
-  .ff-cta-inner { padding: 40px 20px; }
+  .ff-cta-inner { width: calc(100% - 24px); padding: 40px 20px; }
   .ff-cta-circle--one { width: 260px; height: 260px; }
   .ff-cta-circle--two { width: 220px; height: 220px; }
 }
