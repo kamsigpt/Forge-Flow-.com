@@ -491,8 +491,9 @@
         }
 
         .auth-page {
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            height: auto;
+            overflow-x: hidden;
             background: #0f172a;
             display: flex;
             align-items: stretch;
@@ -501,7 +502,7 @@
 
         .auth-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.15fr 0.85fr;
             gap: 0;
             width: 100%;
             max-width: none;
@@ -520,7 +521,7 @@
             justify-content: flex-start;
             align-items: stretch;
             min-height: 100vh;
-            overflow-y: auto;
+            overflow-y: visible;
         }
 
         .auth-back {
@@ -758,6 +759,7 @@
             justify-content: center;
             overflow: hidden;
             min-height: 100vh;
+            height: 100%;
         }
 
         .auth-visual::before {
