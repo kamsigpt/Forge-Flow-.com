@@ -102,8 +102,7 @@
         </div>
 
         <div class="auth-visual">
-            <img class="auth-visual-bg" src="assets/modern-manufacturing-operations-dashboard.png" alt="" aria-hidden="true">
-            <img class="auth-visual-main" src="assets/modern-manufacturing-operations-dashboard.png" alt="Modern manufacturing operations dashboard">
+            <img src="assets/modern-manufacturing-operations-dashboard.png" alt="Modern manufacturing operations dashboard">
         </div>
     </div>
 
@@ -767,24 +766,13 @@
             display: none;
         }
 
-        .auth-visual-bg {
+        .auth-visual img {
             position: absolute;
-            inset: -30px;
-            width: calc(100% + 60px);
-            height: calc(100% + 60px);
-            object-fit: cover;
-            filter: blur(24px) brightness(0.35);
-            transform: scale(1.08);
-        }
-
-        .auth-visual-main {
-            position: relative;
-            z-index: 1;
+            inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            padding: 28px;
-            box-sizing: border-box;
+            object-fit: cover;
+            display: block;
         }
 
         .auth-visual-content {
