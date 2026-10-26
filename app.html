@@ -110,7 +110,7 @@
 
       <div class="topbar-actions">
         <div class="topbar-clock" id="topbarClock" title="Current date and time">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="topbar-clock-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
           <div class="topbar-clock-body">
             <div class="topbar-clock-time-row">
               <span class="topbar-clock-time" id="topbarClockTime">--:--</span>
@@ -323,47 +323,59 @@
         </div>
 
         <div class="charts-row">
-          <div class="chart-card">
-            <div class="chart-card-title">Planned production</div>
-            <div class="chart-card-sub">Order quantity by target month</div>
+          <div class="chart-card chart-card-production">
+            <div class="chart-card-heading">
+              <div>
+                <div class="chart-card-eyebrow">PRODUCTION</div>
+                <div class="chart-card-title">Planned output</div>
+                <div class="chart-card-sub">Open order quantities by target month</div>
+              </div>
+              <div class="chart-card-summary"><span>Total planned</span><strong id="dashProductionTotal">0</strong><small>units</small></div>
+            </div>
             <div class="chart-empty-state" id="dashLineEmpty" hidden>No planned production in this period.</div>
             <canvas id="dashLineChart" height="160"></canvas>
           </div>
-          <div class="chart-card">
-            <div class="chart-card-title">Order Status Distribution</div>
-            <div class="chart-card-sub">Orders by current status</div>
+          <div class="chart-card chart-card-status">
+            <div class="chart-card-heading">
+              <div>
+                <div class="chart-card-eyebrow">WORKFLOW</div>
+                <div class="chart-card-title">Order status</div>
+                <div class="chart-card-sub">Production orders in selected period</div>
+              </div>
+              <div class="chart-card-summary"><span>Total orders</span><strong id="dashOrderTotal">0</strong></div>
+            </div>
             <div class="chart-empty-state" id="dashPieEmpty" hidden>No production orders yet.</div>
             <canvas id="dashPieChart" height="160"></canvas>
           </div>
         </div>
 
         <!-- MRP Summary Section -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
-          <div class="table-card" style="border-left:3px solid var(--danger)">
-            <div style="padding:16px">
-              <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">MRP Material Shortages</div>
+        <div class="dashboard-ops-grid">
+          <div class="table-card dashboard-ops-card dashboard-ops-card--risk">
+            <div class="dashboard-ops-card-body">
+              <div class="dashboard-ops-title">Material requirements</div>
               <div style="display:flex;flex-direction:column;gap:8px" id="mrpShortagesList">
                 <div class="summary-empty">No material shortages</div>
               </div>
-              <button class="btn-secondary" style="margin-top:12px;width:100%;font-size:12px" onclick="showModule('purchase',null)">Generate Purchase Requests</button>
+              <button class="btn-secondary dashboard-ops-action" onclick="showModule('purchase',null)">Review purchase requests</button>
             </div>
           </div>
-          <div class="table-card" style="border-left:3px solid var(--cobalt)">
-            <div style="padding:16px">
-              <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Demand Pipeline</div>
+          <div class="table-card dashboard-ops-card dashboard-ops-card--demand">
+            <div class="dashboard-ops-card-body">
+              <div class="dashboard-ops-title">Demand pipeline</div>
               <div style="display:flex;flex-direction:column;gap:8px" id="demandPipelineList">
                 <div class="summary-empty">No open demand</div>
               </div>
-              <button class="btn-secondary" style="margin-top:12px;width:100%;font-size:12px" onclick="showModule('sales',null)">View Orders</button>
+              <button class="btn-secondary dashboard-ops-action" onclick="showModule('sales',null)">Review sales orders</button>
             </div>
           </div>
-          <div class="table-card" style="border-left:3px solid var(--warn)">
-            <div style="padding:16px">
-              <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Production Capacity</div>
+          <div class="table-card dashboard-ops-card dashboard-ops-card--capacity">
+            <div class="dashboard-ops-card-body">
+              <div class="dashboard-ops-title">Production capacity</div>
               <div style="display:flex;flex-direction:column;gap:8px" id="productionCapacityList">
                 <div class="summary-empty">No active operations</div>
               </div>
-              <button class="btn-secondary" style="margin-top:12px;width:100%;font-size:12px" onclick="showModule('workops',null)">View Workfloor</button>
+              <button class="btn-secondary dashboard-ops-action" onclick="showModule('workops',null)">View work operations</button>
             </div>
           </div>
         </div>

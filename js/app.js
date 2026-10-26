@@ -1386,6 +1386,12 @@ function renderDashboardCharts(rangeValue) {
   const series = computeChartSeries(rangeValue);
   const status = computeStatusDistribution(rangeValue);
   const hasStatus = Object.values(status).some(value => value > 0);
+  const setSummary = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = Number(value || 0).toLocaleString('en-US');
+  };
+  setSummary('dashProductionTotal', series.plannedQty.reduce((sum, value) => sum + (Number(value) || 0), 0));
+  setSummary('dashOrderTotal', Object.values(status).reduce((sum, value) => sum + (Number(value) || 0), 0));
 
   if (lineChart) {
     lineChart.data.labels = series.labels;
