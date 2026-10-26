@@ -1,4 +1,11 @@
 import { supabase, signOut } from './supabase.js';
+import {
+  appendAuditTrail,
+  canTransitionStatus,
+  computeOperationsSnapshot,
+  isOpenManufacturing,
+  validateModuleRecord
+} from './operations.js';
 
 console.log('Module import successful');
 
@@ -164,17 +171,22 @@ function loadAppearanceSettings() {
     
     applyAppearanceSettings(settings);
   } else {
-    applyTheme('system');
+    applyTheme('light');
   }
 }
 
+function resolveAppTheme(theme) {
+  return theme === 'dark' ? 'dark' : 'light';
+}
+
 function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
+  const resolved = resolveAppTheme(theme);
+  document.documentElement.setAttribute('data-theme', resolved);
   const logo = document.querySelector('.ff-logo--sidebar');
   if (logo) {
-    logo.src = theme === 'light'
-      ? new URL('../assets/forge-flow-logo.png', import.meta.url).href
-      : new URL('../assets/forge-flow-logo-white.png', import.meta.url).href;
+    logo.src = resolved === 'dark'
+      ? new URL('../assets/forge-flow-logo-white.png', import.meta.url).href
+      : new URL('../assets/forge-flow-logo.png', import.meta.url).href;
   }
 }
 
@@ -1273,48 +1285,38 @@ function computeDashboardMetrics(rangeValue) {
   const bounds = getDashboardRangeBounds(rangeValue);
   const sales = Object.values(getMergedModuleData('sales'));
   const mfg = Object.values(getMergedModuleData('mfg'));
-  const pr = Object.values(getMergedModuleData('pr'));
   const inventory = Object.values(getMergedModuleData('inventory'));
-  const staff = Object.values(getMergedModuleData('staff'));
-  const suppliers = Object.values(getMergedModuleData('suppliers'));
 
   let salesRevenue = 0;
-  const activeCustomers = new Set();
   sales.forEach(o => {
     if (!recordInRange(o, bounds, 'deliveryDate') && !recordInRange(o, bounds, 'orderDate')) return;
     salesRevenue += (parseFloat(o.qty) || 0) * (parseFloat(o.price) || 0);
-    if (o.customer) activeCustomers.add(String(o.customer).toLowerCase());
   });
 
-  const closedStatuses = ['Delivered', 'Cancelled', 'Rejected'];
-  let activeMfg = 0;
-  mfg.forEach(o => {
-    if (!recordInRange(o, bounds, 'targetDate')) return;
-    if (!closedStatuses.includes((o.status || '').trim())) activeMfg++;
-  });
-
-  let purchaseCost = 0;
-  pr.forEach(o => {
-    if (!recordInRange(o, bounds, 'reqDate') && !recordInRange(o, bounds, 'orderDate')) return;
-    purchaseCost += (parseFloat(o.qty) || 0) * (parseFloat(o.cost) || 0);
-  });
+  const activeMfg = mfg.filter(isOpenManufacturing).length;
 
   let inventoryValue = 0;
-  let lowStock = 0;
   inventory.forEach(o => {
     inventoryValue += (parseFloat(o.stock) || 0) * (parseFloat(o.cost) || 0);
-    if ((parseFloat(o.stock) || 0) < (parseFloat(o.minStock) || 0)) lowStock++;
+  });
+
+  const operational = computeOperationsSnapshot({
+    inventory,
+    mfg,
+    maintenance: Object.values(getMergedModuleData('maintenance')),
+    operations: Object.values(getMergedModuleData('operations'))
   });
 
   return {
     salesRevenue,
     inventoryValue,
     activeMfg,
-    lowStock,
-    purchaseCost,
-    staffCount: staff.length,
-    supplierCount: suppliers.length,
-    customerCount: activeCustomers.size
+    lowStock: operational.lowStock.length,
+    delayedOrders: operational.delayedOrders.length,
+    materialShortages: operational.shortages.length,
+    maintenanceDue: operational.maintenanceDue.length,
+    criticalIssues: operational.criticalIssueCount,
+    openIssues: operational.issues.length
   };
 }
 
@@ -1415,10 +1417,18 @@ async function renderDashboard(rangeValue) {
   setText('kpiInventoryValue', fmt(metrics.inventoryValue));
   setText('kpiActiveMfg', fmt(metrics.activeMfg));
   setText('kpiLowStock', fmt(metrics.lowStock));
-  setText('kpiPurchaseCost', fmt(metrics.purchaseCost));
-  setText('kpiStaff', fmt(metrics.staffCount));
-  setText('kpiSuppliers', fmt(metrics.supplierCount));
-  setText('kpiCustomers', fmt(metrics.customerCount));
+  setText('kpiDelayedOrders', fmt(metrics.delayedOrders));
+  setText('kpiMaterialsShortage', fmt(metrics.materialShortages));
+  setText('kpiMaintenanceDue', fmt(metrics.maintenanceDue));
+  setText('kpiOpenIssues', fmt(metrics.openIssues));
+
+  const operational = computeOperationsSnapshot({
+    inventory: getMergedModuleData('inventory'),
+    mfg: getMergedModuleData('mfg'),
+    maintenance: getMergedModuleData('maintenance'),
+    operations: getMergedModuleData('operations')
+  });
+  renderOperationalIssues(operational.issues);
 
   renderDashboardCharts(value);
 
@@ -1426,6 +1436,29 @@ async function renderDashboard(rangeValue) {
   const created = await getAccountCreatedAt();
   const startMonth = created ? startOfMonth(created) : null;
   updateDashboardSubtitle(subtitle, value, startOfMonth(new Date()), startMonth);
+}
+
+function renderOperationalIssues(issues) {
+  const list = document.getElementById('operationalIssuesList');
+  const count = document.getElementById('operationalIssueCount');
+  if (!list || !count) return;
+  count.textContent = `${issues.length} open`;
+  if (!issues.length) {
+    list.innerHTML = '<div class="summary-empty">No operational issues detected</div>';
+    return;
+  }
+  list.innerHTML = issues.slice(0, 8).map(issue => {
+    const module = issue.moduleId || 'dashboard';
+    const severity = issue.severity === 'critical' ? 'critical' : 'warning';
+    return `<div class="operational-issue ${severity}">
+      <span class="operational-issue-dot" aria-hidden="true"></span>
+      <div class="operational-issue-body">
+        <div class="operational-issue-title">${escapeHtml(issue.title)}</div>
+        <div class="operational-issue-desc">${escapeHtml(issue.description)}</div>
+      </div>
+      <button class="operational-issue-action" type="button" onclick="showModule('${escapeHtml(module)}',null)">${escapeHtml(issue.actionLabel || 'Review')}</button>
+    </div>`;
+  }).join('');
 }
 
 let dashboardMonthTimer = null;
@@ -1535,6 +1568,11 @@ function clearDashboardSummaryWidgets() {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
   });
+}
+
+function updateDemoDataNotice() {
+  const notice = document.getElementById('demoDataNotice');
+  if (notice) notice.hidden = localStorage.getItem('forgeflow_data_cleared') === 'true';
 }
 
 function applyClearedDataState() {
@@ -1853,10 +1891,9 @@ function saveRecordOverride(dataKey, recordId, data) {
 }
 
 async function upsertModuleRecord(dataKey, recordId, data) {
-  const companyId = await ensureCompanyContext();
-  if (!companyId || !dataKey || !recordId) return;
-
   try {
+    const companyId = await ensureCompanyContext();
+    if (!companyId || !dataKey || !recordId) return null;
     const payload = {
       company_id: companyId,
       module_key: dataKey,
@@ -1874,8 +1911,10 @@ async function upsertModuleRecord(dataKey, recordId, data) {
       .upsert(payload, { onConflict: 'company_id,module_key,record_id' });
 
     if (error) throw error;
+    return true;
   } catch (e) {
     console.warn(`Failed to persist module record ${dataKey}:${recordId}`, e);
+    return false;
   }
 }
 
@@ -1986,6 +2025,7 @@ async function hydrateSettingsFromBackend() {
 
     if (data.data.data_cleared === true) {
       localStorage.setItem('forgeflow_data_cleared', 'true');
+  updateDemoDataNotice();
       applyClearedDataState();
     }
 
@@ -2771,36 +2811,66 @@ function applyStatusSelectStyle(select) {
   select.style.borderColor = style[2];
 }
 
-function changeStatus(select) {
+async function changeStatus(select) {
   const newStatus = select.value;
   if (!newStatus) return;
-  updateStatus(select, newStatus);
-  applyStatusSelectStyle(select);
-  persistRowStatus(select, newStatus);
-  
   const row = select.closest('tr');
   const view = select.closest('.module-view');
   const type = view ? (moduleTypeByViewId[view.id] || 'Record') : 'Record';
   const paneId = getPaneId(type);
   const recordId = row ? (extractIdFromRow(row, paneId) || '') : '';
+  const dataKey = paneDataMap[paneId]?.dataKey;
+  const record = dataKey && recordId ? lookupRecord(dataKey, recordId) : null;
+  const oldStatus = record?.status || select.dataset.status || '';
+  if (dataKey === 'mfg') {
+    const transition = canTransitionStatus('mfg', oldStatus, newStatus);
+    if (!transition.allowed) {
+      select.value = oldStatus;
+      showToast(transition.reason, 'error');
+      return;
+    }
+  }
+  select.disabled = true;
+  const persisted = await persistRowStatus(select, newStatus);
+  select.disabled = false;
+  if (persisted === false) {
+    select.value = oldStatus;
+    showToast('Could not save this status change. Check your connection and permissions, then try again.', 'error');
+    return;
+  }
+  updateStatus(select, newStatus);
+  applyStatusSelectStyle(select);
+  if (persisted === null) showToast('Status changed for this session only.', 'info');
   const moduleId = view?.id ? view.id.replace('mod-', '') : null;
   addNotification('order', 'Status Changed', `${type} ${recordId} was changed to ${newStatus}.`.trim(), 'order', moduleId);
 }
 
-function persistRowStatus(select, newStatus) {
+async function persistRowStatus(select, newStatus) {
   const row = select.closest('tr');
   const view = select.closest('.module-view');
-  if (!row || !view) return;
+  if (!row || !view) return null;
   const type = moduleTypeByViewId[view.id];
-  if (!type) return;
+  if (!type) return null;
   const paneId = getPaneId(type);
   const recordId = extractIdFromRow(row, paneId);
   if (!recordId) return;
   const dataKey = paneDataMap[paneId]?.dataKey;
-  if (!dataKey) return;
+  if (!dataKey) return null;
   const record = lookupRecord(dataKey, recordId);
-  if (!record) return;
-  saveRecordOverride(dataKey, recordId, { ...record, status: newStatus });
+  if (!record) return null;
+  const updated = { ...record, status: newStatus };
+  updated.auditTrail = appendAuditTrail(record, updated, {
+    action: 'status_changed',
+    actor: getForgeflowUser()?.email || 'user',
+    summary: `${record.status || 'Unknown'} → ${newStatus}`
+  });
+  const persisted = await upsertModuleRecord(dataKey, recordId, updated);
+  if (persisted === false) return false;
+  const overrides = getRecordOverrides();
+  if (!overrides[dataKey]) overrides[dataKey] = {};
+  overrides[dataKey][recordId] = updated;
+  saveRecordOverrides(overrides);
+  return persisted;
 }
 
 function initStatusDropdowns() {
@@ -3433,13 +3503,14 @@ async function disconnectIntegrationFromModal(provider) {
 }
 
 // ============ RECORD MANAGEMENT ============
-function saveRecord(type, id) {
-  console.log('saveRecord called:', type, id);
+let savingRecord = false;
+
+async function saveRecord(type, id) {
+  if (savingRecord) return;
   
   const paneId = getPaneId(type);
   const paneConfig = paneDataMap[paneId] || {};
   const recordData = collectPaneData(type);
-  console.log('Record data:', recordData);
   
   const now = new Date().toISOString();
   const recordId =
@@ -3454,22 +3525,63 @@ function saveRecord(type, id) {
     recordData.createdAt = currentPaneData.originalData?.createdAt || now;
   }
   
+  const isEdit = currentPaneData?.mode === 'edit';
+  const previous = paneConfig.dataKey ? lookupRecord(paneConfig.dataKey, recordId) : null;
+  let persistenceResult = null;
   if (paneConfig.dataKey) {
+    const errors = validateModuleRecord(paneConfig.dataKey, recordData);
+    if (errors.length) {
+      showToast(errors.map(error => error.message).join(' '), 'error');
+      return;
+    }
+    if (paneConfig.dataKey === 'mfg' && previous?.status && recordData.status) {
+      const transition = canTransitionStatus('mfg', previous.status, recordData.status);
+      if (!transition.allowed) {
+        showToast(transition.reason, 'error');
+        return;
+      }
+    }
+    recordData.auditTrail = appendAuditTrail(previous, recordData, {
+      action: isEdit ? 'updated' : 'created',
+      actor: getForgeflowUser()?.email || 'user',
+      summary: `${type} ${isEdit ? 'updated' : 'created'}`
+    });
+    savingRecord = true;
+    const saveButton = document.querySelector(`#${paneId} .btn-pane-save`);
+    if (saveButton) {
+      saveButton.disabled = true;
+      saveButton.dataset.previousLabel = saveButton.textContent;
+      saveButton.textContent = 'Saving…';
+    }
+    persistenceResult = await upsertModuleRecord(paneConfig.dataKey, recordId, recordData);
+    savingRecord = false;
+    if (saveButton) {
+      saveButton.disabled = false;
+      saveButton.textContent = saveButton.dataset.previousLabel || 'Save';
+    }
+    if (persistenceResult === false) {
+      showToast('Could not save this record. Check your connection and permissions, then try again.', 'error');
+      return;
+    }
     if (!mockData[paneConfig.dataKey]) mockData[paneConfig.dataKey] = {};
     mockData[paneConfig.dataKey][recordId] = {
       ...(mockData[paneConfig.dataKey][recordId] || {}),
       ...recordData
     };
-    saveRecordOverride(paneConfig.dataKey, recordId, mockData[paneConfig.dataKey][recordId]);
+    const overrides = getRecordOverrides();
+    if (!overrides[paneConfig.dataKey]) overrides[paneConfig.dataKey] = {};
+    overrides[paneConfig.dataKey][recordId] = { ...recordData };
+    saveRecordOverrides(overrides);
   }
 
   clearPaneDraft(type);
 
   closePane();
-  const isEdit = currentPaneData?.mode === 'edit';
   const savedAction = isEdit ? 'updated' : 'saved';
   showToast(
-    type + (isEdit ? ' updated successfully!' : ' saved successfully!'),
+    type + (persistenceResult === null
+      ? ' saved for this session only.'
+      : (isEdit ? ' updated successfully!' : ' saved successfully!')),
     'success'
   );
   
@@ -6368,6 +6480,7 @@ async function initializeApplication() {
     }
     await hydrateModuleRecords();
     applyClearedDataState();
+    updateDemoDataNotice();
     await hydrateSettingsFromBackend();
 
     initSubscription();
