@@ -108,18 +108,17 @@
         </div>
       </div>
 
-      <div class="topbar-clock" id="topbarClock" title="Current date &amp; time">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <div class="topbar-clock-body">
-          <div class="topbar-clock-time-row">
-            <span class="topbar-clock-time" id="topbarClockTime">--:--:--</span>
-            <span class="topbar-clock-period" id="topbarClockPeriod">AM</span>
-          </div>
-          <span class="topbar-clock-date" id="topbarClockDate"></span>
-        </div>
-      </div>
-
       <div class="topbar-actions">
+        <div class="topbar-clock" id="topbarClock" title="Current date and time">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div class="topbar-clock-body">
+            <div class="topbar-clock-time-row">
+              <span class="topbar-clock-time" id="topbarClockTime">--:--</span>
+              <span class="topbar-clock-period" id="topbarClockPeriod">AM</span>
+            </div>
+            <span class="topbar-clock-date" id="topbarClockDate"></span>
+          </div>
+        </div>
         <div class="notification-dropdown">
           <button class="topbar-icon-btn" title="Notifications" onclick="toggleNotifications()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -185,15 +184,6 @@
         <button class="topbar-icon-btn" title="Help" onclick="openHelpPage()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
-        <span class="plan-badge" id="planBadge" data-plan="">
-          <span class="plan-badge-text">FREE TRIAL</span>
-          <span class="plan-badge-countdown">Day 7 left</span>
-          <span class="plan-active-text">Active</span>
-        </span>
-        <button class="demo-data-btn" onclick="clearDemoData()" title="Clear all demo data">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          Clear Data
-        </button>
         <div class="user-dropdown">
           <div class="user-avatar-top" id="sidebarAvatar">JD</div>
           <div class="user-dropdown-menu">
@@ -203,6 +193,7 @@
                 <div class="user-dropdown-name" id="sidebarName">John Demo</div>
                 <div class="user-dropdown-email">john@demo.com</div>
                 <div class="user-dropdown-plan" id="sidebarPlan">Free Trial</div>
+                <div class="user-dropdown-trial" id="profileTrialCountdown" hidden>Day 7 left</div>
               </div>
             </div>
             <div class="user-dropdown-divider"></div>
@@ -333,13 +324,15 @@
 
         <div class="charts-row">
           <div class="chart-card">
-            <div class="chart-card-title">Sales Revenue & Production Output</div>
-            <div class="chart-card-sub">Last 12 months — dual axis</div>
+            <div class="chart-card-title">Planned production</div>
+            <div class="chart-card-sub">Order quantity by target month</div>
+            <div class="chart-empty-state" id="dashLineEmpty" hidden>No planned production in this period.</div>
             <canvas id="dashLineChart" height="160"></canvas>
           </div>
           <div class="chart-card">
             <div class="chart-card-title">Order Status Distribution</div>
-            <div class="chart-card-sub">Current manufacturing orders</div>
+            <div class="chart-card-sub">Orders by current status</div>
+            <div class="chart-empty-state" id="dashPieEmpty" hidden>No production orders yet.</div>
             <canvas id="dashPieChart" height="160"></canvas>
           </div>
         </div>
@@ -2006,7 +1999,7 @@
                 <div class="danger-actions">
                   <div class="danger-item">
                     <div>
-                      <span class="danger-label">Clear All Data</span>
+                      <span class="danger-label">Clear Workspace Data</span>
                       <span class="danger-desc">Permanently delete all your data. This cannot be undone.</span>
                     </div>
                     <button class="btn-danger" onclick="confirmClearData()">Clear Data</button>

@@ -10,6 +10,12 @@ const MAINTENANCE_STATUSES = [
   'Completed', 'Resolved', 'Rejected', 'Cancelled'
 ];
 
+export const DEMO_ACCOUNT_EMAIL = 'billionboi34gmail.com';
+
+export function isDemoAccountEmail(email) {
+  return String(email ?? '').trim().toLowerCase() === DEMO_ACCOUNT_EMAIL;
+}
+
 const TRANSITIONS = {
   mfg: {
     Pending: ['Approved', 'On Hold', 'Cancelled'],

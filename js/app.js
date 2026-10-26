@@ -4,6 +4,7 @@ import {
   canTransitionStatus,
   computeOperationsSnapshot,
   isOpenManufacturing,
+  isDemoAccountEmail,
   validateModuleRecord
 } from './operations.js';
 
@@ -13,6 +14,23 @@ console.log('Module import successful');
 let currentAuthUser = null;
 let currentAuthProfile = null;
 let currentCompanyId = null;
+
+function currentAccountEmail() {
+  return String(currentAuthUser?.email || getForgeflowUser()?.email || '').trim().toLowerCase();
+}
+
+function currentAccountDataClearedKey() {
+  return `forgeflow_data_cleared:${encodeURIComponent(currentAccountEmail() || 'anonymous')}`;
+}
+
+function isCurrentAccountDataCleared() {
+  return localStorage.getItem(currentAccountDataClearedKey()) === 'true';
+}
+
+function setCurrentAccountDataCleared(value) {
+  if (value) localStorage.setItem(currentAccountDataClearedKey(), 'true');
+  else localStorage.removeItem(currentAccountDataClearedKey());
+}
 
 function getForgeflowUser() {
   return JSON.parse(localStorage.getItem('forgeflow_user') || 'null');
@@ -592,12 +610,12 @@ let notificationCount = 0;
 let notifications = [];
 
 function getNotifications() {
-  const saved = localStorage.getItem('forgeflow_notifications_list');
+  const saved = localStorage.getItem(`${currentAccountDataClearedKey()}:notifications`);
   return saved ? JSON.parse(saved) : [];
 }
 
 function saveNotifications(list) {
-  localStorage.setItem('forgeflow_notifications_list', JSON.stringify(list));
+  localStorage.setItem(`${currentAccountDataClearedKey()}:notifications`, JSON.stringify(list));
   notificationCount = list.filter(n => !n.read).length;
   updateNotificationBadge();
 }
@@ -1002,11 +1020,9 @@ function getTrialEndDate() {
 let trialCountdownTimer = null;
 
 function initTrialCountdown() {
-  const badgeEl = document.getElementById('planBadge');
-  const countdownEl = badgeEl?.querySelector('.plan-badge-countdown');
+  const countdownEl = document.getElementById('profileTrialCountdown');
   
   if (!countdownEl) {
-    console.log('Countdown element not found');
     return;
   }
   
@@ -1015,8 +1031,9 @@ function initTrialCountdown() {
   const userData = getForgeflowUser() || {};
   
   if (paidPlans.includes(userData.planLabel)) {
-    countdownEl.style.display = 'none';
-    console.log('Paid plan - countdown hidden');
+    countdownEl.hidden = true;
+    if (trialCountdownTimer) clearInterval(trialCountdownTimer);
+    trialCountdownTimer = null;
     return;
   }
   
@@ -1024,7 +1041,7 @@ function initTrialCountdown() {
   // is identical on every device instead of resetting each browser session.
   const endDate = getTrialEndDate();
   
-  countdownEl.style.display = 'inline';
+  countdownEl.hidden = false;
   
   if (trialCountdownTimer) {
     clearInterval(trialCountdownTimer);
@@ -1032,22 +1049,13 @@ function initTrialCountdown() {
   
   const pad = n => String(n).padStart(2, '0');
   
-  function formatCountdown(diff) {
-    const totalSeconds = Math.max(0, Math.floor(diff / 1000));
-    const day = Math.max(1, Math.min(Math.ceil(totalSeconds / 86400), TRIAL_DURATION_DAYS));
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `Day ${day} · ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-  }
-  
   function updateCountdown() {
-    const badge = document.getElementById('planBadge');
     // Double check - if plan changed to paid, hide countdown
     const currentUser = getForgeflowUser() || {};
     if (paidPlans.includes(currentUser.planLabel)) {
-      const el = badge?.querySelector('.plan-badge-countdown');
-      if (el) el.style.display = 'none';
+      countdownEl.hidden = true;
+      clearInterval(trialCountdownTimer);
+      trialCountdownTimer = null;
       return;
     }
     
@@ -1063,7 +1071,9 @@ function initTrialCountdown() {
       return;
     }
     
-    const text = `${formatCountdown(diff)} left`;
+    const totalSeconds = Math.floor(diff / 1000);
+    const daysLeft = Math.max(1, Math.min(Math.ceil(totalSeconds / 86400), TRIAL_DURATION_DAYS));
+    const text = daysLeft === 1 ? '1 day left in trial' : `${daysLeft} days left in trial`;
     countdownEl.textContent = text;
     countdownEl.title = `Trial ends ${endDate.toLocaleString()} — upgrade to keep Pro features`;
     
@@ -1113,7 +1123,7 @@ function initLiveClock() {
   
   // 12-hour clock (AM/PM) regardless of locale defaults
   const timeFmt = new Intl.DateTimeFormat('en-US', {
-    hour: 'numeric', minute: '2-digit', second: '2-digit',
+    hour: 'numeric', minute: '2-digit',
     hour12: true, timeZone
   });
   const dateFmt = new Intl.DateTimeFormat('en-US', {
@@ -1125,9 +1135,8 @@ function initLiveClock() {
     const t = timeFmt.formatToParts(now);
     const hour = t.find(p => p.type === 'hour')?.value || '12';
     const minute = t.find(p => p.type === 'minute')?.value || '00';
-    const second = t.find(p => p.type === 'second')?.value || '00';
     const period = t.find(p => p.type === 'dayPeriod')?.value?.toUpperCase() || '';
-    timeEl.textContent = `${hour}:${minute}:${second}`;
+    timeEl.textContent = `${hour}:${minute}`;
     if (periodEl) periodEl.textContent = period;
     
     const d = dateFmt.formatToParts(now);
@@ -1335,29 +1344,21 @@ function getMonthlyBuckets(rangeValue) {
 function computeChartSeries(rangeValue) {
   const bounds = getDashboardRangeBounds(rangeValue);
   const buckets = getMonthlyBuckets(rangeValue);
-  const sales = Object.values(getMergedModuleData('sales'));
   const mfg = Object.values(getMergedModuleData('mfg'));
 
   const labels = buckets.map(b => b.toLocaleDateString('en-US', { month: 'short' }));
-  const salesData = buckets.map(() => 0);
-  const prodData = buckets.map(() => 0);
+  const plannedQty = buckets.map(() => 0);
 
   const bucketIndex = (d) => buckets.findIndex(b => b.getMonth() === d.getMonth() && b.getFullYear() === d.getFullYear());
 
-  sales.forEach(o => {
-    const d = toDateValue(o.deliveryDate || o.orderDate);
-    if (!d || d < bounds.start || d > bounds.end) return;
-    const idx = bucketIndex(d);
-    if (idx >= 0) salesData[idx] += (parseFloat(o.qty) || 0) * (parseFloat(o.price) || 0);
-  });
   mfg.forEach(o => {
     const d = toDateValue(o.targetDate);
     if (!d || d < bounds.start || d > bounds.end) return;
     const idx = bucketIndex(d);
-    if (idx >= 0) prodData[idx] += parseFloat(o.qty) || 0;
+    if (idx >= 0 && isOpenManufacturing(o)) plannedQty[idx] += parseFloat(o.qty) || 0;
   });
 
-  return { labels, salesData: salesData.map(v => +(v / 1000).toFixed(1)), prodData };
+  return { labels, plannedQty, hasData: plannedQty.some(value => value > 0) };
 }
 
 function computeStatusDistribution(rangeValue) {
@@ -1382,20 +1383,13 @@ function renderDashboardCharts(rangeValue) {
   const pCtx = document.getElementById('dashPieChart');
   if (!lCtx || !pCtx) return;
 
-  const dataCleared = localStorage.getItem('forgeflow_data_cleared') === 'true';
-
-  let labels = [], salesData = [], prodData = [];
-  let status = { 'In Production': 0, 'Completed': 0, 'Pending': 0, 'Shipped': 0, 'Delivered': 0 };
-  if (!dataCleared) {
-    const series = computeChartSeries(rangeValue);
-    labels = series.labels; salesData = series.salesData; prodData = series.prodData;
-    status = computeStatusDistribution(rangeValue);
-  }
+  const series = computeChartSeries(rangeValue);
+  const status = computeStatusDistribution(rangeValue);
+  const hasStatus = Object.values(status).some(value => value > 0);
 
   if (lineChart) {
-    lineChart.data.labels = labels;
-    lineChart.data.datasets[0].data = salesData;
-    lineChart.data.datasets[1].data = prodData;
+    lineChart.data.labels = series.labels;
+    lineChart.data.datasets[0].data = series.plannedQty;
     lineChart.update();
   }
   if (pieChart) {
@@ -1403,6 +1397,15 @@ function renderDashboardCharts(rangeValue) {
     pieChart.data.datasets[0].data = Object.values(status);
     pieChart.update();
   }
+  const setChartState = (canvasId, emptyId, hasData) => {
+    const canvas = document.getElementById(canvasId);
+    const wrapper = canvas?.parentElement;
+    const empty = document.getElementById(emptyId);
+    if (wrapper) wrapper.hidden = !hasData;
+    if (empty) empty.hidden = hasData;
+  };
+  setChartState('dashLineChart', 'dashLineEmpty', series.hasData);
+  setChartState('dashPieChart', 'dashPieEmpty', hasStatus);
 }
 
 async function renderDashboard(rangeValue) {
@@ -1479,78 +1482,6 @@ function initDashboardAutoRefresh() {
   }, 30000);
 }
 
-async function clearDemoData() {
-  if (!confirm('Are you sure you want to clear ALL data? This will remove every record across all modules (manufacturing, inventory, sales, purchase, BOM, suppliers, staff, maintenance, operations, UOM) and reset the dashboard. Your account, plan and settings will be kept.')) {
-    return;
-  }
-
-  showToast('Clearing all data...', 'warn');
-
-  // 1. Wipe in-memory module stores so search/pane data is gone immediately
-  Object.keys(mockData).forEach(key => { mockData[key] = {}; });
-  Object.keys(serverRecordCache).forEach(key => delete serverRecordCache[key]);
-
-  // 2. Wipe backend records for this company (keep settings + team membership)
-  try {
-    const companyId = await ensureCompanyContext();
-    if (companyId) {
-      const { error } = await supabase
-        .from('module_records')
-        .delete()
-        .eq('company_id', companyId)
-        .neq('module_key', 'settings')
-        .neq('module_key', 'teams');
-      if (error) console.warn('Failed to clear backend records:', error.message);
-    }
-  } catch (e) {
-    console.warn('Backend clear failed:', e);
-  }
-
-  // 3. Clear all visible table rows
-  document.querySelectorAll('.data-table tbody').forEach(tbody => {
-    tbody.innerHTML = '';
-  });
-
-  // 4. Reset KPI values (e.g. Total Sales Revenue, Inventory Value, Purchase Cost MTD)
-  resetDashboardKpis();
-
-  // 5. Wipe dashboard summary widgets (MRP shortages, demand pipeline,
-  //    production capacity, low stock alerts) so nothing remains on screen
-  clearDashboardSummaryWidgets();
-
-  // 6. Clear notifications
-  localStorage.removeItem('forgeflow_notifications_list');
-  notifications = [];
-  const notifList = document.getElementById('notificationList');
-  if (notifList) notifList.innerHTML = '';
-  const notifDot = document.getElementById('notifDot');
-  if (notifDot) notifDot.style.display = 'none';
-  await clearNotificationsFromServer();
-
-  // 7. Clear search history and close the results dropdown
-  localStorage.removeItem('forgeflow_search_history');
-  const dropdown = document.getElementById('searchResultsDropdown');
-  if (dropdown) dropdown.classList.remove('open');
-
-  // 8. Reset dashboard charts to empty state
-  try {
-    if (lineChart) lineChart.destroy();
-    if (pieChart) pieChart.destroy();
-    lineChart = null;
-    pieChart = null;
-    chartsInited = false;
-    initCharts();
-  } catch (e) {
-    console.warn('Chart reset failed:', e);
-  }
-
-  // 9. Flag so a page reload keeps everything cleared
-  localStorage.setItem('forgeflow_data_cleared', 'true');
-  void persistSettingsToBackend();
-
-  showToast('All data has been cleared successfully', 'success');
-}
-
 function resetDashboardKpis() {
   document.querySelectorAll('.kpi-value').forEach(kpi => {
     kpi.textContent = '0';
@@ -1572,11 +1503,26 @@ function clearDashboardSummaryWidgets() {
 
 function updateDemoDataNotice() {
   const notice = document.getElementById('demoDataNotice');
-  if (notice) notice.hidden = localStorage.getItem('forgeflow_data_cleared') === 'true';
+  if (notice) notice.hidden = !isDemoAccountEmail(currentAccountEmail()) || isCurrentAccountDataCleared();
+}
+
+function applyAccountDemoPolicy() {
+  if (isDemoAccountEmail(currentAccountEmail())) {
+    updateDemoDataNotice();
+    return;
+  }
+
+  Object.keys(mockData).forEach(key => { mockData[key] = {}; });
+  document.querySelectorAll('.data-table tbody').forEach(tbody => {
+    tbody.innerHTML = '<tr class="empty-row"><td class="table-empty" colspan="100">No records yet. Create a record to get started.</td></tr>';
+  });
+  const initialNotifications = document.getElementById('notificationList');
+  if (initialNotifications) initialNotifications.replaceChildren();
+  updateDemoDataNotice();
 }
 
 function applyClearedDataState() {
-  if (localStorage.getItem('forgeflow_data_cleared') !== 'true') return;
+  if (!isCurrentAccountDataCleared()) return;
 
   document.querySelectorAll('.data-table tbody').forEach(tbody => {
     tbody.innerHTML = '';
@@ -1601,7 +1547,6 @@ function applyUser(user) {
   const avEl   = document.getElementById('sidebarAvatar');
   const nameEl = document.getElementById('sidebarName');
   const planEl = document.getElementById('sidebarPlan');
-  const badgeEl = document.getElementById('planBadge');
   const nameElTop = document.querySelector('.user-dropdown-name');
   const avElTop = document.querySelector('.user-avatar-top');
   const avElLarge = document.querySelector('.user-avatar-large');
@@ -1617,34 +1562,20 @@ function applyUser(user) {
     el.textContent = safeUser.email || '';
   });
 
-  if (badgeEl) {
-    const badgeText = badgeEl.querySelector('.plan-badge-text');
-    const countdownEl = badgeEl.querySelector('.plan-badge-countdown');
-    if (badgeText) badgeText.textContent = planLabel;
-    
-    // Check if it's a paid plan
-    const paidPlans = ['STARTER', 'PRO', 'PROFESSIONAL', 'ENTERPRISE'];
-    const isPaidPlan = paidPlans.includes(planLabel);
-    
-    // Remove any existing plan classes
-    badgeEl.classList.remove('paid-plan');
-    
-    if (isPaidPlan) {
-      badgeEl.classList.add('paid-plan');
-      badgeEl.setAttribute('data-plan', 'paid');
-      if (countdownEl) countdownEl.style.display = 'none';
-    } else {
-      badgeEl.setAttribute('data-plan', 'trial');
-      if (countdownEl) countdownEl.style.display = 'inline';
-      updateTrialCountdown();
-    }
-  }
+  updateTrialCountdown();
 }
 
 function updateTrialCountdown() {
-  const badgeEl = document.getElementById('planBadge');
-  const countdownEl = badgeEl?.querySelector('.plan-badge-countdown');
+  const countdownEl = document.getElementById('profileTrialCountdown');
   if (!countdownEl) return;
+
+  const paidPlans = ['STARTER', 'PRO', 'PROFESSIONAL', 'ENTERPRISE'];
+  const user = getForgeflowUser() || {};
+  if (paidPlans.includes(user.planLabel)) {
+    countdownEl.hidden = true;
+    return;
+  }
+  countdownEl.hidden = false;
   
   const endDate = getTrialEndDate();
   
@@ -1658,7 +1589,7 @@ function updateTrialCountdown() {
     return;
   }
   
-  countdownEl.textContent = 'Day ' + daysLeft + ' left';
+  countdownEl.textContent = daysLeft === 1 ? '1 day left in trial' : `${daysLeft} days left in trial`;
   countdownEl.title = 'Free trial ends ' + endDate.toLocaleString() + ' — upgrade to keep Pro features';
 }
 
@@ -1948,7 +1879,6 @@ function getSettingsBundleFromStorage() {
       catch (e) { bundle[key.replace('forgeflow_', '')] = raw; }
     }
   });
-  bundle['data_cleared'] = localStorage.getItem('forgeflow_data_cleared') === 'true';
   bundle['user'] = getForgeflowUser();
   return bundle;
 }
@@ -2021,12 +1951,6 @@ async function hydrateSettingsFromBackend() {
         setForgeflowUser(user);
         applyUser(user);
       }
-    }
-
-    if (data.data.data_cleared === true) {
-      localStorage.setItem('forgeflow_data_cleared', 'true');
-  updateDemoDataNotice();
-      applyClearedDataState();
     }
 
     if (localStorage.getItem('forgeflow_team_login') === 'true') {
@@ -4260,10 +4184,7 @@ function evaluateTrialStatus() {
     void persistSettingsToBackend();
   }
 
-  const badgeText = document.getElementById('planBadge')?.querySelector('.plan-badge-text');
-  if (badgeText && badgeText.textContent !== 'TRIAL EXPIRED') {
-    badgeText.textContent = 'TRIAL EXPIRED';
-  }
+  updateTrialCountdown();
 
   if (!trialExpiredPromptShown) {
     trialExpiredPromptShown = true;
@@ -5009,16 +4930,18 @@ function confirmClearData() {
       'forgeflow_appearance', 'forgeflow_general', 'forgeflow_company',
       'forgeflow_security', 'forgeflow_integrations_settings',
       'forgeflow_integration_states', 'forgeflow_notifications',
-      'forgeflow_payment_method'
+      'forgeflow_payment_method', currentAccountDataClearedKey()
     ];
     
     Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('forgeflow_') && !keysToKeep.includes(key)) {
+      if (key.startsWith('forgeflow_') && !keysToKeep.includes(key) && !key.startsWith('forgeflow_data_cleared:')) {
         localStorage.removeItem(key);
       }
     });
     
-    localStorage.setItem('forgeflow_data_cleared', 'true');
+    setCurrentAccountDataCleared(true);
+    localStorage.removeItem(`${currentAccountDataClearedKey()}:notifications`);
+    updateDemoDataNotice();
     
     try {
       const companyId = await ensureCompanyContext();
@@ -6268,37 +6191,26 @@ function initCharts() {
     lCtx2d.clearRect(0, 0, lCtx.width, lCtx.height);
     pCtx2d.clearRect(0, 0, pCtx.width, pCtx.height);
 
-    const dataCleared = localStorage.getItem('forgeflow_data_cleared') === 'true';
-    
+    const range = document.getElementById('dashboardRangeSelect')?.value || 'this-month';
+    const series = computeChartSeries(range);
+    const status = computeStatusDistribution(range);
+
     lineChart = new Chart(lCtx, {
       type: 'line',
       data: {
-        labels: ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'],
-        datasets: [
-          {
-            label: 'Sales ($k)',
-            data: dataCleared ? [] : [42, 48, 51, 58, 63, 55, 69, 72, 78, 75, 82, 84],
-            borderColor: '#2E6EEB',
-            backgroundColor: 'rgba(249,115,22,0.06)',
-            tension: 0.4,
-            fill: true,
-            pointRadius: 3,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#2E6EEB',
-          },
-          {
-            label: 'Production (units)',
-            data: dataCleared ? [] : [180, 210, 195, 240, 260, 228, 290, 310, 330, 305, 350, 360],
-            borderColor: '#0EA5A4',
-            backgroundColor: 'rgba(14,165,164,0.04)',
-            tension: 0.4,
-            fill: true,
-            pointRadius: 3,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#0EA5A4',
-            yAxisID: 'y2',
-          }
-        ]
+        labels: series.labels,
+        datasets: [{
+          label: 'Planned units',
+          data: series.plannedQty,
+          borderColor: '#123B7A',
+          backgroundColor: 'rgba(18,59,122,0.10)',
+          borderWidth: 2,
+          tension: 0.28,
+          fill: true,
+          pointRadius: 2,
+          pointHoverRadius: 4,
+          pointBackgroundColor: '#123B7A'
+        }]
       },
       options: {
         responsive: true,
@@ -6306,12 +6218,12 @@ function initCharts() {
         resizeDelay: 120,
         interaction: { mode: 'index', intersect: false },
         plugins: {
-          legend: { labels: { color: '#64748B', font: { family: 'Figtree', size: 12 }, boxWidth: 14 } }
+          legend: { display: false },
+          tooltip: { backgroundColor: '#0B1F3A', padding: 10, displayColors: false }
         },
         scales: {
-          x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#94A3B8', font: { family: 'Figtree', size: 11 } } },
-          y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#94A3B8', font: { family: 'Figtree', size: 11 } } },
-          y2: { position: 'right', grid: { display: false }, ticks: { color: '#00C896', font: { family: 'Figtree', size: 11 } } },
+          x: { grid: { display: false }, border: { display: false }, ticks: { color: '#64748B', font: { family: 'Inter, sans-serif', size: 11 } } },
+          y: { beginAtZero: true, grid: { color: '#EEF2F7', drawTicks: false }, border: { display: false }, ticks: { color: '#64748B', precision: 0, padding: 8, font: { family: 'Inter, sans-serif', size: 11 } } }
         }
       }
     });
@@ -6319,13 +6231,13 @@ function initCharts() {
     pieChart = new Chart(pCtx, {
       type: 'doughnut',
       data: {
-        labels: ['In Production', 'Completed', 'Pending', 'Shipped', 'Delivered'],
+        labels: Object.keys(status),
         datasets: [{
-          data: dataCleared ? [] : [35, 22, 18, 12, 13],
-          backgroundColor: ['#2E6EEB', '#0EA5A4', '#F59E0B', '#22D3EE', '#14B8A6'],
-          borderColor: '#F9FAFB',
-          borderWidth: 2,
-          hoverOffset: 6,
+          data: Object.values(status),
+          backgroundColor: ['#123B7A', '#2E6EEB', '#A8B9D2', '#16A34A', '#64748B'],
+          borderColor: '#FFFFFF',
+          borderWidth: 3,
+          hoverOffset: 3,
         }]
       },
       options: {
@@ -6334,9 +6246,10 @@ function initCharts() {
         resizeDelay: 120,
         cutout: '62%',
         plugins: {
+          tooltip: { backgroundColor: '#0B1F3A', padding: 10 },
           legend: {
             position: 'bottom',
-            labels: { color: '#64748B', font: { family: 'Figtree', size: 11 }, padding: 10, boxWidth: 12 }
+            labels: { color: '#64748B', font: { family: 'Inter, sans-serif', size: 11 }, padding: 14, boxWidth: 10, usePointStyle: true, pointStyle: 'circle' }
           }
         }
       }
@@ -6344,6 +6257,7 @@ function initCharts() {
     
     bindChartResizeListener();
     chartsInited = true;
+    renderDashboardCharts(range);
     console.log('Charts initialized successfully');
   } catch (e) {
     console.error('Error initializing charts:', e);
@@ -6368,7 +6282,6 @@ window.toggleNotifications = toggleNotifications;
 window.markAllRead = markAllRead;
 window.openSettingsSubscription = openSettingsSubscription;
 window.switchSettingsTab = switchSettingsTab;
-window.clearDemoData = clearDemoData;
 window.saveSettings = saveSettings;
 window.closeUserDropdown = closeUserDropdown;
 window.toggleUserDropdown = toggleUserDropdown;
@@ -6425,7 +6338,6 @@ window.formatCardExpiry = formatCardExpiry;
 window.toggleNotifications = toggleNotifications;
 window.markAllRead = markAllRead;
 window.openHelpPage = openHelpPage;
-window.clearDemoData = clearDemoData;
 window.switchTeamsTab = switchTeamsTab;
 window.closeUserDropdown = closeUserDropdown;
 window.toggleUserDropdown = toggleUserDropdown;
@@ -6479,6 +6391,7 @@ async function initializeApplication() {
       addNotification('system', 'Welcome back, ' + (loggedInUser.firstName || loggedInUser.fullName || 'there') + '!', 'You signed in to ForgeFlow successfully.', 'user');
     }
     await hydrateModuleRecords();
+    applyAccountDemoPolicy();
     applyClearedDataState();
     updateDemoDataNotice();
     await hydrateSettingsFromBackend();

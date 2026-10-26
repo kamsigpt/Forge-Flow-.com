@@ -9,6 +9,7 @@ import {
   computeOperationsSnapshot,
   getInventoryHealth,
   getManufacturingProgress,
+  isDemoAccountEmail,
   toNumber,
   validateModuleRecord
 } from '../js/operations.js';
@@ -41,6 +42,13 @@ const mfg = {
     ]
   }
 };
+
+test('demo fixtures are limited to the one configured account', () => {
+  assert.equal(isDemoAccountEmail('billionboi34gmail.com'), true);
+  assert.equal(isDemoAccountEmail(' BILLIONBOI34GMAIL.COM '), true);
+  assert.equal(isDemoAccountEmail('another@example.com'), false);
+  assert.equal(isDemoAccountEmail('billionboi34@gmail.com'), false);
+});
 
 test('toNumber parses formatted quantities and falls back safely', () => {
   assert.equal(toNumber('1,200 PCS'), 1200);

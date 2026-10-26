@@ -47,3 +47,12 @@ The baseline Node test suite and Vite build were initially blocked in the sandbo
 3. Enforce role capabilities in Postgres policies or authenticated server-side functions; stop treating local invited-user identities as authentication.
 4. Persist operational issues with acknowledgement and resolution history, and connect each action to the source record.
 5. Add integration and browser journey tests against a safe Supabase development project, then perform desktop/tablet/mobile visual verification.
+
+## Follow-up interface and demo-data changes
+
+- The internal sidebar hover now uses Forge Flow blue with white labels and icons. The clock moved into the topbar action group with a quiet separator and compact typography.
+- Plan and trial status now appear in the profile menu under the account email. The redundant topbar plan badge was removed.
+- Workspace clearing is available from Settings → Data Management → Danger Zone; the topbar clear button was removed.
+- Dashboard charts use the selected date range and actual order quantities/status records, with minimal styling and explicit empty states. Fake chart series were removed.
+- Built-in demo fixtures are shown only when the authenticated email exactly matches `billionboi34gmail.com` (case-insensitive). Other accounts get empty table states; demo-clear flags and local notification lists are scoped by account.
+- The UI automation helper timed out while enumerating desktop apps, so live browser visual inspection could not be completed in this pass.
