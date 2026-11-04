@@ -5272,6 +5272,138 @@ body {
     }
 }
 
+/* Keep the application canvas fitted to the phone viewport. Some module
+   tables intentionally scroll inside their own cards; they must not widen
+   the page or squeeze the main column. */
+@media (max-width: 768px) {
+    html,
+    body {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .app-layout {
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        max-width: 100vw;
+        overflow: hidden;
+    }
+
+    .app-layout > .sidebar {
+        flex: none;
+    }
+
+    .app-layout > .app-main {
+        flex: 1 1 0%;
+        width: 0;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .app-layout > .app-main > .topbar,
+    .app-layout > .app-main > .app-content {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .app-layout .app-content {
+        padding-inline: clamp(12px, 4vw, 20px);
+    }
+
+    .app-layout .module-view,
+    .app-layout .module-view.active,
+    .app-layout .module-header,
+    .app-layout .module-header > div,
+    .app-layout .module-actions,
+    .app-layout .kpi-grid,
+    .app-layout .charts-row,
+    .app-layout .chart-card,
+    .app-layout .table-card {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .app-layout .module-header {
+        align-items: stretch;
+    }
+
+    .app-layout .module-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .app-layout .module-actions > * {
+        max-width: 100%;
+    }
+
+    .app-layout .module-actions select {
+        min-width: 0 !important;
+        width: 100%;
+    }
+
+    .app-layout .module-actions .btn-primary,
+    .app-layout .module-actions .btn-secondary {
+        width: auto;
+        min-width: 0;
+        white-space: normal;
+    }
+
+    .app-layout .table-card .table-wrapper,
+    .app-layout .sub-table-wrap {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-layout .module-title {
+        font-size: 21px;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .app-layout .module-subtitle {
+        font-size: 12px;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    .app-layout .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .app-layout .kpi-card {
+        min-width: 0;
+        padding: 12px;
+    }
+
+    .app-layout .kpi-label {
+        overflow-wrap: anywhere;
+    }
+
+    .app-layout .chart-card-heading {
+        gap: 10px;
+    }
+
+    .app-layout .chart-card-summary {
+        max-width: 105px;
+        padding: 6px 8px;
+    }
+
+    .app-layout .chart-card-summary span {
+        text-align: right;
+    }
+
+    .app-layout #mod-integrations {
+        padding: 12px;
+    }
+}
+
 .demo-data-notice svg {
     width: 16px;
     height: 16px;
