@@ -5297,10 +5297,19 @@ body {
     }
 
     .app-layout > .app-main {
-        flex: 1 1 0%;
-        width: 0;
+        position: fixed;
+        inset: 0;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100vw !important;
+        height: 100vh;
+        height: 100dvh;
+        margin: 0 !important;
+        transform: none !important;
+        flex: none;
         min-width: 0;
-        max-width: 100%;
+        max-width: 100vw;
+        z-index: 1;
     }
 
     .app-layout > .app-main > .topbar,
